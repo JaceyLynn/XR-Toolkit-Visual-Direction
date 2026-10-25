@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual Style Direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Outfit:wght@400;500;600;700&family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+@property --pulse{syntax:'<color>';inherits:true;initial-value:#d8e63c}
+/* Layout: a lean showcase of two directions. Each: three short notes (summary, main elements, palette),
+   then the same landing twice (forced light, forced dark) in a scrolling frame that behaves like the real first screen.
+   B = Morph, now with tactile 3D objects. C = Canvas Chat, now a constellation you can play with. */
+:root{
+  --bg:#f7f7fa; --fg:#16152a; --muted:#5b5a72; --line:#d9d8e4; --focus:#5546f5;
+  --f-ui:"Outfit","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0f0e1f; --fg:#efeef8; --muted:#a9a8c0; --line:#2e2d45; --focus:#a99bff; color-scheme:dark }}
+:root[data-theme="dark"]{ --bg:#0f0e1f; --fg:#efeef8; --muted:#a9a8c0; --line:#2e2d45; --focus:#a99bff; color-scheme:dark }
+
+/* forced modes for the frames: b- Discover Wonder, c- Constellation Chat */
+.mode-light{
+  --b-bg:#ffffff; --b-ink:#1b1a4b; --b-text:#1b1a4b; --b-muted:#4a4a7a; --b-red:#ff5a5f; --b-orange:#ff9a3c; --b-yellow:#ffd54a; --b-green:#3ccf8e; --b-gmint:#8ef3d5; --b-sky:#6ec6ff; --b-blue:#5b5bf6; --b-violet:#a46cf5; --b-pink:#ff7ac8; --b-peach:#ffb48c; --b-coral:#ff7a8a; --b-mint:#b8f7cf; --b-lav:#c9c4ff;
+  --b-orb:.8; --b-grain:.3; --b-glass:linear-gradient(135deg,rgba(255,255,255,.7),rgba(255,255,255,.45) 55%,rgba(255,255,255,.58)); --b-rim:rgba(255,255,255,.95); --b-shadow:rgba(27,26,75,.22); --b-extrude:#8ef3d5;
+  --c-bg:#f3f4f6; --c-ink:#17184b; --c-muted:#273287; --c-mesh:#d9dbe3; --c-plum:#17184b; --c-on-plum:#f0eee9; --c-peri:#d6b4fc; --c-pink:#d8e63c; --c-spark:#273287; --c-lilac:#d3dde7; --c-on:#17184b; --c-link:rgba(23,24,75,.2);
+  color-scheme:light}
+.mode-dark{
+  --b-bg:#0b0826; --b-ink:#c9c4ff; --b-text:#eceeff; --b-muted:#b9b3ff; --b-violet:#5546f5; --b-sky:#6ec6ff; --b-peach:#ffb48c; --b-coral:#ff7a8a; --b-mint:#b8f7cf; --b-lav:#c9c4ff;
+  --b-orb:.5; --b-grain:.1; --b-glass:linear-gradient(160deg,rgba(255,255,255,.12),rgba(23,19,63,.45) 40%,rgba(23,19,63,.6)); --b-rim:rgba(255,255,255,.2); --b-shadow:rgba(0,0,0,.6); --b-extrude:#ff7a8a;
+  --c-bg:#150811; --c-ink:#faf9f8; --c-muted:#beb8cd; --c-mesh:#26131f; --c-plum:#623b70; --c-on-plum:#faf9f8; --c-peri:#aaaaff; --c-pink:#fc7cba; --c-spark:#ffd36e; --c-lilac:#beb8cd; --c-on:#150811; --c-link:rgba(190,184,205,.22);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.55 var(--f-ui);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-block:40px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:56px}
+h1,h2,h3{text-wrap:balance;margin:0}
+header.top{display:grid;gap:10px;max-width:64ch}
+header.top h1{font:700 clamp(28px,4vw,40px)/1.08 var(--f-ui);letter-spacing:-.02em}
+header.top p{margin:0;color:var(--muted)}
+.jump{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:6px;font-size:14px}
+.jump a{color:var(--fg);text-underline-offset:4px;text-decoration-thickness:1px}
+.style{display:grid;gap:22px;padding-top:26px;border-top:1px solid var(--line)}
+.spec{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 40px}
+.spec>div{display:grid;gap:6px;align-content:start;min-width:0}
+.spec h2{font:700 28px/1.1 var(--f-ui);letter-spacing:-.015em}
+.spec p{margin:0}
+.label{font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.els{margin:0;padding-left:18px;display:grid;gap:3px}
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.sw div{display:grid;gap:3px;font:400 11px/1.3 var(--f-mono);color:var(--muted)}
+.sw i{display:block;height:34px;border-radius:17px;border:1px solid var(--line);background:linear-gradient(90deg,var(--l) 50%,var(--d,var(--l)) 50%)}
+.sw b{font-weight:500;color:var(--fg)}
+.pair{display:grid;gap:18px}
+.frame{border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0;background:var(--bg)}
+.cap{display:flex;align-items:center;gap:4px;padding:4px 6px 4px 12px;border-top:1px solid var(--line);font:400 11px var(--f-mono);color:var(--muted)}
+.cap span{flex:1}
+.ic{width:30px;height:30px;display:grid;place-items:center;border:0;background:none;color:var(--muted);border-radius:6px;cursor:pointer}
+.ic:hover{color:var(--fg);background:color-mix(in srgb,var(--fg) 7%,transparent)}
+.ic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width:760px){ .spec{grid-template-columns:minmax(0,1fr)} }
+
+/* ---------- the landing (same markup and copy in both directions) ---------- */
+.vp{--fh:580px;height:var(--fh);overflow-y:auto;overflow-x:hidden;position:relative}
+.ld{min-height:100%;text-align:center;position:relative;isolation:isolate;overflow:hidden}
+.ld-top{position:relative;z-index:2;display:flex;align-items:center;padding:16px 22px 12px;text-align:left}
+.ld-logo{font:inherit;font-weight:700;font-size:15px;background:none;border:0;padding:0;color:inherit;cursor:pointer}
+.ld .s1,.ld .s2{position:relative;isolation:isolate}
+.ld .s1{min-height:calc(var(--fh) - 52px);display:grid;place-content:center;justify-items:center;gap:18px;padding:24px 20px 36px}
+.ld .s2{min-height:var(--fh);display:grid;place-content:center;justify-items:center;padding:40px 16px}
+.ld h3{font-size:clamp(2rem,5.4vw,3.8rem);line-height:1.05;letter-spacing:-.03em;max-width:15ch}
+.ld .mk{position:relative;white-space:nowrap;display:inline-block}
+.ld .lede{max-width:42ch;margin:0;font-size:1.06rem}
+.ld .cue{margin-top:10px;width:46px;height:46px;display:grid;place-items:center;border-radius:50%;cursor:pointer;font:600 1rem var(--f-mono);color:inherit;background:none;border:0}
+@media (prefers-reduced-motion:no-preference){ .ld .cue b{display:block;animation:cue 2s ease-in-out infinite} }
+@keyframes cue{50%{transform:translateY(5px)}}
+.ld .ways{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:min(880px,100%)}
+.ld .way{display:grid;gap:14px;justify-items:center;align-content:start;position:relative}
+.ld .way p{margin:0;font-size:.95rem;max-width:32ch}
+.ld .go{border:0;cursor:pointer;font:inherit;max-width:100%;color:inherit;background:none;padding:0}
+.ld .obj{display:none}
+@media (max-width:720px){ .ld .ways{grid-template-columns:minmax(0,1fr)} }
+/* decoration layers sit behind the copy and drift a little with the pointer */
+.deco{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.p{position:absolute;left:var(--x);top:var(--y);width:0;height:0;transform:translate3d(calc(var(--px,0) * var(--d,10) * 1px),calc(var(--py,0) * var(--d,10) * 1px),0);transition:transform .6s cubic-bezier(.2,.8,.3,1)}
+.o{position:absolute;display:block;width:var(--s);height:var(--h,var(--s));left:calc(var(--s) / -2);top:calc(var(--h,var(--s)) / -2);rotate:var(--r,0deg)}
+@media (prefers-reduced-motion:no-preference){ .o{animation:bob 6s ease-in-out var(--t,0s) infinite alternate} }
+@keyframes bob{to{transform:translateY(-14px) rotate(6deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- B. Discover Wonder ---------- */
+.v-b{background:var(--b-bg);color:var(--b-text);font-family:"Outfit",sans-serif}
+.v-b .ld-logo,.v-b h3,.v-b .go{font-family:"Unbounded","Outfit",sans-serif}
+.v-b .ld-logo{font-weight:600;font-size:14px}
+.v-b .ld-top{justify-content:center}
+.v-b h3{font-weight:700;letter-spacing:-.04em}
+.v-b .mk{color:var(--b-blue);text-shadow:1px 1px 0 var(--b-pink),2px 2px 0 var(--b-orange),3px 3px 0 var(--b-yellow),4px 4px 0 var(--b-green),5px 5px 0 var(--b-sky),7px 9px 14px var(--b-shadow);transition:text-shadow .3s}
+.v-b h3:hover .mk{text-shadow:1px 1px 0 var(--b-red),2px 2px 0 var(--b-pink),3px 3px 0 var(--b-orange),4px 4px 0 var(--b-yellow),5px 5px 0 var(--b-green),6px 6px 0 var(--b-gmint),7px 7px 0 var(--b-sky),8px 8px 0 var(--b-violet),10px 13px 18px var(--b-shadow)}
+.v-b .lede,.v-b .way p{color:var(--b-muted)}
+/* liquid gradient ground */
+.orbs{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden;background:var(--b-bg)}
+.orbs canvas.liquid{position:absolute;left:0;top:0;width:100%;display:block}
+.v-b .s1{gap:12px;padding-block:8px 24px;cursor:none}
+.v-b .s1 .cue,.v-b .ld-top{cursor:pointer}
+/* the 3D devices are drawn but invisible: the magnifying glass reveals them */
+.v-b .dev{position:absolute;inset:0;opacity:0;z-index:-1;pointer-events:none}
+.v-b .dev canvas{width:100%;height:100%;display:block}
+.v-b h3,.v-b .lede{position:relative}
+/* magnifying glass that follows the pointer over the first screen */
+.lens{position:absolute;left:0;top:0;width:calc(var(--lr) * 2);height:calc(var(--lr) * 2);margin:calc(var(--lr) * -1) 0 0 calc(var(--lr) * -1);border-radius:50%;overflow:hidden;pointer-events:none;z-index:6;opacity:0;scale:.5;transition:opacity .25s,scale .35s cubic-bezier(.3,1.6,.5,1);background:var(--b-bg)}
+.lens.on{opacity:1;scale:1}
+/* on load the headline settles in while the glass swells over it */
+@media (prefers-reduced-motion:no-preference){ .v-b.intro .s1>h3{animation:tin 1.1s cubic-bezier(.2,.8,.2,1) both} .v-b.intro .s1>.lede{animation:tin 1.1s .25s cubic-bezier(.2,.8,.2,1) both} }
+@keyframes tin{from{opacity:0;filter:blur(10px);transform:translateY(14px) scale(.96)}}
+.lens canvas{position:absolute;inset:0;width:100%;height:100%}
+.lens .lin{position:absolute;left:0;top:0;transform-origin:0 0}
+.lens .lin .cue{background:color-mix(in srgb,var(--b-yellow) 62%,transparent);color:var(--b-ink);-webkit-backdrop-filter:blur(10px) saturate(150%);backdrop-filter:blur(10px) saturate(150%);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -6px 12px rgba(255,170,40,.35),inset 0 0 0 1px rgba(255,255,255,.5),0 10px 18px -8px rgba(140,90,0,.45);transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
+.lens .lin .cue::before{display:none}
+.lens .lin .lede{text-shadow:-2px 0 rgba(255,90,95,.5),2px 0 rgba(91,91,246,.5)}
+.lens .lin h3,.lens .lin h3 .mk{color:transparent;text-shadow:none;-webkit-background-clip:text;background-clip:text;background-image:linear-gradient(100deg,#ff5a5f,#ff9a3c,#ffd54a,#3ccf8e,#6ec6ff,#5b5bf6,#a46cf5,#ff7ac8)}
+.lens::after{content:"";position:absolute;inset:0;border-radius:50%;
+  box-shadow:inset 0 0 1px 1px rgba(20,18,60,.18),inset 0 0 14px 3px rgba(20,18,60,.22),inset 0 -10px 22px -6px rgba(255,255,255,.45),inset 8px 10px 20px -10px rgba(255,255,255,.7);
+  background:radial-gradient(circle,transparent 78%,rgba(255,110,140,.12) 88%,rgba(110,170,255,.16) 94%,transparent 100%)}
+
+.glassy{background:color-mix(in srgb,var(--b-gmint) 70%,transparent);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 0 0 1px rgba(255,255,255,.35)}
+/* controls: the ↓ button is a blue circle with a frosted mint bead */
+.v-b .cue{position:relative;isolation:isolate;color:#fff;background:var(--b-blue);box-shadow:0 10px 22px -8px var(--b-shadow);transition:transform .25s cubic-bezier(.3,1.7,.5,1)}
+.v-b .cue::before{content:"";position:absolute;z-index:1;width:26px;height:26px;right:-8px;top:-8px;border-radius:50%;background:color-mix(in srgb,var(--b-yellow) 75%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:inset 0 1px 0 rgba(255,255,255,.75)}
+.v-b .cue:hover{transform:translateY(-2px) scale(1.06)}
+.v-b .ways{gap:clamp(18px,3vw,32px)}
+.v-b .way{padding:34px 28px 32px;border-radius:24px;background:var(--b-glass);border:1px solid var(--b-rim);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%);box-shadow:inset 0 1px 0 var(--b-rim),0 26px 48px -22px var(--b-shadow);transition:transform .4s cubic-bezier(.3,1.5,.5,1)}
+.v-b .way:hover{transform:translateY(-4px)}
+.v-b .go{position:relative;isolation:isolate;font-weight:600;font-size:clamp(.95rem,1.5vw,1.08rem);letter-spacing:-.02em;color:#fff;background:var(--b-blue);padding:15px 26px;border-radius:999px;box-shadow:0 14px 26px -12px var(--b-shadow);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.v-b .go::before{content:"";position:absolute;z-index:-1;width:44px;height:44px;right:-12px;top:-14px;border-radius:50%;background:color-mix(in srgb,var(--b-pink) 72%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:inset 0 1px 0 rgba(255,255,255,.7);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.v-b .way:nth-child(2) .go{color:var(--b-text);background:color-mix(in srgb,var(--b-gmint) 72%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 14px 26px -12px var(--b-shadow)}
+.v-b .way:nth-child(2) .go::before{right:auto;left:-12px;top:auto;bottom:-14px;background:var(--b-orange);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+.v-b .go:hover{transform:translateY(-2px)}
+.v-b .go:hover::before{transform:translate(-6px,4px) scale(1.12)}
+.v-b .way:nth-child(2) .go:hover::before{transform:translate(6px,-4px) scale(1.12)}
+.v-b .go:active{transform:translateY(1px) scale(.98)}
+@media (max-width:720px){ .v-b .way{margin-top:56px} }
+
+/* ---------- C. Constellation Chat ---------- */
+.v-c{background:var(--c-bg);color:var(--c-ink);font-family:"Archivo",sans-serif}
+.v-c canvas.sky{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.v-c .ld-logo{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.03em;font-stretch:112%}
+.v-c h3{max-width:none;line-height:1.02;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.035em;line-height:1;font-size:clamp(1.9rem,5vw,3.5rem);max-width:13ch}
+.v-c .mk{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.01em;font-size:1.22em;color:var(--c-plum);padding:0 .08em;transition:transform .3s cubic-bezier(.3,1.8,.5,1)}
+.v-c .mk{--pulse:#d8e63c;transition:--pulse 1.2s ease,transform .3s cubic-bezier(.3,1.8,.5,1)}
+.v-c .mk::before{content:"";position:absolute;left:-8%;right:-8%;bottom:.02em;height:78%;z-index:-1;clip-path:polygon(0 0,100% 0,89.655% 100%,10.345% 100%);background:linear-gradient(to top,color-mix(in srgb,var(--pulse) 60%,transparent),transparent)}
+.v-c .mk::after{content:"";position:absolute;left:4%;right:4%;bottom:.02em;height:.08em;background:var(--pulse)}
+.v-c h3:hover .mk{transform:rotate(-3deg) scale(1.04)}
+.v-c .lede{color:var(--c-muted);font-size:1.04rem;max-width:40ch}
+.v-c{--hard:#17184b}
+.v-c .cue{background:var(--c-lilac);color:var(--c-on);border:2px solid var(--hard);box-shadow:3px 3px 0 var(--hard);transition:transform .2s cubic-bezier(.3,1.7,.5,1),box-shadow .2s}
+.v-c .cue:hover{transform:translate(-2px,-2px) rotate(-8deg);box-shadow:5px 5px 0 var(--hard)}
+.v-c .ways{gap:0;align-items:start;width:min(860px,100%)}
+/* 2.5D bubbles: ink outline, hard offset shadow (drop-shadow so the tail casts one too), the second overlaps the first */
+.v-c .way{--c:var(--c-pink);--sh:8px;text-align:left;justify-items:start;gap:10px;padding:24px 26px 28px;border-radius:20px;background:var(--c);color:var(--c-on);border:2px solid var(--hard);cursor:pointer;filter:drop-shadow(var(--sh) var(--sh) 0 var(--hard)) drop-shadow(0 22px 22px rgba(23,24,75,.22));transition:transform .3s cubic-bezier(.3,1.6,.5,1),filter .3s;z-index:1}
+.v-c .way::before{content:"";position:absolute;left:28px;bottom:-21px;width:27px;height:21px;background:var(--hard);clip-path:polygon(0 0,100% 0,0 100%)}
+.v-c .way::after{content:"";position:absolute;left:30px;bottom:-15px;width:19px;height:15px;background:var(--c);clip-path:polygon(0 0,100% 0,0 100%)}
+.v-c .way:nth-child(2){--c:var(--c-peri);margin:64px 0 0 -34px;z-index:2}
+.v-c .way:nth-child(2)::before{left:auto;right:28px;clip-path:polygon(0 0,100% 0,100% 100%)}
+.v-c .way:nth-child(2)::after{left:auto;right:30px;clip-path:polygon(0 0,100% 0,100% 100%)}
+.v-c .way:hover{--sh:12px;transform:translate(-4px,-4px) rotate(-1.2deg);z-index:3}
+.v-c .way:nth-child(2):hover{transform:translate(-4px,-4px) rotate(1.2deg)}
+.v-c .way:active{--sh:3px;transform:translate(4px,4px)}
+.v-c .way p{color:color-mix(in srgb,var(--c-on) 80%,transparent)}
+.v-c .go{text-wrap:balance}
+.v-c .go{position:static;text-align:left;font-weight:800;font-stretch:118%;text-transform:uppercase;letter-spacing:-.01em;font-size:clamp(1.02rem,1.8vw,1.3rem);line-height:1.15;color:var(--c-on)}
+.v-c .go::after{content:"";position:absolute;inset:0;border-radius:20px}
+.v-c .way:hover .go{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+@media (max-width:720px){ .v-c .way:nth-child(2){margin:150px 0 0} }
+.v-c .s2{padding-bottom:150px}
+.v-c .ways{position:relative}
+.v-c .obj{display:block;position:absolute;width:108px;height:108px;pointer-events:none;z-index:4}
+.ast{filter:drop-shadow(2px 2px 0 var(--hard))}
+.ast{width:100%;height:100%;overflow:visible;stroke:var(--hard);stroke-width:1.2;stroke-linejoin:round;stroke-linecap:round}
+.ast *{vector-effect:non-scaling-stroke}
+.ast .s{fill:#ffffff} .ast .b{fill:var(--c-spark)}
+.ast .limbs path{fill:none;vector-effect:none;stroke:var(--hard);stroke-width:7.6;stroke-linecap:round;paint-order:stroke}
+.ast .limbs.in path{stroke:#ffffff;stroke-width:5.2} .ast .v{fill:var(--hard)} .ast .vi{fill:var(--c-peri)} .ast .y{fill:var(--c-pink)} .ast .n{fill:var(--c-lilac)}
+.ast .ln{fill:none} .ast .hl,.ast .hl2{fill:none;stroke:var(--c-bg);stroke-width:1.6}
+.ast .v.hl,.ast circle.v{stroke:none}
+@media (prefers-reduced-motion:no-preference){
+  .a1{transform-origin:50% 60%;animation:drift1 4.5s ease-in-out infinite alternate}
+  .a2{transform-origin:50% 90%;animation:hover2 3s ease-in-out infinite alternate}
+  .a2 .flame{transform-origin:27px 57px;animation:flick .25s steps(2) infinite alternate}
+  .v-c .way:hover .a1{animation-duration:1.6s} .v-c .way:hover .a2{animation-duration:1.2s}
+}
+@keyframes drift1{from{transform:rotate(-14deg) translateY(0)}to{transform:rotate(-4deg) translateY(-6px)}}
+@keyframes hover2{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+@keyframes flick{to{transform:scaleY(.7)}}
+/* venue icons that pop up under the pointer, linger, then shrink away */
+.chip{position:absolute;z-index:-1;pointer-events:none;width:0;height:0}
+.chip>div{position:absolute;left:0;top:0;transform:translate(-50%,-100%);padding-bottom:10px;transform-origin:50% 100%;animation:chip 3.8s linear forwards}
+/* pops up big, holds, then shrinks steadily to nothing (stays opaque until the very end, so the shrink reads) */
+@keyframes chip{0%{transform:translate(-50%,-100%) scale(.2)}7%{transform:translate(-50%,-100%) scale(1.25);animation-timing-function:ease-out}13%{transform:translate(-50%,-100%) scale(1)}40%{transform:translate(-50%,-100%) scale(1);animation-timing-function:cubic-bezier(.4,0,.7,1)}96%{transform:translate(-50%,-100%) scale(.06);opacity:1}100%{transform:translate(-50%,-100%) scale(0);opacity:0}}
+@media (prefers-reduced-motion:reduce){ @keyframes chip{0%,40%{transform:translate(-50%,-100%) scale(1)}96%{transform:translate(-50%,-100%) scale(.06);opacity:1}100%{transform:translate(-50%,-100%) scale(0);opacity:0}} }
+.chip i{display:block;width:var(--z,60px);height:var(--z,60px);transform:rotate(var(--tilt))}
+.chip i svg{width:100%;height:100%;overflow:visible;fill:var(--c);stroke:var(--hard);stroke-width:1;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(2px 2px 0 var(--hard))}
+.chip svg *{vector-effect:non-scaling-stroke}
+.chip svg .k{fill:var(--hard);stroke:none}
+.chip svg .ln{fill:none;stroke:var(--hard);stroke-width:1.5}
+
+/* ---------- full screen view ---------- */
+.full{position:fixed;inset:0;z-index:20;display:grid;grid-template-rows:minmax(0,1fr) auto;background:var(--bg);border:0;border-radius:0}
+.full .vp{--fh:calc(100vh - 40px);height:100%}
+.full .cap{padding-bottom:max(4px,env(safe-area-inset-bottom,0px));padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Visual style direction</h1>
+    <nav class="jump" aria-label="Directions"><a href="#morph">Discover Wonder</a><a href="#constellation">Constellation Chat</a></nav>
+  </header>
+
+  <section class="style" id="morph" data-v="v-b" data-name="Discover Wonder">
+    <div class="spec">
+      <div><span class="label">From Theme B</span><h2>Discover Wonder</h2><p>A flowing gradient and a magnifying glass. Look closer to find the XR devices hidden around the page.</p></div>
+      <div><span class="label">Main elements</span><ul class="els"><li>Cool flowing gradient</li><li>Magnifying glass with an oil-ripple intro</li><li>Hidden warm 3D devices and glass buttons</li></ul></div>
+      <div><span class="label">Colour palette</span><div class="sw">
+        <div><i style="--l:#ff5a5f"></i><b>Red · object</b>#FF5A5F</div>
+        <div><i style="--l:#ff9a3c"></i><b>Orange · object</b>#FF9A3C</div>
+        <div><i style="--l:#ffd54a"></i><b>Yellow · object</b>#FFD54A</div>
+        <div><i style="--l:#3ccf8e"></i><b>Green · gradient</b>#3CCF8E</div>
+        <div><i style="--l:#8ef3d5"></i><b>Mint · glass</b>#8EF3D5</div>
+        <div><i style="--l:#6ec6ff"></i><b>Sky · gradient</b>#6EC6FF</div>
+        <div><i style="--l:#5b5bf6"></i><b>Blue · gradient, action</b>#5B5BF6</div>
+        <div><i style="--l:#a46cf5"></i><b>Violet · gradient</b>#A46CF5</div>
+        <div><i style="--l:#ff7ac8"></i><b>Pink · object</b>#FF7AC8</div>
+        <div><i style="--l:#ffffff"></i><b>Ground</b>#FFFFFF</div>
+        <div><i style="--l:#1b1a4b"></i><b>Ink</b>#1B1A4B</div>
+      </div></div>
+    </div>
+    <div class="pair"></div>
+  </section>
+
+  <section class="style" id="constellation" data-v="v-c" data-name="Constellation Chat">
+    <div class="spec">
+      <div><span class="label">From Theme C</span><h2>Constellation Chat</h2><p>A radial star chart of venues you can play with, and two ways in as reply bubbles.</p></div>
+      <div><span class="label">Main elements</span><ul class="els"><li>Radial star chart</li><li>Pop-up icons, 2.5D reply bubbles and two little astronauts</li><li>Wide poster type with a serif accent</li></ul></div>
+      <div><span class="label">Colour palette</span><div class="sw">
+        <div><i style="--l:#f3f4f6"></i><b>Light grey · ground</b>#F3F4F6</div>
+        <div><i style="--l:#17184b"></i><b>Tetsu-Kon Blue · ink</b>#17184B</div>
+        <div><i style="--l:#273287"></i><b>Intergalactic Highway</b>#273287</div>
+        <div><i style="--l:#d8e63c"></i><b>Duranta Yellow</b>#D8E63C</div>
+        <div><i style="--l:#d6b4fc"></i><b>Light Violet</b>#D6B4FC</div>
+        <div><i style="--l:#d3dde7"></i><b>Nordic Breeze</b>#D3DDE7</div>
+      </div></div>
+    </div>
+    <div class="pair"></div>
+  </section>
+</div>
+
+<template id="landing">
+  <div class="ld">
+    <div class="ld-top"><button type="button" class="ld-logo">XR Distribution Toolkit</button></div>
+    <div class="s1">
+      <div class="deco"></div>
+      <h3>There’s a world for your <span class="mk">XR work</span></h3>
+      <p class="lede">Plan how an immersive work will reach audiences, and find venues that show work like yours.</p>
+      <button type="button" class="cue" aria-label="Show the two ways in"><b>↓</b></button>
+    </div>
+    <div class="s2">
+      <div class="deco"></div>
+      <div class="ways">
+        <div class="way"><div class="obj" aria-hidden="true"></div><button type="button" class="go">Start the guided journey →</button><p>New to showing XR work, or not sure where to start? We’ll guide you step by step to a distribution plan for your project.</p></div>
+        <div class="way"><div class="obj" aria-hidden="true"></div><button type="button" class="go">Explore the venue database →</button><p>Know the field already, or just need to check something quickly? Go straight to the venues and filter them yourself.</p></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tpl = document.getElementById('landing');
+  // a placed object: x, y (%), size, pointer depth, float delay, inner html
+  const at = (x, y, s, d, t, inner, shadow = true) => `<i class="p" style="--x:${x}%;--y:${y}%;--d:${d};--s:${s}px">${shadow ? '<s class="shd"></s>' : ''}<b class="o" style="--s:${s}px;--t:${t}s">${inner}</b></i>`;
+  const sph = (c, tex = '') => `<b class="o sph ${tex}" style="--s:100%;position:absolute;inset:0;width:100%;height:100%;left:0;top:0;--c:var(${c});animation:none"></b>`;
+  const flower = `<span class="flower" style="position:absolute;inset:0"><span class="fl">${[0,1,2,3,4,5].map(k => `<i class="pt cork" style="--k:${k}"></i>`).join('')}<span class="core">${sph('--b-coral')}</span></span></span>`;
+  const torus = c => `<span class="torus" style="position:absolute;inset:0"><i class="rg" style="--c:var(${c})"></i></span>`;
+  const capsule = c => `<b class="capsule" style="position:absolute;inset:0;--c:var(${c})"></b>`;
+
+  const DECO = {
+    'v-b': { bg: '<div class="orbs" aria-hidden="true"><canvas class="liquid"></canvas></div>', s1: '', s2: '' },
+    'v-c': { bg: '<canvas class="sky" aria-hidden="true"></canvas>', s1: '', s2: '',
+      // two little astronauts perched on the reply bubbles: a newcomer drifting on a tether, and a seasoned pro with a jetpack and a flag
+      obj: [
+        `<svg class="ast a1" viewBox="0 0 80 80"><g class="limbs"><path d="M26 37C19 34 14 31 10 28M54 44c4 4 6 8 6 12M35 57c-1 5-4 8-7 12M45 57c2 5 2 9 4 13"/></g><g class="limbs in"><path d="M26 37C19 34 14 31 10 28M54 44c4 4 6 8 6 12M35 57c-1 5-4 8-7 12M45 57c2 5 2 9 4 13"/></g>
+          <circle class="s" cx="40" cy="38" r="20"/><path class="ln" d="M21 44.5Q40 52.5 59 44.5"/><circle class="y" cx="40" cy="48.6" r="3.2"/>
+          <ellipse class="b" cx="40" cy="32.5" rx="13" ry="9"/><rect class="y" x="34.4" y="28.8" width="2.6" height="7" rx="1.3"/><rect class="y" x="43" y="28.8" width="2.6" height="7" rx="1.3"/>
+          <path class="ln" d="M40 18c0-4 1-7 3-9"/><path class="y" d="M43 9c3-4 8-4.4 10-3.2-2 3.2-6 5.2-10 3.2z"/><path class="y" d="M42.2 10.4c-3-4-7-4.4-9-3.4 2 3 5.4 4.6 9 3.4z"/></svg>`,
+        `<svg class="ast a2" viewBox="0 0 80 80">
+          <g class="limbs"><path d="M57 36c6-4 9-9 9-15M23 40c-6 3-7 8-4 11M34 57l-1 13M46 57l1 13"/></g><g class="limbs in"><path d="M57 36c6-4 9-9 9-15M23 40c-6 3-7 8-4 11M34 57l-1 13M46 57l1 13"/></g>
+          <path class="s" d="M40 17l18.2 10.5v21L40 59 21.8 48.5v-21z"/><path class="vi" d="M21.8 42.4h36.4v5.4H21.8z"/><rect class="y" x="36" y="41.1" width="8" height="8" rx="1.4"/>
+          <rect class="b" x="27" y="25.5" width="26" height="15" rx="7.5"/><rect class="y" x="34.4" y="29.5" width="2.6" height="7" rx="1.3"/><rect class="y" x="43" y="29.5" width="2.6" height="7" rx="1.3"/>
+          <path class="ln" d="M40 17V9"/><path class="y" d="M40 1.5l1.9 3.9 4.3.6-3.1 3 .7 4.3-3.8-2-3.8 2 .7-4.3-3.1-3 4.3-.6z"/></svg>`
+      ] }
+  };
+
+  // Constellation: stars snap to the 28px mesh; near ones are linked; the pointer links the closest three and names the nearest.
+  // abstract icons for what the field offers; drawn in a 24px box
+  const ICON = {
+    community:'<circle cx="8" cy="8" r="3.5"/><circle cx="16" cy="8" r="3.5"/><path d="M2 20a6 6 0 0 1 12 0z"/><path d="M10 20a6 6 0 0 1 12 0z"/>',
+    education:'<path d="M6 11.5v4.5c3.2 2.6 8.8 2.6 12 0v-4.5L12 14.5z"/><path d="M1.5 9L12 4l10.5 5L12 14z"/>',
+    production:'<path d="M12 2l2 4 4.2-1.6-1 4.4L21 11l-3.8 2.2 1 4.4L14 16l-2 4-2-4-4.2 1.6 1-4.4L3 11l3.8-2.2-1-4.4L10 6z"/><circle class="k" cx="12" cy="11" r="2.6"/>',
+    funding:'<path d="M5 16v2c0 1.7 3.1 3 7 3s7-1.3 7-3v-2z"/><ellipse cx="12" cy="16" rx="7" ry="3"/><path d="M5 9.5V12c0 1.7 3.1 3 7 3s7-1.3 7-3V9.5z"/><ellipse cx="12" cy="9.5" rx="7" ry="3"/>',
+    network:'<path class="ln" d="M6 6l6 5 6-5M12 11v7"/><circle cx="5" cy="5.5" r="3"/><circle cx="19" cy="5.5" r="3"/><circle cx="12" cy="11" r="3"/><circle cx="12" cy="19" r="3"/>',
+    research:'<path d="M14.2 16.3l2.1-2.1 5.4 5.4-2.1 2.1z"/><circle cx="10" cy="10" r="6.5"/><path class="k" d="M7 9a3.2 3.2 0 0 1 3-3v1.4A1.8 1.8 0 0 0 8.4 9z"/>',
+    exhibition:'<rect x="3" y="4" width="18" height="16" rx="1.5"/><path class="k" d="M6 17l4-5 3 3 2-2 3 4z"/><circle class="k" cx="16" cy="8.5" r="1.6"/>',
+    festival:'<path d="M2 20L12 3l10 17z"/><path class="k" d="M12 11l-3.5 9h7z"/>',
+    residency:'<path d="M3 11l9-8 9 8v10H3z"/><rect class="k" x="10" y="14" width="4" height="7"/>',
+    touring:'<path class="ln" d="M5 18c5 0 4-6 7-6s3-6 7-6"/><circle cx="5" cy="18" r="3.2"/><circle cx="19" cy="6" r="3.2"/>',
+    online:'<circle cx="12" cy="12" r="9.5"/><path class="ln" d="M2.5 12h19M12 2.5c3.3 3.3 3.3 15.7 0 19M12 2.5c-3.3 3.3-3.3 15.7 0 19"/>',
+    performance:'<path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/>',
+    dome:'<path d="M2 19a10 10 0 0 1 20 0z"/><path class="k" d="M8 19a4 5 0 0 1 8 0z"/>',
+    immersive:'<path d="M2 7.5h20v9.5h-6.5l-2-3h-3l-2 3H2z"/><rect class="k" x="5" y="10" width="4" height="3" rx="1.5"/><rect class="k" x="15" y="10" width="4" height="3" rx="1.5"/>',
+    audience:'<path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle class="k" cx="12" cy="12" r="3.3"/>',
+    ideas:'<path d="M12 2a6.5 6.5 0 0 0-4.2 11.5c.9.8 1.2 1.6 1.2 2.5h6c0-.9.3-1.7 1.2-2.5A6.5 6.5 0 0 0 12 2z"/><rect x="9" y="17.5" width="6" height="2" rx="1"/><rect x="10" y="20.5" width="4" height="1.8" rx=".9"/>' };
+  const KINDS = Object.keys(ICON);
+  function sky(ld, vp) {
+    const cv = ld.querySelector('canvas.sky'), ctx = cv.getContext('2d');
+    const RING = 56, SPOKES = 36; let lastN = -1, last = null, lastT = 0, cx = 0, cy = 0, maxR = 0, W = 0, H = 0, stars = [], ptr = null, col = {}, tick = 0, raf = 0, on = false;
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const read = () => { const cs = getComputedStyle(ld); ['--c-peri','--c-pink','--c-spark','--c-plum','--c-link','--c-mesh','--c-lilac','--c-ink','--c-bg','--c-muted'].forEach(k => col[k] = cs.getPropertyValue(k).trim()); };
+    const build = () => { const r = ld.getBoundingClientRect(); W = r.width; H = ld.scrollHeight; const dpr = Math.min(2, devicePixelRatio || 1);
+      cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + 'px'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      seed = 7; stars = []; const mk = ld.querySelector('.mk').getBoundingClientRect(); cx = mk.left - r.left + mk.width / 2; cy = mk.top - r.top + mk.height * .58;
+      maxR = Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy)); const K = Math.ceil(maxR / RING), n = Math.round(W * H / 8000), seen = new Set();
+      for (let i = 0; i < n * 3 && stars.length < n; i++) { const kk = Math.max(1, Math.ceil(Math.sqrt(rnd()) * K)), j = Math.floor(rnd() * SPOKES), id = kk + ':' + j;
+        if (seen.has(id)) continue; const rr = kk * RING, a = j / SPOKES * 6.2832, x = cx + rr * Math.cos(a), y = cy + rr * Math.sin(a);
+        if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue;
+        if (((x - cx) / 330) ** 2 + ((y - cy) / 160) ** 2 < 1 && rnd() < .8) continue;
+        seen.add(id); const big = rnd() < .22; stars.push({ rr, a, x, y, r: big ? 3.2 : 1.9, c: ['--c-peri','--c-pink','--c-spark','--c-plum'][Math.floor(rnd() * 4)], ph: rnd() * 6.28, k: KINDS[stars.length % KINDS.length], big }); }
+      stars.links = []; stars.forEach((a, i) => { const near = stars.map((b, j) => [j, Math.hypot(a.x - b.x, a.y - b.y)]).filter(([j, d]) => j > i && d < 130).sort((p, q) => p[1] - q[1]).slice(0, 2); near.forEach(([j]) => stars.links.push([i, j])); });
+      read(); draw(); };
+    const draw = () => { if (!W || !stars.links) return; ctx.clearRect(0, 0, W, H); const tt = performance.now() / 1000, rot = RM ? 0 : tt * .012;
+      stars.forEach(s => { s.x = cx + s.rr * Math.cos(s.a + rot); s.y = cy + s.rr * Math.sin(s.a + rot); });
+      ctx.strokeStyle = col['--c-mesh']; ctx.lineWidth = 1; ctx.beginPath();
+      for (let r = RING; r <= maxR; r += RING) { ctx.moveTo(cx + r, cy); ctx.arc(cx, cy, r, 0, 6.2832); }
+      for (let j = 0; j < SPOKES; j++) { const a = j / SPOKES * 6.2832 + rot; ctx.moveTo(cx + RING * Math.cos(a), cy + RING * Math.sin(a)); ctx.lineTo(cx + maxR * Math.cos(a), cy + maxR * Math.sin(a)); }
+      ctx.stroke();
+      if (!RM) { const per = 5, n = Math.floor(tt / per), pr = (tt % per) / per * maxR, hex = col[['--c-pink','--c-peri','--c-spark'][n % 3]] || '#fc7cba';
+        if (n !== lastN) { lastN = n; const mk = ld.querySelector('.mk'); if (mk) mk.style.setProperty('--pulse', hex); }
+        const rgb = hex.match(/[0-9a-f]{2}/gi).map(h => parseInt(h, 16)).join(','), fade = .95 * (1 - .6 * pr / maxR);
+        const g = ctx.createRadialGradient(cx, cy, Math.max(0, pr - 70), cx, cy, pr + 6); g.addColorStop(0, `rgba(${rgb},0)`); g.addColorStop(.85, `rgba(${rgb},${fade})`); g.addColorStop(1, `rgba(${rgb},0)`);
+        ctx.strokeStyle = g; ctx.lineWidth = 1.8; ctx.stroke(); }
+      ctx.lineWidth = 1; ctx.strokeStyle = col['--c-link']; ctx.beginPath(); stars.links.forEach(([i, j]) => { ctx.moveTo(stars[i].x, stars[i].y); ctx.lineTo(stars[j].x, stars[j].y); }); ctx.stroke();
+      let near = [];
+      if (ptr) near = stars.map(s => [s, Math.hypot(s.x - ptr.x, s.y - ptr.y)]).sort((a, b) => a[1] - b[1]).slice(0, 3).filter(([, d]) => d < 220);
+      if (near.length) { ctx.strokeStyle = col['--c-spark']; ctx.lineWidth = 1.5; ctx.setLineDash([3, 4]); ctx.beginPath(); near.forEach(([s]) => { ctx.moveTo(ptr.x, ptr.y); ctx.lineTo(s.x, s.y); }); ctx.stroke(); ctx.setLineDash([]); }
+      stars.forEach(s => { const tw = RM ? 1 : .75 + .25 * Math.sin(tt * 1.6 + s.ph); const hot = near.some(([n]) => n === s);
+        ctx.fillStyle = col[s.c]; ctx.beginPath();
+        if (s.big || hot) { const R = (hot ? 5.5 : s.r + 1.4) * tw, r = R * .38; for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 - Math.PI / 2, rr = k % 2 ? r : R; ctx.lineTo(s.x + rr * Math.cos(a), s.y + rr * Math.sin(a)); } ctx.closePath(); }
+        else ctx.arc(s.x, s.y, s.r * tw, 0, 6.29);
+        if (s.big || hot) { ctx.shadowColor = 'rgba(21,8,17,.55)'; ctx.shadowOffsetX = 1.5; ctx.shadowOffsetY = 1.5; } ctx.fill(); ctx.shadowColor = 'transparent'; });
+      if (near.length && near[0][0] !== last) { last = near[0][0]; spawn(last); }
+    };
+    const spawn = st => { const now = performance.now(); if (now - lastT < 260) { last = null; return; } lastT = now;
+      const chips = ld.querySelectorAll('.chip'); if (chips.length > 5) chips[0].remove();
+      const c = document.createElement('div'); c.className = 'chip'; c.style.left = st.x + 'px'; c.style.top = (st.y - 4) + 'px';
+      c.style.setProperty('--c', col[st.c === '--c-plum' ? '--c-lilac' : st.c]); c.style.setProperty('--tilt', ((st.ph % 1.2) * 10 - 6).toFixed(1) + 'deg');
+      c.style.setProperty('--z', (st.big ? 64 : 50) + 'px'); c.innerHTML = `<div><i><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[st.k]}</svg></i></div>`;
+      cv.after(c); c.firstChild.addEventListener('animationend', () => c.remove()); };
+    const loop = () => { if (!on) return; if (++tick % 90 === 0) read(); draw(); raf = RM ? 0 : requestAnimationFrame(loop); };
+    vp.addEventListener('pointermove', e => { const r = ld.getBoundingClientRect(); ptr = { x: e.clientX - r.left, y: e.clientY - r.top }; if (RM) draw(); });
+    vp.addEventListener('pointerleave', () => { ptr = null; if (RM) draw(); });
+    new ResizeObserver(build).observe(ld);
+    vp._sky = v => { on = v; if (v) { read(); cancelAnimationFrame(raf); loop(); } };
+    vp._skyRead = () => { read(); draw(); };
+    if (document.fonts) document.fonts.ready.then(() => build());
+  }
+
+  // Liquid gradient: domain-warped colour flow in a tiny shader, kept pale behind the headline
+  function liquid(ld, vp) {
+    const cv = ld.querySelector('canvas.liquid'), gl = cv && cv.getContext('webgl', { antialias: false, preserveDrawingBuffer: true }); if (!gl) return;
+    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision mediump float;uniform vec2 r;uniform float t;uniform vec2 c;uniform float rad;
+      void main(){vec2 p=gl_FragCoord.xy/r.x*3.4;float tt=t*.32;
+        for(float i=1.;i<6.;i++){p.x+=.55/i*sin(i*p.y+tt+.3*i)+.4;p.y+=.45/i*cos(i*p.x+tt*1.1+.3*(i+5.))-.3;}
+        float v=.5+.5*sin(p.x*1.3),w=.5+.5*cos(p.y*1.2+v*1.8);
+        // deep folds and bright ridges give the flow depth
+        float band=.5+.5*sin(p.x*1.4+p.y*.7+w*2.);
+        vec3 col=mix(vec3(.25,.17,.72),vec3(.36,.36,.96),smoothstep(.0,.4,v));
+        col=mix(col,vec3(.64,.42,.96),smoothstep(.25,.65,w)*.85);
+        col=mix(col,vec3(.43,.78,1.),smoothstep(.35,.7,v*.55+w*.45)*.9);
+        col=mix(col,vec3(.24,.81,.56),smoothstep(.5,.85,band*(.4+.6*v))*.9);
+        col=mix(col,vec3(.18,.1,.55),smoothstep(.35,.8,(1.-v)*(1.-band))*.7);
+        col+=vec3(.55,.75,.7)*pow(1.-abs(sin(p.y*1.2+v*3.1)),10.)*.35;
+        col=mix(col,vec3(1.),smoothstep(rad,0.,length((gl_FragCoord.xy-c)*vec2(.62,1.)))*.78);
+        gl_FragColor=vec4(col,1.);}`));
+    gl.linkProgram(pr); gl.useProgram(pr);
+    const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const al = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(al); gl.vertexAttribPointer(al, 2, gl.FLOAT, false, 0, 0);
+    const U = n => gl.getUniformLocation(pr, n), K = .5; let on = false, raf = 0, t0 = performance.now() - 20000;
+    const size = () => { const W = ld.clientWidth, H = ld.scrollHeight, s1 = ld.querySelector('.s1'); cv.width = Math.max(1, W * K); cv.height = Math.max(1, H * K); cv.style.height = H + 'px';
+      gl.viewport(0, 0, cv.width, cv.height); gl.uniform2f(U('r'), cv.width, cv.height);
+      gl.uniform2f(U('c'), W / 2 * K, (H - (s1.offsetTop + s1.offsetHeight / 2)) * K); gl.uniform1f(U('rad'), Math.min(W, 900) * .36 * K); frame(); };
+    const frame = () => { gl.uniform1f(U('t'), (performance.now() - t0) / 1000); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+    const loop = () => { if (!on) return; frame(); raf = RM ? 0 : requestAnimationFrame(loop); };
+    const ro = new ResizeObserver(size); ro.observe(ld); size();
+    vp._anims.push(v => { on = v; cancelAnimationFrame(raf); if (v) loop(); });
+    vp._cleanup.push(() => { on = false; cancelAnimationFrame(raf); ro.disconnect(); const x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); });
+  }
+
+  // Glossy 3D devices hidden around the headline and the ↓ button; only the magnifying glass shows them
+  function devices(ld, vp) {
+    const s1 = ld.querySelector('.s1'), h3 = s1.querySelector('h3');
+    s1.insertAdjacentHTML('afterbegin', '<div class="dev" aria-hidden="true"><canvas></canvas></div>');
+    const host = s1.querySelector('.dev'); if (!window.THREE) { host.remove(); return; }
+    const T = THREE, cv = host.querySelector('canvas');
+    const R3 = new T.WebGLRenderer({ canvas: cv, alpha: true, antialias: true, preserveDrawingBuffer: true }); R3.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+    const sc = new T.Scene(), cam = new T.PerspectiveCamera(30, 1.55, .1, 50); cam.position.set(0, 0, 10);
+    sc.add(new T.HemisphereLight(0xffffff, 0xd9d4ff, .95)); const dl = new T.DirectionalLight(0xffffff, .8); dl.position.set(3, 5, 5); sc.add(dl);
+    const rim = new T.DirectionalLight(0x6ec6ff, .7); rim.position.set(-5, 1, -3); sc.add(rim); const warm = new T.PointLight(0xff7ac8, .45); warm.position.set(4, -2, 3); sc.add(warm);
+    const M = (c, o = {}) => new T.MeshPhysicalMaterial(Object.assign({ color: c, roughness: .26, metalness: 0, clearcoat: 1, clearcoatRoughness: .1 }, o));
+    // every screen and lens is white; under the magnifier the same parts show a rainbow
+    const BL = M(0xffffff, { roughness: .12, side: T.DoubleSide });
+    const tc = document.createElement('canvas'); tc.width = 256; tc.height = 256; const tx = tc.getContext('2d'), lg = tx.createLinearGradient(0, 0, 256, 256);
+    ['#ff5a5f','#ff9a3c','#ffd54a','#3ccf8e','#6ec6ff','#5b5bf6','#a46cf5','#ff7ac8'].forEach((c, i, a) => lg.addColorStop(i / (a.length - 1), c));
+    tx.fillStyle = lg; tx.fillRect(0, 0, 256, 256);
+    const tex = new T.CanvasTexture(tc); tex.wrapS = tex.wrapT = T.MirroredRepeatWrapping;
+    const RB = new T.MeshBasicMaterial({ map: tex, side: T.DoubleSide });
+    const rr = (w, h, r, d, bev) => { const s = new T.Shape(), x = -w / 2, y = -h / 2; s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r); s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h); s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r); s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+      const g = new T.ExtrudeGeometry(s, { depth: d, bevelEnabled: true, bevelThickness: bev, bevelSize: bev, bevelSegments: 6, curveSegments: 18 }); g.center(); return g; };
+    const flat = (w, h, r) => { const g = rr(w, h, r, .001, 0); const uv = g.attributes.uv, pos = g.attributes.position; for (let i = 0; i < uv.count; i++) uv.setXY(i, pos.getX(i) / w + .5, pos.getY(i) / h + .5); return g; };
+    const ms = (g, m, p = [0,0,0], r = [0,0,0], k = [1,1,1]) => { const o = new T.Mesh(g, m); o.position.set(...p); o.rotation.set(...r); o.scale.set(...k); return o; };
+    const grp = (ch, p = [0,0,0], r = [0,0,0]) => { const g = new T.Group(); ch.forEach(c => g.add(c)); g.position.set(...p); g.rotation.set(...r); return g; };
+    // the object keeps four warm colours; the gradient behind has the four cool ones
+    const C = { red: 0xff5a5f, orange: 0xff9a3c, yellow: 0xffd54a, pink: 0xff7ac8, ink: 0x1b1a4b };
+    const rimG = new T.TorusGeometry(.5, .09, 18, 48), lensG = new T.CircleGeometry(.47, 40);
+    const items = [
+      // VR headset
+      grp([ms(rr(2.4, 1.3, .45, .7, .18), M(C.red)), ms(rr(2.05, .95, .36, .08, .06), BL, [0, 0, .54]), ms(new T.TorusGeometry(1.2, .1, 16, 64), M(C.yellow), [0, .05, -.5], [Math.PI / 2, 0, 0], [1.02, .8, 1])], [0, 0, 0], [.12, -.5, 0]),
+      // curved immersive screen: the screen is the inside of a cylinder arc, facing you, in a curved frame
+      grp([ms(new T.CylinderGeometry(2.3, 2.3, 1.5, 64, 1, true, Math.PI - .75, 1.5), M(C.yellow, { side: T.DoubleSide }), [0, 0, 2.3]),
+        ms(new T.CylinderGeometry(2.2, 2.2, 1.32, 64, 1, true, Math.PI - .7, 1.4), BL, [0, 0, 2.26]),
+        ], [0, 0, 0], [.05, 0, 0]),
+      // phone with AR content floating above it
+      grp([ms(rr(1.1, 2.1, .22, .1, .06), M(C.pink)), ms(flat(.94, 1.9, .16), BL, [0, 0, .12]), ms(new T.OctahedronGeometry(.36), M(C.yellow), [0, 1.5, .45]), ms(new T.SphereGeometry(.12, 16, 12), M(C.orange), [.5, 1.2, .5])], [0, -.5, 0], [-.3, -.5, .1]),
+      // camera
+      grp([ms(rr(1.9, 1.25, .22, .8, .1), M(C.orange)), ms(new T.CylinderGeometry(.48, .52, .7, 40), M(C.ink, { roughness: .2 }), [0, -.02, .72], [Math.PI / 2, 0, 0]), ms(new T.CircleGeometry(.4, 40), BL, [0, -.02, 1.08]),
+        ms(rr(.6, .32, .1, .3, .04), M(C.yellow), [-.45, .8, 0]), ms(new T.SphereGeometry(.09, 16, 12), M(C.red), [.68, .42, .52])], [0, 0, 0], [.1, -.55, 0]),
+      // AR glasses
+      grp([ms(rimG, M(C.red), [-.62, 0, 0]), ms(rimG, M(C.red), [.62, 0, 0]), ms(lensG, BL, [-.62, 0, 0]), ms(lensG, BL, [.62, 0, 0]),
+        ms(new T.CylinderGeometry(.06, .06, .34, 12), M(C.yellow), [0, .14, 0], [0, 0, Math.PI / 2]), ms(new T.BoxGeometry(.1, .1, 1.5), M(C.pink), [-1.1, .06, -.72]), ms(new T.BoxGeometry(.1, .1, 1.5), M(C.pink), [1.1, .06, -.72])], [0, 0, 0], [.15, -.45, 0])
+    ];
+    items.forEach(g => g.traverse(o => { if (o.material === BL) o.material = RB; })); // seen only through the glass, so the screens show the rainbow
+    // devices hidden around the headline and the ↓ button: [which item, anchor, dx, dy (px from the anchor), size px, tilt]
+    const SPOTS = [[0, 'tl', -40, 30, 115, .25], [1, 'tr', 90, 10, 120, -.15], [4, 'tc', 90, -26, 95, .15], [2, 'mid', -80, 10, 80, -.3],
+      [3, 'cl', -140, -6, 110, .2], [2, 'cr', 75, 25, 80, .3], [4, 'bl', -70, 70, 85, -.2], [0, 'br', 0, 60, 95, -.15], [3, 'trm', 10, 50, 75, -.3]];
+    const holders = SPOTS.map(([i, , , , , r]) => { const h = new T.Group(), g = new T.Group(); g.add(items[i].clone()); g.rotation.z = r; h.add(g); sc.add(h); return h; });
+    let W = 0, H = 0;
+    const size = () => { W = s1.clientWidth; H = s1.clientHeight; if (!W || !H) return; R3.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix();
+      const k = 2 * cam.position.z * Math.tan(15 * Math.PI / 180) / H, sr = s1.getBoundingClientRect(), rel = el => { const r = el.getBoundingClientRect(); return { l: r.left - sr.left, t: r.top - sr.top, r: r.right - sr.left, b: r.bottom - sr.top, w: r.width, h: r.height }; };
+      const t = rel(h3), le = rel(s1.querySelector('.lede')), c = rel(s1.querySelector('.cue'));
+      const A = { tl: [t.l, t.t + t.h * .3], tr: [t.r, t.t + t.h * .2], tc: [t.l + t.w * .55, t.t], mid: [t.l + t.w * .4, t.t + t.h * .55], trm: [t.r - t.w * .2, t.t + t.h * .6],
+        cl: [c.l, c.t + c.h / 2], cr: [c.r, c.t + c.h / 2], bl: [le.l, le.b], br: [le.r, le.b] };
+      SPOTS.forEach(([, a, dx, dy, px], n) => { const [x0, y0] = A[a], x = Math.min(W - px / 2, Math.max(px / 2, x0 + dx)), y = y0 + dy, h = holders[n];
+        h.position.set((x - W / 2) * k, -(y - H / 2) * k, 0); h.userData.y = h.position.y; h.scale.setScalar(px * k / 2.4); });
+      R3.render(sc, cam); };
+    // the magnifier asks for a fresh frame; the devices bob gently, they never turn
+    vp._devRender = () => { const tt = performance.now() / 1000; holders.forEach((h, n) => { h.position.y = h.userData.y + (RM ? 0 : Math.sin(tt * 1.3 + n) * .05); }); R3.render(sc, cam); };
+    const ro = new ResizeObserver(size); ro.observe(ld); size();
+    if (document.fonts) document.fonts.ready.then(size);
+    vp._cleanup.push(() => { ro.disconnect(); R3.dispose(); R3.forceContextLoss(); });
+  }
+
+  // A magnifying glass that follows the pointer over the first screen: it enlarges the gradient, the device and the words
+  let lensN = 0;
+  function lens(ld, vp) {
+    const hover = matchMedia('(hover: hover)').matches;
+    const s1 = ld.querySelector('.s1'), ZB = 1.35;
+    const fid = 'rip' + (++lensN);
+    ld.insertAdjacentHTML('beforeend', `<div class="lens" aria-hidden="true"><canvas></canvas><div class="lin"></div></div>
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="${fid}" x="0" y="0" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feImage preserveAspectRatio="none" x="0" y="0" result="m0"/><feGaussianBlur in="m0" stdDeviation="2.5" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></svg>`);
+    const flt = ld.querySelector('#' + fid), fim = flt.querySelector('feImage'), fdm = flt.querySelector('feDisplacementMap');
+    // ripple map: rings pushing outward from the middle of the glass, red = x shift, green = y shift
+    const MS = 128, mc = document.createElement('canvas'); mc.width = mc.height = MS; const mx2 = mc.getContext('2d'), img = mx2.createImageData(MS, MS);
+    const ripple = t => { let peak = 0; for (let j = 0; j < MS; j++) for (let i = 0; i < MS; i++) { const x = i / (MS - 1) * 2 - 1, y = j / (MS - 1) * 2 - 1, r = Math.hypot(x, y) + 1e-4; let w = 0;
+        for (const [tb, a] of [[.45, 1], [.85, .7]]) { const dt = t - tb; if (dt <= 0) continue; const front = dt * 2.2; if (r > front) continue;
+          w += a * Math.exp(-dt * 2.6) * Math.sin(r * 15 - dt * 20) * (1 - r / (front + .001)) ** .5 * Math.min(1, (1 - r) * 4 + .2); }
+        peak = Math.max(peak, Math.abs(w)); const o = (j * MS + i) * 4; img.data[o] = 128 + 127 * Math.max(-1, Math.min(1, w * x / r)); img.data[o + 1] = 128 + 127 * Math.max(-1, Math.min(1, w * y / r)); img.data[o + 2] = 128; img.data[o + 3] = 255; }
+      mx2.putImageData(img, 0, 0); fim.setAttribute('href', mc.toDataURL()); return peak; };
+    const el = ld.querySelector('.lens'), lc = el.querySelector('canvas'), ctx = lc.getContext('2d'), lin = el.querySelector('.lin');
+    let R = 90, mx = 0, my = 0, show = false, raf = 0, intro = false, played = false, zx = ZB, zy = ZB;
+    const build = () => { R = Math.round(Math.min(120, Math.max(70, (vp.clientHeight || 580) * .15))); el.style.setProperty('--lr', R + 'px');
+      [flt, fim].forEach(n => { n.setAttribute('width', 2 * R); n.setAttribute('height', 2 * R); });
+      const dpr = Math.min(2, devicePixelRatio || 1); lc.width = lc.height = 2 * R * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const c = s1.cloneNode(true); c.querySelectorAll('.dev,.deco').forEach(n => { n.style.visibility = 'hidden'; n.querySelectorAll('canvas').forEach(x => x.remove()); });
+      Object.assign(c.style, { position: 'absolute', left: '0', top: s1.offsetTop + 'px', width: ld.clientWidth + 'px', margin: '0' });
+      lin.style.width = ld.clientWidth + 'px'; lin.replaceChildren(c); };
+    // zx and zy can differ for a moment, which smears the words sideways like a drop of oil
+    const draw = () => { const sw = 2 * R / zx, sh = 2 * R / zy, x0 = mx - sw / 2, y0 = my - sh / 2;
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 2 * R, 2 * R);
+      const lq = ld.querySelector('canvas.liquid'); if (lq && lq.width) { const k = lq.width / ld.clientWidth; ctx.drawImage(lq, x0 * k, y0 * k, sw * k, sh * k, 0, 0, 2 * R, 2 * R); }
+      if (vp._devRender) vp._devRender(); const dc = ld.querySelector('.dev canvas'); if (dc && dc.width) { const lr = ld.getBoundingClientRect(), dr = dc.getBoundingClientRect(), k = dc.width / dr.width;
+        const sx = (x0 - (dr.left - lr.left)) * k, sy = (y0 - (dr.top - lr.top)) * k, ssx = sw * k, ssy = sh * k;
+        // clip the source to the canvas so every browser draws it
+        const cx0 = Math.max(0, sx), cy0 = Math.max(0, sy), cx1 = Math.min(dc.width, sx + ssx), cy1 = Math.min(dc.height, sy + ssy);
+        if (cx1 > cx0 && cy1 > cy0) { const fx = 2 * R / ssx, fy = 2 * R / ssy; ctx.drawImage(dc, cx0, cy0, cx1 - cx0, cy1 - cy0, (cx0 - sx) * fx, (cy0 - sy) * fy, (cx1 - cx0) * fx, (cy1 - cy0) * fy); } }
+      el.style.left = mx + 'px'; el.style.top = my + 'px';
+      // the magnified ↓ button slides in towards the middle of the glass
+      const cc = lin.querySelector('.cue'), rc = s1.querySelector('.cue'); if (cc && rc) { const lr = ld.getBoundingClientRect(), b = rc.getBoundingClientRect(), dx = mx - (b.left - lr.left + b.width / 2), dy = my - (b.top - lr.top + b.height / 2), d = Math.hypot(dx, dy), k = d < R * 1.1 ? .55 : 0;
+        cc.style.transform = `translate(${dx * k}px,${dy * k}px)${k ? ' scale(1.08)' : ''}`; }
+      lin.style.transform = `translate(${R - mx * zx}px,${R - my * zy}px) scale(${zx},${zy})`; };
+    const loop = () => { if (!show) return; draw(); raf = requestAnimationFrame(loop); };
+    // On load: the glass swells up over the middle of the headline, pulses twice like oil struck by two notes (rings ripple out through it), then shrinks away
+    const bump = (t, at, w) => { const x = (t - at) / w; return x > 0 && x < 1 ? Math.sin(x * Math.PI) : 0; };
+    const back = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+    const playIntro = () => { if (played || RM) return; played = true; intro = true; show = false; cancelAnimationFrame(raf);
+      const h3 = s1.querySelector('h3'), lr = ld.getBoundingClientRect(), hr = h3.getBoundingClientRect();
+      mx = hr.left - lr.left + hr.width / 2; my = hr.top - lr.top + hr.height / 2;
+      ld.classList.add('intro'); el.classList.add('on'); el.style.transition = 'none'; el.style.filter = `url(#${fid})`; const t0 = performance.now();
+      const step = now => { if (!intro) return; const t = (now - t0) / 1000;
+        const grow = t < .55 ? back(Math.min(1, t / .55)) : t < 1.45 ? 1 : Math.max(0, 1 - (t - 1.45) / .45) ** 2;
+        const p = bump(t, .5, .32) + .6 * bump(t, .9, .3);
+        el.style.scale = (1.35 * grow).toFixed(3); el.style.opacity = Math.min(1, grow * 2).toFixed(2);
+        const z = (1 + .45 * Math.min(1, t / .5)) / 1.35; zx = z * (1 + .3 * p); zy = z * (1 - .1 * p);
+        ripple(t); fdm.setAttribute('scale', (R * .34).toFixed(1));
+        draw();
+        if (t < 1.9) requestAnimationFrame(step);
+        else { intro = false; zx = zy = ZB; el.classList.remove('on'); el.style.transition = el.style.scale = el.style.opacity = el.style.filter = ''; fdm.setAttribute('scale', 0); ld.classList.remove('intro'); } };
+      requestAnimationFrame(step); };
+    vp._anims.push(v => { if (v) setTimeout(playIntro, 250); });
+    if (hover) {
+      vp.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || intro) return; const r = ld.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top;
+        const inS1 = my > s1.offsetTop && my < s1.offsetTop + s1.offsetHeight && !e.target.closest('.ld-top');
+        if (inS1 && !show) { show = true; el.classList.add('on'); cancelAnimationFrame(raf); loop(); }
+        else if (!inS1 && show) { show = false; el.classList.remove('on'); } });
+      vp.addEventListener('pointerleave', () => { if (intro) return; show = false; el.classList.remove('on'); });
+    }
+    const ro = new ResizeObserver(build); ro.observe(ld); build();
+    if (document.fonts) document.fonts.ready.then(build);
+    vp._cleanup.push(() => { show = false; intro = false; cancelAnimationFrame(raf); ro.disconnect(); });
+  }
+
+  function mount(vp) {
+    (vp._cleanup || []).forEach(f => f()); vp._cleanup = []; vp._anims = [];
+    vp.innerHTML = ''; vp.scrollTop = 0;
+    vp.appendChild(tpl.content.cloneNode(true));
+    const v = vp.dataset.v, D = DECO[v], ld = vp.querySelector('.ld'), s2 = vp.querySelector('.s2');
+    ld.classList.add(v);
+    ld.insertAdjacentHTML('afterbegin', D.bg || '');
+    const [d1, d2] = vp.querySelectorAll('.deco'); d1.innerHTML = D.s1 || ''; d2.innerHTML = D.s2 || '';
+    if (D.obj) vp.querySelectorAll('.obj').forEach((o, i) => o.innerHTML = D.obj[i]);
+    if (v === 'v-b') { vp.querySelector('h3').innerHTML = 'Where will<br>your<br><span class="mk">XR work</span><br>shine?'; liquid(ld, vp); devices(ld, vp); lens(ld, vp); }
+    if (v === 'v-c') { vp.querySelector('h3').innerHTML = 'There’s a world<br>for your<br><span class="mk">XR work</span>'; sky(ld, vp); vp._sky(true);
+      const ways = vp.querySelector('.ways'), ws = [...ways.querySelectorAll('.way')], os = ws.map(w => { const o = w.querySelector('.obj'); ways.appendChild(o); return o; });
+      const park = () => ws.forEach((w, i) => { os[i].style.top = (w.offsetTop + w.offsetHeight + 40) + 'px'; os[i].style.left = (i ? w.offsetLeft + w.offsetWidth - 104 : w.offsetLeft - 14) + 'px'; });
+      new ResizeObserver(park).observe(ways); park(); }
+    // pointer drift for the 3D objects
+    if (!RM) vp.addEventListener('pointermove', e => { const r = vp.getBoundingClientRect();
+      ld.style.setProperty('--px', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3)); ld.style.setProperty('--py', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3)); });
+    // the ↓ button glides to the two ways in
+    let slid = false, timer = 0;
+    const slide = force => { if (slid && !force) return; slid = true; clearTimeout(timer); vp.scrollTo({ top: s2.offsetTop, behavior: RM ? 'auto' : 'smooth' }); };
+    const stop = () => { if (!slid) { slid = true; clearTimeout(timer); } };
+    ['wheel','touchmove','keydown','pointerdown'].forEach(ev => vp.addEventListener(ev, e => { if (!e.target.closest('.cue')) stop(); }, { passive: true }));
+    vp.querySelector('.cue').addEventListener('click', () => slide(true));
+    vp._arm = () => {}; // no auto glide: the ↓ button takes you down
+    vp._disarm = () => { if (!slid) { clearTimeout(timer); timer = 0; } };
+  }
+
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    const vp = e.target;
+    if (vp._sky) vp._sky(e.isIntersecting);
+    (vp._anims || []).forEach(f => f(e.isIntersecting));
+    if (e.isIntersecting && e.intersectionRatio >= .6) vp._arm && vp._arm(); else vp._disarm && vp._disarm();
+  }), { threshold: [0, .6] });
+
+  const icon = {
+    replay:'<svg viewBox="0 0 16 16"><path d="M2.5 8a5.5 5.5 0 1 0 1.7-4"/><path d="M2.5 2.5v3h3"/></svg>',
+    full:'<svg viewBox="0 0 16 16"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg>',
+    close:'<svg viewBox="0 0 16 16"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>',
+    mode:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 0 0 0-11z" fill="currentColor"/></svg>'
+  };
+  function frame(v, mode, name, isFull) {
+    const f = document.createElement('div'); f.className = 'frame mode-' + mode + (isFull ? ' full' : '');
+    const vp = document.createElement('div'); vp.className = 'vp'; vp.dataset.v = v; vp.tabIndex = 0; vp.setAttribute('aria-label', name + ', ' + mode + ' mode');
+    const cap = document.createElement('div'); cap.className = 'cap';
+    cap.innerHTML = `<span>${isFull ? name + ' · ' : ''}${mode === 'light' ? 'Light' : 'Dark'}</span><button type="button" class="ic" data-a="replay" aria-label="Replay from the top" title="Replay from the top">${icon.replay}</button>` +
+      (isFull ? `<button type="button" class="ic" data-a="close" aria-label="Close full screen" title="Close">${icon.close}</button>`
+              : `<button type="button" class="ic" data-a="full" aria-label="Open ${name} ${mode} full screen" title="Full screen">${icon.full}</button>`);
+    f.append(vp, cap);
+    cap.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const a = b.dataset.a;
+      if (a === 'replay') { mount(vp); (vp._anims || []).forEach(f => f(true)); }
+      if (a === 'full') openFull(v, mode, name, b);
+      if (a === 'mode') { mode = mode === 'light' ? 'dark' : 'light'; f.className = 'frame full mode-' + mode; cap.querySelector('span').textContent = name + ' · ' + (mode === 'light' ? 'Light' : 'Dark'); if (vp._skyRead) vp._skyRead(); }
+      if (a === 'close') closeFull(); });
+    mount(vp);
+    return f;
+  }
+  document.querySelectorAll('.style').forEach(sec => { const pair = sec.querySelector('.pair');
+    ['light'].forEach(m => { const f = frame(sec.dataset.v, m, sec.dataset.name); pair.appendChild(f); io.observe(f.querySelector('.vp')); }); });
+
+  let full = null, back = null;
+  const esc = e => { if (e.key === 'Escape') closeFull(); };
+  function openFull(v, mode, name, from) {
+    back = from; full = frame(v, mode, name, true);
+    full.setAttribute('role', 'dialog'); full.setAttribute('aria-modal', 'true'); full.setAttribute('aria-label', name + ' full screen');
+    document.body.appendChild(full); document.body.style.overflow = 'hidden';
+    const vp = full.querySelector('.vp'); mount(vp); if (vp._sky) vp._sky(true); (vp._anims || []).forEach(f => f(true)); vp.focus(); vp._arm();
+    document.addEventListener('keydown', esc);
+  }
+  function closeFull() { if (!full) return; const vp = full.querySelector('.vp'); if (vp._sky) vp._sky(false); (vp._cleanup || []).forEach(f => f()); full.remove(); full = null; document.body.style.overflow = ''; document.removeEventListener('keydown', esc); if (back) back.focus(); }
+})();
+</script>
+
+</body>
+</html>
