@@ -145,9 +145,11 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 /* ---------- C. Starry Aurora: a warm night sky ---------- */
 .v-c{--n-night:#0e0b1e;--n-plum:#2a1430;--n-ink:#fdfcff;--n-muted:#e8e1f0;--n-amber:#ffb86b;--n-rose:#f49ab4;--n-teal:#5fe0b5;
   background:var(--n-night);color:var(--n-ink);font-family:"Archivo",sans-serif}
-.v-c canvas.aur,.v-c canvas.sky{position:absolute;left:0;top:0;width:100%;display:block;pointer-events:none}
-.v-c canvas.aur{z-index:-2;filter:blur(1.5px)}
-.v-c canvas.sky{z-index:-1}
+.v-c canvas.aur,.v-c canvas.aurbg,.v-c canvas.sky{position:absolute;left:0;top:0;width:100%;display:block;pointer-events:none}
+.v-c canvas.aurbg{z-index:-3;filter:blur(1.5px)}
+/* the curtains sit in front of the stars: the sky is drawn below the star canvas and the aurora on its own layer above it */
+.v-c canvas.aur{z-index:-1;filter:blur(1.5px)}
+.v-c canvas.sky{z-index:-2}
 .v-c .ld-logo{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.03em;font-stretch:112%}
 .v-c h3{line-height:1;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.035em;font-size:clamp(1.9rem,5vw,3.5rem);max-width:13ch;text-shadow:1px 1px 3px #0e0b1e}
 .v-c .mk{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.01em;font-size:1.22em;padding:0 .12em;text-shadow:none;
@@ -238,45 +240,52 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 
   const DECO = {
     'v-b': { bg: '<div class="orbs" aria-hidden="true"><canvas class="liquid"></canvas></div>', s1: '', s2: '' },
-    'v-c': { bg: '<canvas class="aur" aria-hidden="true"></canvas><canvas class="sky" aria-hidden="true"></canvas>', s1: '', s2: '' }
+    'v-c': { bg: '<canvas class="aurbg" aria-hidden="true"></canvas><canvas class="aur" aria-hidden="true"></canvas><canvas class="sky" aria-hidden="true"></canvas>', s1: '', s2: '' }
   };
 
   // Constellation: a warm night sky. An aurora drifts behind the headline, constellations draw themselves now and then,
   // and the pointer joins the stars it passes over.
   // The aurora is a real 3D sky: three curtains on a plane overhead, seen through a camera that tilts up as you scroll,
   // from a low view across the sky (top of the page) to looking straight up from right underneath (the two ways in).
-  const AUR = `precision mediump float;uniform vec2 r;uniform float t;uniform float w;uniform float S;uniform vec2 m0;uniform vec2 m1;uniform vec2 m2;uniform float g;uniform float ph;uniform float p;
-    vec3 look(vec2 q){float a=mix(.45,1.5708,p),k=.75;vec3 f=vec3(0.,cos(a),sin(a)),u=vec3(0.,-sin(a),cos(a));
+  const AUR = `precision mediump float;uniform vec2 r;uniform float t;uniform float w;uniform float S;uniform vec2 m0;uniform vec2 m1;uniform vec2 m2;uniform float g;uniform float ph;uniform float p;uniform float L;
+    vec3 look(vec2 q){float a=mix(.62,1.5708,p),k=.75;vec3 f=vec3(0.,cos(a),sin(a)),u=vec3(0.,-sin(a),cos(a));
       return normalize(f+vec3((q.x-w*.5)/S*2.*k,0.,0.)+u*(-(q.y-S*.5)/S*2.*k));}
     void main(){vec2 P=vec2(gl_FragCoord.x/r.x*w,(1.-gl_FragCoord.y/r.y)*S);vec3 d=look(P);float el=d.z;
       float br=.5+.5*sin(t*.7);
-      vec3 col=mix(vec3(.24,.095,.165),vec3(.055,.043,.118),smoothstep(-.12,.3+.04*br,el));
-      col+=vec3(.42,.17,.08)*(1.-smoothstep(-.15,.06+.03*br,el))*(.42+.14*br);
-      if(el>.01){float Yc=mix(-1.7,0.,p),calm=mix(1.,.4,p);
+      vec3 col=mix(vec3(.035,.03,.08),vec3(.055,.043,.118),smoothstep(-.2,.25,el));
+      // looking straight up, the sky opens into a deep dome: darker blue overhead, lighter blue towards the edges
+      vec2 R=vec2((P.x-w*.5)/max(w*.5,S*.55)*1.1,(P.y-S*.5)/S);float rr=dot(R,R),zp=smoothstep(.35,1.,p);
+      float ed=smoothstep(.05,1.1,rr);col=mix(col,mix(vec3(.035,.035,.1),vec3(.07,.085,.19),ed)*(.94+.06*br),zp);
+      vec3 A=vec3(0.);
+      if(L>.5&&el>.01){float Yc=mix(-1.7,0.,p),calm=mix(1.,.4,p);
         vec2 D=P-m0;float fall=exp(-dot(D,D)/80000.),fog=smoothstep(.0,.18,el);vec3 ac=vec3(0.);
         for(int i=0;i<3;i++){float fi=float(i),wi=1.;
           vec3 dm=look(i==0?m0:(i==1?m1:m2));vec2 Hm=dm.xy/max(dm.z,.08);Hm.y+=Yc;
           vec3 cc=i==0?vec3(.37,.88,.71):(i==1?vec3(.98,.5,.62):vec3(1.,.69,.4));
           // each curtain is a thin hanging sheet: sample it at rising heights so it stands up from a low view and fans out from straight below
-          for(int k=0;k<28;k++){float fk=float(k),z=1.+fk*mix(.05,.03,p);vec2 H=d.xy*z/el;H.y+=Yc;
-            float c=(-.5+fi*.5)*mix(1.7,1.,p)+calm*(.12*sin(H.x*1.3+t*.21+ph+fi*1.9)+.05*sin(H.x*3.1-t*.29+ph*1.6+fi*2.7))+.015*sin(H.x*7.-t*.45+fi);
+          for(int k=0;k<28;k++){float fk=float(k),z=1.+fk*mix(.085,.03,p);vec2 H=d.xy*z/el;H.y+=Yc;
+            float c=(-.5+fi*.5)*mix(2.1,1.,p)+calm*(.12*sin(H.x*1.3+t*.21+ph+fi*1.9)+.05*sin(H.x*3.1-t*.29+ph*1.6+fi*2.7))+.015*sin(H.x*7.-t*.45+fi);
             float pull=exp(-pow((H.x-Hm.x)/.7,2.))*g*wi*.42;c+=clamp(Hm.y-c,-.3,.3)*clamp(pull,-.3,.42)*.55;
             // far off and at the sides the perspective squeezes the rays into thin streaks, so there the sheet is softer and the rays fade out
             float far=1./max(el,.05),clr=smoothstep(.04,.3,el)*exp(-H.x*H.x*.9);
-            float dd=H.y-c,sheet=exp(-dd*dd/(mix(.012,.0012,p)*(1.+far*.5+abs(H.x)*.8)));
+            float dd=H.y-c,sheet=exp(-dd*dd/(mix(.0075,.0012,p)*(1.+far*.5+abs(H.x)*.8)));
             float rays=.66+clr*.3*sin(H.x*26.+5.*sin(H.x*4.+t*.3+ph+fi*2.)+fi*3.)+clr*.08*sin(H.x*61.+t*.4+fi);
             float fade=.35+.65*smoothstep(-.3,1.,sin(H.x*1.6+t*.15+fi*2.3));
-            ac+=mix(cc,vec3(.78,.45,.86),fk/27.*.6)*sheet*rays*fade*exp(-fk*.095)*mix(1.,.4,p)*(i==0?.2:.24)*(1.+.4*fall*max(g,0.)*wi);}}
-        col+=ac*fog;}
-      gl_FragColor=vec4(col,1.);}`;
+            ac+=mix(cc,vec3(.78,.45,.86),fk/27.*.6)*sheet*rays*fade*exp(-fk*mix(.06,.095,p))*mix(1.3,.4,p)*(i==0?.2:.24)*(1.+.4*fall*max(g,0.)*wi);}}
+        A=ac*fog;}
+      // L=0 draws the sky; L=1 draws only the curtains, premultiplied, so they cover the stars where they glow
+      if(L>.5){float al=clamp(max(A.r,max(A.g,A.b))*1.6,0.,1.);gl_FragColor=vec4(A,al);}else gl_FragColor=vec4(col,1.);}`;
   function sky(ld, vp) {
     const cv = ld.querySelector('canvas.sky'), ctx = cv.getContext('2d'), ac = ld.querySelector('canvas.aur');
-    const gl = ac && ac.getContext('webgl', { antialias: false, preserveDrawingBuffer: true }); let prog = null, uR, uT, uS, uW, uM, uG, uP, uPh;
-    if (gl) { const sh = (ty, src) => { const o = gl.createShader(ty); gl.shaderSource(o, src); gl.compileShader(o); return o; };
-      prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}')); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, AUR)); gl.linkProgram(prog); gl.useProgram(prog);
+    const bc = ld.querySelector('canvas.aurbg');
+    const mkGL = (c, L) => { const gl = c && c.getContext('webgl', { antialias: false, preserveDrawingBuffer: true, premultipliedAlpha: true }); if (!gl) return null;
+      const sh = (ty, src) => { const o = gl.createShader(ty); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+      const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}')); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, AUR)); gl.linkProgram(prog); gl.useProgram(prog);
       gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
       const a = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
-      uR = gl.getUniformLocation(prog, 'r'); uT = gl.getUniformLocation(prog, 't'); uW = gl.getUniformLocation(prog, 'w'); uM = [0, 1, 2].map(k => gl.getUniformLocation(prog, 'm' + k)); uG = gl.getUniformLocation(prog, 'g'); uPh = gl.getUniformLocation(prog, 'ph'); uS = gl.getUniformLocation(prog, 'S'); uP = gl.getUniformLocation(prog, 'p'); }
+      const u = n => gl.getUniformLocation(prog, n); gl.uniform1f(u('L'), L);
+      return { gl, c, R: u('r'), T: u('t'), W: u('w'), M: [0, 1, 2].map(k => u('m' + k)), G: u('g'), Ph: u('ph'), S: u('S'), P: u('p') }; };
+    const gls = [mkGL(bc, 0), mkGL(ac, 1)].filter(Boolean), gl = gls.length > 0;
     const grid = document.createElement('canvas');
     const TINTS = ['255,244,227', '255,226,190', '255,205,170', '250,196,214', '214,236,255'];
     let W = 0, H = 0, stars = [], bright = [], keep = [], cons = [], links = [], pick = null, ptr = null, nextCon = 0, raf = 0, act = 0, spd = 0, gv = 0, mx = 0, my = 0, vxs = 0, ph = 0, mp = [[0, 0], [0, 0], [0, 0]], on = false, vh = 0, s2top = 1, cam = 0;
@@ -287,12 +296,13 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     const build = () => { const r = ld.getBoundingClientRect(); W = r.width; H = ld.scrollHeight; if (!W || !H) return; const dpr = Math.min(2, devicePixelRatio || 1);
       cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + 'px'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       vh = vp.clientHeight; const s2 = ld.querySelector('.s2'); s2top = s2 ? s2.offsetTop : 1;
-      if (gl) { ac.width = Math.ceil(W / 2); ac.height = Math.ceil(vh / 2); ac.style.height = vh + 'px'; gl.viewport(0, 0, ac.width, ac.height); }
+      gls.forEach(o => { o.c.width = Math.ceil(W / 2); o.c.height = Math.ceil(vh / 2); o.c.style.height = vh + 'px'; o.gl.viewport(0, 0, o.c.width, o.c.height); });
       // keep constellations clear of the copy and the buttons
       keep = [...ld.querySelectorAll('h3, .lede, .cue, .go')].map(e => { const b = e.getBoundingClientRect(); return [b.left - r.left - 28, b.top - r.top - 28, b.right - r.left + 28, b.bottom - r.top + 28]; });
       const clear = (x, y) => !keep.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
-      seed = 11; stars = []; const n = Math.round(W * H / 2400);
-      for (let i = 0; i < n; i++) { const big = rnd() < .09, x = Math.round(rnd() * W / 9) * 9, y = Math.round(rnd() * H / 9) * 9;
+      seed = 11; stars = []; const n = Math.round(W * H / 2100);
+      // sparse near the top of the page, denser down towards the buttons
+      for (let i = 0; i < n; i++) { const big = rnd() < .09, x = Math.round(rnd() * W / 9) * 9, y = Math.round(H * (rnd() < .3 ? rnd() : Math.pow(rnd(), .6)) / 9) * 9;
         stars.push({ x, y, r: big ? 1.3 + rnd() * 1.1 : .35 + rnd() * .8, t: Math.floor(rnd() * TINTS.length), ph: rnd() * 6.28, sp: .6 + rnd() * 1.6, big, ok: big && clear(x, y) }); }
       if (!mx) { mx = W / 2; my = vh * .3; mp.forEach(q => { q[0] = mx; q[1] = my; }); } bright = stars.filter(s => s.ok); cons = []; links = []; pick = null; nextCon = 0; draw(); };
     // pick a chain of 4 to 6 nearby bright stars that no other constellation is using
@@ -313,8 +323,8 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         // each curtain trails the pointer at its own pace: the nearest quickest, the farthest slowest
         if (ptr) mp.forEach((q, k) => { const rt = [.03, .017, .009][k]; q[0] += (ptr.x - q[0]) * rt; q[1] += (ptr.y - q[1]) * rt; }); }
       // the aurora stays in view while the page scrolls; the camera tilts up as you go down
-      const st = vp.scrollTop; ac.style.top = st + 'px'; const pt = Math.max(0, Math.min(1, st / s2top)), e = pt * pt * (3 - 2 * pt); cam += (e - cam) * (RM ? 1 : .2);
-      if (gl) { gl.uniform2f(uR, ac.width, ac.height); gl.uniform1f(uT, tt); gl.uniform1f(uW, W); gl.uniform1f(uS, vh); mp.forEach((q, k) => gl.uniform2f(uM[k], q[0], q[1] - st)); gl.uniform1f(uP, cam); gl.uniform1f(uG, gv); gl.uniform1f(uPh, ph); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }
+      const st = vp.scrollTop; ac.style.top = bc.style.top = st + 'px'; const pt = Math.max(0, Math.min(1, st / s2top)), e = pt * pt * (3 - 2 * pt); cam += (e - cam) * (RM ? 1 : .2);
+      gls.forEach(({ gl, c, R, T, W: Wu, M, G, Ph, S, P }) => { gl.uniform2f(R, c.width, c.height); gl.uniform1f(T, tt); gl.uniform1f(Wu, W); gl.uniform1f(S, vh); mp.forEach((q, k) => gl.uniform2f(M[k], q[0], q[1] - st)); gl.uniform1f(P, cam); gl.uniform1f(G, gv); gl.uniform1f(Ph, ph); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); });
       // a dense array of faint dots shows around the pointer
       if (ptr && act > .02) { const G = 9, GR = 115, S = GR * 2, ox = ptr.x - GR, oy = ptr.y - GR, gx = grid.getContext('2d');
         if (grid.width !== S) grid.width = grid.height = S;
