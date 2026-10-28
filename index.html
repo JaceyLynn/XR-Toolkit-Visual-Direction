@@ -192,20 +192,34 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 .v-m h3{font-family:"FA-1","Hauora Sans",sans-serif;font-weight:400;letter-spacing:-.02em;font-size:clamp(1.6rem,3.6vw,2.75rem);max-width:none;text-shadow:0 1px 18px rgba(30,32,140,.55)}
 .v-m .mk{font-family:"FA-1",monospace;font-weight:400;letter-spacing:0;word-spacing:0;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.16em}
 /* a monospace space is as wide as a letter, so the gap in "XR Work" is pulled in */
-.v-m .cue{margin-top:2px;width:48px;height:48px;color:var(--m-ink);border:1px solid rgba(255,255,255,.7);border-radius:50%;transition:background .3s,color .3s}
-.v-m .cue:hover{background:#fff;color:var(--m-sky)}
+.v-m .cue{margin-top:2px;width:48px;height:48px;color:var(--m-ink);border:1px solid rgba(255,255,255,.7);border-radius:50%;position:relative;overflow:hidden;isolation:isolate;transition:border-color .6s,box-shadow .8s}
+/* hover on ↓ is a small sunrise: the sky inside the circle warms from the bottom and a coral sun rises over the horizon */
+.v-m .cue::before,.v-m .cue::after{content:"";position:absolute;pointer-events:none;z-index:-1}
+.v-m .cue::after{inset:0;background:linear-gradient(0deg,rgba(255,150,110,.75),rgba(255,190,150,.32) 45%,rgba(255,255,255,0) 80%);opacity:0;transition:opacity .9s ease}
+.v-m .cue::before{left:50%;bottom:0;width:70px;height:70px;margin-left:-35px;border-radius:50%;background:radial-gradient(circle,#ffc9a0 0,#ffa178 40%,#ff7f5c 68%);box-shadow:0 0 18px 4px rgba(255,140,100,.55);transform:translateY(calc(100% - 6px));transition:transform 1.1s cubic-bezier(.2,.75,.2,1)}
+.v-m .cue:hover,.v-m .cue:focus-visible,.v-m .cuerow.on .cue{border-color:#ffc2a6;box-shadow:0 0 26px rgba(255,127,92,.45)}
+.v-m .cue:hover::after,.v-m .cue:focus-visible::after,.v-m .cuerow.on .cue::after{opacity:1}
+.v-m .cue:hover::before,.v-m .cue:focus-visible::before,.v-m .cuerow.on .cue::before{transform:translateY(11px)}
+.v-m .cue b{position:relative;z-index:1;text-shadow:0 0 6px rgba(200,70,40,.45)}
 /* as in Starry Aurora, a short line appears to the right of the ↓ when you hover it */
 .v-m .cuerow{display:flex;align-items:center;gap:16px}
 .v-m .cuerow .lede{font-size:.9rem;line-height:1.45;letter-spacing:.005em;max-width:none;margin:0;opacity:0;transform:translateX(-6px);transition:opacity .35s,transform .35s;pointer-events:none;text-shadow:0 1px 12px rgba(30,32,140,.5)}
 .v-m .cue:hover+.lede,.v-m .cue:focus-visible+.lede,.v-m .cuerow.on .lede{opacity:1;transform:none}
-.v-m .cuerow.on .cue{background:#fff;color:var(--m-sky)}
 .v-m .mk{cursor:pointer}.v-m .mk:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:2px}
-.v-m .ways{width:min(820px,100%);gap:64px 120px}
+.v-m .ways{width:auto;max-width:100%;grid-template-columns:repeat(2,max-content);justify-content:center;gap:56px clamp(40px,9vw,120px)}
+@media (max-width:760px){ .v-m .ways{grid-template-columns:max-content} }
 .v-m .go{position:relative;padding:10px 2px;font-family:"FA-1",monospace;font-weight:400;font-size:clamp(.9rem,1.4vw,1.02rem);letter-spacing:.01em;color:var(--m-ink);text-transform:uppercase;text-shadow:0 1px 12px rgba(30,32,140,.6)}
 /* only the first word is underlined; on hover the whole label is */
-.v-m .go .u,.v-m .go:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:7px}
-.v-m .go{transition:color .25s}
-.v-m .go:hover,.v-m .go:focus-visible{color:#ff7f5c}
+.v-m .go{position:relative}
+/* the underline is a thin line with a soft sunrise light shining up from it into the letters; under the first word at rest, the whole label on hover */
+.v-m .go::after{content:"";position:absolute;left:2px;bottom:2px;width:var(--uw,40%);height:28px;border-bottom:1px solid #fff;background:radial-gradient(ellipse 62% 100% at 50% 100%,rgba(255,150,110,.5),rgba(255,170,130,.16) 50%,rgba(255,190,150,0) 78%);pointer-events:none;transition:width .6s cubic-bezier(.2,.75,.2,1),border-color .6s}
+.v-m .go:hover::after,.v-m .go:focus-visible::after{width:calc(100% - 4px);border-color:#ffb08a}
+/* the two ways in share the ↓ sunrise: on hover a coral-to-peach gradient rises up through the letters */
+.v-m .go{background:linear-gradient(0deg,#ff7f5c 0%,#ff7f5c 16%,#ffab82 25%,#ffe2cb 34%,#fff 48%,#fff 100%);background-size:100% 200%;background-position:0 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 1px 8px rgba(30,32,140,.55));transition:background-position .9s cubic-bezier(.2,.75,.2,1)}
+.v-m .go:hover,.v-m .go:focus-visible{background-position:0 100%}
+
+.v-m .go{transition:color .25s;white-space:nowrap}
+
 
 /* ---------- full screen view ---------- */
 .full{position:fixed;inset:0;z-index:20;display:grid;grid-template-rows:minmax(0,1fr) auto;background:var(--bg);border:0;border-radius:0}
@@ -764,7 +778,9 @@ precision mediump float;
         const mk = s1.querySelector('.mk'); mk.setAttribute('role', 'button'); mk.tabIndex = 0; mk.setAttribute('aria-label', 'XR Work: scroll down to the two ways in');
         const hi = v => row.classList.toggle('on', v); ['pointerenter', 'focus'].forEach(ev => mk.addEventListener(ev, () => hi(true))); ['pointerleave', 'blur'].forEach(ev => mk.addEventListener(ev, () => hi(false)));
         mk.addEventListener('click', () => cu.click()); mk.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cu.click(); } }); }
-      vp.querySelectorAll('.go').forEach(g => { const [w0, ...rest] = g.textContent.split(' '); g.innerHTML = `<span class="u">${w0}</span> ${rest.join(' ')}`; }); flock(ld, vp); }
+      vp.querySelectorAll('.go').forEach(g => { const [w0, ...rest] = g.textContent.split(' '); g.innerHTML = `<span class="u">${w0}</span> ${rest.join(' ')}`; });
+      { const gs = vp.querySelectorAll('.go'), uw = () => gs.forEach(g => g.style.setProperty('--uw', g.querySelector('.u').offsetWidth + 'px'));
+        document.fonts.ready.then(uw); new ResizeObserver(uw).observe(ld); } flock(ld, vp); }
     // pointer drift for the 3D objects
     if (!RM) vp.addEventListener('pointermove', e => { const r = vp.getBoundingClientRect();
       ld.style.setProperty('--px', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3)); ld.style.setProperty('--py', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3)); });
