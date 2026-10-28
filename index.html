@@ -152,9 +152,9 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 .v-c h3{line-height:1;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.035em;font-size:clamp(1.9rem,5vw,3.5rem);max-width:13ch;text-shadow:1px 1px 3px #0e0b1e}
 .v-c .mk{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.01em;font-size:1.22em;padding:0 .12em;text-shadow:none;
   color:transparent;-webkit-background-clip:text;background-clip:text;background-image:linear-gradient(100deg,#a8f4ff,#b4c4ff 55%,#e2ccff)}
-/* font pairing: Nova Square for the headline; Panamera (embedded below the page fonts) for the accent and the two ways in */
+/* font pairing: Nova Square for the headline and its gradient accent; Panamera (embedded below the page fonts) for the lede and the two ways in */
 .v-c h3{font-family:"Nova Square","Archivo",sans-serif;font-weight:400;font-stretch:100%;letter-spacing:.01em}
-.v-c .mk{font-family:"Panamera","Instrument Serif",Georgia,serif;font-style:normal;font-weight:200;filter:drop-shadow(1px 1px 1.5px #0e0b1e)}
+.v-c .mk{font-family:"Nova Square","Archivo",sans-serif;font-style:normal;font-weight:400;font-size:1em;letter-spacing:.01em;padding:0;filter:drop-shadow(1px 1px 1.5px #0e0b1e)}
 /* the lede waits under the ↓ and appears when you hover it */
 .v-c .s1>.lede{font-family:"Panamera",sans-serif;font-size:.82rem;letter-spacing:.01em;max-width:none;margin-top:-6px;opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s;pointer-events:none}
 .v-c .cue:hover+.lede,.v-c .cue:focus-visible+.lede{opacity:1;transform:none}
@@ -189,7 +189,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 
   <section class="style" id="constellation" data-v="v-c" data-name="Starry Aurora">
     <div class="spec">
-      <div><span class="label">From Theme C</span><h2>Starry Aurora</h2><p>A warm night sky. The aurora gathers and spreads as you move, and constellations draw themselves.</p></div>
+      <div><span class="label">From Theme C</span><h2>Starry Aurora</h2><p>A warm night sky seen from below. As you scroll, the view tilts up until the aurora is overhead and the two ways in sit between its curtains. The aurora bends toward your pointer, and constellations start drawing themselves as soon as the page opens.</p></div>
       <div><span class="label">Main elements</span><ul class="els"><li>Warm night sky with a 3D aurora that turns overhead as you scroll</li><li>Dot grid and an aurora that follows your pointer</li><li>Constellations that form on their own or as you join stars</li><li>Nova Square and Panamera type</li></ul></div>
       <div><span class="label">Colour palette</span><div class="sw">
         <div><i style="--l:#0e0b1e"></i><b>Night · ground</b>#0E0B1E</div>
@@ -297,9 +297,13 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       if (!mx) { mx = W / 2; my = vh * .3; mp.forEach(q => { q[0] = mx; q[1] = my; }); } bright = stars.filter(s => s.ok); cons = []; links = []; pick = null; nextCon = 0; draw(); };
     // pick a chain of 4 to 6 nearby bright stars that no other constellation is using
     const newCon = now => { const used = new Set(cons.flatMap(c => c.pts)), free = bright.filter(s => !used.has(s)); if (free.length < 6) return;
-      const pts = [free[Math.floor(Math.random() * free.length)]], want = 4 + Math.floor(Math.random() * 3);
-      while (pts.length < want) { const l = pts[pts.length - 1], nx = free.filter(s => !pts.includes(s)).map(s => [s, Math.hypot(s.x - l.x, s.y - l.y)]).filter(([, d]) => d > 34 && d < 150).sort((a, b) => a[1] - b[1])[0]; if (!nx) break; pts.push(nx[0]); }
-      if (pts.length < 3) return; cons.push({ pts, born: now }); };
+      // start in the part of the sky that is on screen, so the visitor sees it draw; try a few starts until one makes a chain
+      const st = vp.scrollTop, seen = free.filter(s => s.y > st + 30 && s.y < st + vh - 30), from = (seen.length ? seen : free).slice().sort(() => Math.random() - .5);
+      let best = [];
+      for (const s0 of from.slice(0, 14)) { const pts = [s0], want = 4 + Math.floor(Math.random() * 3);
+        while (pts.length < want) { const l = pts[pts.length - 1], nx = free.filter(s => !pts.includes(s)).map(s => [s, Math.hypot(s.x - l.x, s.y - l.y)]).filter(([, d]) => d > 34 && d < 190).sort((a, b) => a[1] - b[1])[0]; if (!nx) break; pts.push(nx[0]); }
+        if (pts.length > best.length) best = pts; if (best.length >= 4) break; }
+      if (best.length < 3) return; cons.push({ pts: best, born: now }); };
     const draw = () => { if (!W) return; const now = performance.now() / 1000, tt = RM ? 20 : now;
       ctx.clearRect(0, 0, W, H);
       if (!RM) { act *= .985; spd *= .85;
@@ -322,7 +326,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         mg.addColorStop(0, 'rgba(0,0,0,1)'); mg.addColorStop(.45, 'rgba(0,0,0,.45)'); mg.addColorStop(1, 'rgba(0,0,0,0)'); gx.fillStyle = mg; gx.fillRect(0, 0, S, S);
         ctx.globalAlpha = .4 * act; ctx.drawImage(grid, ox, oy); ctx.globalAlpha = 1; }
       // constellations that draw themselves: each line grows in turn, the name appears, then it all fades
-      if (!RM && now > nextCon && cons.length < 3) { newCon(now); nextCon = now + 2.2 + Math.random() * 1.6; }
+      if (!RM && on && now > nextCon && cons.length < 3) { const first = !nextCon; newCon(now); if (first) newCon(now + .9); nextCon = now + (first ? 3.2 : 2.2 + Math.random() * 1.6); }
       if (RM && !cons.length) newCon(now);
       cons = cons.filter(c => RM || now - c.born < 6);
       ctx.lineCap = 'round';
