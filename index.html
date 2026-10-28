@@ -147,7 +147,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 @media (max-width:720px){ .v-b .way{margin-top:56px} }
 
 /* ---------- C. Starry Aurora: a warm night sky ---------- */
-.v-c{--n-night:#0e0b1e;--n-plum:#2a1430;--n-ink:#fdfcff;--n-muted:#e8e1f0;--n-amber:#ffb86b;--n-rose:#f49ab4;--n-teal:#5fe0b5;
+.v-c{--n-night:#14143a;--n-plum:#2a1430;--n-ink:#fdfcff;--n-muted:#e8e1f0;--n-amber:#ffb86b;--n-rose:#f49ab4;--n-teal:#5fe0b5;
   background:var(--n-night);color:var(--n-ink);font-family:"Archivo",sans-serif}
 .v-c canvas.aur,.v-c canvas.aurbg,.v-c canvas.sky{position:absolute;left:0;top:0;width:100%;display:block;pointer-events:none}
 .v-c canvas.aurbg{z-index:-3;filter:blur(1.5px)}
@@ -234,10 +234,10 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     <h1>Visual style direction</h1>
   </header>
 
-  <section class="style" id="murmuration" data-v="v-m" data-name="Murmuration">
+  <section class="style" id="murmuration" data-v="v-m" data-name="Murmuration at sunrise">
     <div class="spec">
-      <div><h2>Murmuration</h2><p>A Savoy blue to soft purple sky with clouds drifting down, and a 3D flock of flat dots in warm white and dusty plum with a few sunrise coral sparks. At rest the flock swirls like starlings at dusk. Hover over the first screen and it gathers into a great egret seen from below that flaps, glides and turns as it follows you, while the coral sparks flicker across its wings. Lower down, the flock circles whichever way in you point at.</p></div>
-      <div><span class="label">Main elements</span><ul class="els"><li>3D flock of white and plum dots that moves like a murmuration</li><li>Hover to gather the flock into a flying great egret, with flickering coral sparks</li><li>The flock circles a button on hover, and the button turns coral</li><li>Clouds drifting down, as if the flock is climbing</li><li>Dot array around the pointer, and a short line beside ↓ on hover</li><li>FA-1 title and buttons, Hauora Sans text</li></ul></div>
+      <div><h2>Murmuration at sunrise</h2><p>A Savoy blue to soft purple sky with clouds drifting down, their undersides lit faint coral, and a 3D flock of flat dots in warm white and dusty plum with a few sunrise coral sparks. At rest the flock swirls like starlings at dusk. Hover over the first screen and it gathers into a great egret seen from below that flaps, glides and turns as it follows you, while the coral sparks flicker across its wings. Lower down, the flock circles whichever way in you point at.</p></div>
+      <div><span class="label">Main elements</span><ul class="els"><li>3D flock of white and plum dots that moves like a murmuration</li><li>Hover to gather the flock into a flying great egret, with flickering coral sparks</li><li>The ↓ and the two ways in light up like a sunrise on hover, and the flock circles the button</li><li>Clouds drifting down, as if the flock is climbing</li><li>Dot array around the pointer, and a short line beside ↓ on hover</li><li>FA-1 title and buttons, Hauora Sans text</li></ul></div>
       <div><span class="label">Colour palette</span><div class="sw">
         <div><i style="--l:#4b61d1"></i><b>Savoy blue · top</b>#4B61D1</div>
         <div><i style="--l:#7360d0"></i><b>Soft purple · lower</b>#7360D0</div>
@@ -251,16 +251,14 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
   </section>
   <section class="style" id="constellation" data-v="v-c" data-name="Starry Aurora">
     <div class="spec">
-      <div><h2>Starry Aurora</h2><p>A warm night sky seen from below. As you scroll, the view tilts up until the aurora is overhead and the two ways in sit between its curtains. The aurora bends toward your pointer, and constellations start drawing themselves as soon as the page opens.</p></div>
-      <div><span class="label">Main elements</span><ul class="els"><li>Warm night sky with a 3D aurora that turns overhead as you scroll</li><li>Dot grid and an aurora that follows your pointer</li><li>Constellations that form on their own or as you join stars</li><li>Nova Square and Panamera type</li></ul></div>
+      <div><h2>Starry Aurora</h2><p>A warm, deep blue night sky seen from below. As you scroll, the view tilts up until the aurora is overhead and the two ways in sit between its curtains. The aurora bends toward your pointer, and constellations start drawing themselves as soon as the page opens.</p></div>
+      <div><span class="label">Main elements</span><ul class="els"><li>Warm deep blue night sky with a 3D aurora that turns overhead as you scroll</li><li>Dot grid and an aurora that follows your pointer</li><li>Constellations that form on their own or as you join stars</li><li>Nova Square and Panamera type</li></ul></div>
       <div><span class="label">Colour palette</span><div class="sw">
-        <div><i style="--l:#0e0b1e"></i><b>Night · ground</b>#0E0B1E</div>
-        <div><i style="--l:#2a1430"></i><b>Dusk plum · horizon</b>#2A1430</div>
+        <div><i style="--l:#14143a"></i><b>Warm night blue · sky</b>#14143A</div>
         <div><i style="--l:#fdfcff"></i><b>Starlight · text</b>#FDFCFF</div>
-        <div><i style="--l:#e8e1f0"></i><b>Haze · muted text</b>#E8E1F0</div>
-        <div><i style="--l:#ffb86b"></i><b>Ember · action</b>#FFB86B</div>
-        <div><i style="--l:#f49ab4"></i><b>Rose · action</b>#F49AB4</div>
-        <div><i style="--l:#5fe0b5"></i><b>Aurora teal · action</b>#5FE0B5</div>
+        <div><i style="--l:#ffb86b"></i><b>Ember · aurora, action</b>#FFB86B</div>
+        <div><i style="--l:#f49ab4"></i><b>Rose · aurora, action</b>#F49AB4</div>
+        <div><i style="--l:#5fe0b5"></i><b>Aurora teal · aurora, action</b>#5FE0B5</div>
         <div><i style="--l:#a8f4ff;--d:#e2ccff"></i><b>Ice · accent</b>#A8F4FF → #E2CCFF</div>
       </div></div>
     </div>
@@ -313,10 +311,10 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       return normalize(f+vec3((q.x-w*.5)/S*2.*k,0.,0.)+u*(-(q.y-S*.5)/S*2.*k));}
     void main(){vec2 P=vec2(gl_FragCoord.x/r.x*w,(1.-gl_FragCoord.y/r.y)*S);vec3 d=look(P);float el=d.z;
       float br=.5+.5*sin(t*.7);
-      vec3 col=mix(vec3(.035,.03,.08),vec3(.055,.043,.118),smoothstep(-.2,.25,el));
+      vec3 col=mix(vec3(.085,.065,.19),vec3(.075,.08,.22),smoothstep(-.2,.25,el));
       // looking straight up, the sky opens into a deep dome: darker blue overhead, lighter blue towards the edges
       vec2 R=vec2((P.x-w*.5)/max(w*.5,S*.55)*1.1,(P.y-S*.5)/S);float rr=dot(R,R),zp=smoothstep(.35,1.,p);
-      float ed=smoothstep(.05,1.1,rr);col=mix(col,mix(vec3(.035,.035,.1),vec3(.07,.085,.19),ed)*(.94+.06*br),zp);
+      float ed=smoothstep(.05,1.1,rr);col=mix(col,mix(vec3(.06,.06,.18),vec3(.12,.1,.27),ed)*(.94+.06*br),zp);
       vec3 A=vec3(0.);
       if(L>.5&&el>.01){float Yc=mix(-1.7,0.,p),calm=mix(1.,.4,p);
         vec2 D=P-m0;float fall=exp(-dot(D,D)/80000.),fog=smoothstep(.0,.18,el);vec3 ac=vec3(0.);
