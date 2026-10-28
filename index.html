@@ -203,6 +203,8 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 .v-m .cue b{position:relative;z-index:1;text-shadow:0 0 6px rgba(200,70,40,.45)}
 /* as in Starry Aurora, a short line appears to the right of the ↓ when you hover it */
 .v-m .cuerow{display:flex;align-items:center;gap:16px}
+.v-m .cue{flex:none}
+.v-m h3{line-height:1.16}.v-m .mk{text-underline-offset:.2em}
 .v-m .cuerow .lede{font-size:.9rem;line-height:1.45;letter-spacing:.005em;max-width:none;margin:0;opacity:0;transform:translateX(-6px);transition:opacity .35s,transform .35s;pointer-events:none;text-shadow:0 1px 12px rgba(30,32,140,.5)}
 .v-m .cue:hover+.lede,.v-m .cue:focus-visible+.lede,.v-m .cuerow.on .lede{opacity:1;transform:none}
 .v-m .mk{cursor:pointer}.v-m .mk:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:2px}
@@ -225,6 +227,8 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 .full{position:fixed;inset:0;z-index:20;display:grid;grid-template-rows:minmax(0,1fr) auto;background:var(--bg);border:0;border-radius:0}
 .full .vp{--fh:calc(100vh - 40px);height:100%}
 .full .cap{padding-bottom:max(4px,env(safe-area-inset-bottom,0px));padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+/* Murmuration on phones: a little more air between the headline lines and smaller one-line buttons */
+@media (max-width:520px){ .v-m h3{line-height:1.32} .v-m .s1{gap:22px} .v-m .go{font-size:.84rem;letter-spacing:0;padding:12px 2px} .v-m .ways{gap:48px} .v-m .cuerow .lede{font-size:.82rem} }
 </style>
 </head>
 <body>
