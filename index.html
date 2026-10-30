@@ -1,9 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Visual Style Direction</title>
+<title>Starry Aurora Landing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Outfit:wght@400;500;600;700&family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Serif:ital@0;1&family=Nova+Square&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -56,6 +53,11 @@ header.top p{margin:0;color:var(--muted)}
 .sw div{display:grid;gap:3px;font:400 11px/1.3 var(--f-mono);color:var(--muted)}
 .sw i{display:block;height:34px;border-radius:17px;border:1px solid var(--line);background:linear-gradient(90deg,var(--l) 50%,var(--d,var(--l)) 50%)}
 .sw b{font-weight:500;color:var(--fg)}
+.palpick{display:flex;flex-wrap:wrap;gap:8px}
+.palpick button{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 8px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--fg);font:500 13px/1 var(--f-ui);cursor:pointer}
+.palpick button span{display:inline-flex}
+.palpick button i{width:12px;height:12px;border-radius:50%;margin-right:-3px;border:1px solid rgba(0,0,0,.15)}
+.palpick button[aria-pressed="true"]{border-color:var(--fg);box-shadow:inset 0 0 0 1px var(--fg)}
 .pair{display:grid;gap:18px}
 .frame{border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0;background:var(--bg)}
 .cap{display:flex;align-items:center;gap:4px;padding:4px 6px 4px 12px;border-top:1px solid var(--line);font:400 11px var(--f-mono);color:var(--muted)}
@@ -147,7 +149,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 @media (max-width:720px){ .v-b .way{margin-top:56px} }
 
 /* ---------- C. Starry Aurora: a warm night sky ---------- */
-.v-c{--n-night:#14143a;--n-plum:#2a1430;--n-ink:#fdfcff;--n-muted:#e8e1f0;--n-amber:#ffb86b;--n-rose:#f49ab4;--n-teal:#5fe0b5;
+.v-c{--n-night:var(--p-sky,#14143a);--n-plum:#2a1430;--n-ink:var(--p-ink,#fdfcff);--n-muted:#e8e1f0;--n-amber:var(--p-b2,#ffb86b);--n-rose:#f49ab4;--n-teal:var(--p-b1,#5fe0b5);
   background:var(--n-night);color:var(--n-ink);font-family:"Archivo",sans-serif}
 .v-c canvas.aur,.v-c canvas.aurbg,.v-c canvas.sky{position:absolute;left:0;top:0;width:100%;display:block;pointer-events:none}
 .v-c canvas.aurbg{z-index:-3;filter:blur(1.5px)}
@@ -157,19 +159,39 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 .v-c .ld-logo{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.03em;font-stretch:112%}
 .v-c h3{line-height:1;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.035em;font-size:clamp(1.9rem,5vw,3.5rem);max-width:13ch;text-shadow:1px 1px 3px #0e0b1e}
 .v-c .mk{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.01em;font-size:1.22em;padding:0 .12em;text-shadow:none;
-  color:transparent;-webkit-background-clip:text;background-clip:text;background-image:linear-gradient(100deg,#a8f4ff,#b4c4ff 55%,#e2ccff)}
+  color:transparent;-webkit-background-clip:text;background-clip:text;background-image:linear-gradient(100deg,var(--p-mk1,#a8f4ff),var(--p-mk2,#b4c4ff) 55%,var(--p-mk3,#e2ccff))}
 /* font pairing: Nova Square for the headline and its gradient accent; Panamera (embedded below the page fonts) for the lede and the two ways in */
 .v-c h3{font-family:"Nova Square","Archivo",sans-serif;font-weight:400;font-stretch:100%;letter-spacing:.01em}
-.v-c .mk{font-family:"Nova Square","Archivo",sans-serif;font-style:normal;font-weight:400;font-size:1em;letter-spacing:.01em;padding:0;filter:drop-shadow(1px 1px 1.5px #0e0b1e)}
+.v-c .mk{font-family:"Nova Square","Archivo",sans-serif;font-style:normal;font-weight:400;font-size:1em;letter-spacing:.01em;padding:0;filter:drop-shadow(1px 1px 2px #0e0b1e)}
 /* the lede waits under the ↓ and appears when you hover it */
 .v-c .s1>.lede{font-family:"Panamera",sans-serif;font-size:.82rem;letter-spacing:.01em;max-width:none;margin-top:-6px;opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s;pointer-events:none}
 .v-c .cue:hover+.lede,.v-c .cue:focus-visible+.lede{opacity:1;transform:none}
 .v-c .go{font-family:"Panamera","Nova Square",sans-serif;font-weight:400;font-stretch:100%}
 .v-c .lede{color:var(--n-muted);font-size:1.04rem;max-width:40ch}
-.v-c .cue{width:52px;height:52px;color:var(--n-ink);border:1px solid rgba(255,255,255,.28);background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.06) 55%,rgba(255,255,255,.12));-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -8px 16px rgba(95,224,181,.12),0 10px 24px -10px rgba(0,0,0,.6);transition:background .3s,box-shadow .3s,transform .3s}
+.v-c .cue{width:40px;height:40px;font-size:.85em;color:var(--n-ink);border:1px solid rgba(255,255,255,.28);background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.06) 55%,rgba(255,255,255,.12));-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -8px 16px rgba(95,224,181,.12),0 10px 24px -10px rgba(0,0,0,.6);transition:background .3s,box-shadow .3s,transform .3s}
 .v-c .cue:hover{background:linear-gradient(150deg,rgba(255,255,255,.34),rgba(255,255,255,.1) 55%,rgba(255,255,255,.18));transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -8px 16px rgba(95,224,181,.2),0 0 26px rgba(160,240,220,.25)}
 /* the two ways in: warm chat bubbles side by side, never overlapping */
 .v-c .s1{min-height:var(--fh)}
+/* Halo Orbit: the headline, lede and the two ways in are set in the palette's dark colour, lifted off the sky by a tight halo in the action colour */
+.v-c.mwv{--n-ink:var(--p-sky,#14143a);--n-muted:var(--p-sky,#14143a)}
+.v-c.mwv h3,.v-c.mwv h3 .mk{text-shadow:0 0 1px var(--p-b1,#a8f4ff),0 0 5px color-mix(in srgb,var(--p-b1,#a8f4ff) 55%,transparent)}
+/* in Halo Orbit, "XR Work" drops its gradient and matches the rest of the headline */
+.v-c.mwv h3 .mk{background-image:none;color:var(--n-ink);filter:none}
+.v-c.mwv .s1 h3 .mk.w{animation-name:sa-emerge}
+/* the two ways in and the line beside the ↓ stay light, with a thin dark edge */
+.v-c.mwv .lede{color:var(--p-ink,#fdfcff)}
+.v-c.mwv .lede,.v-c.mwv .go{color:var(--p-ink,#fdfcff);text-shadow:0 0 1px var(--p-sky,#14143a),0 1px 4px color-mix(in srgb,var(--p-sky,#14143a) 60%,transparent)}
+/* the words emerge from the dark sky one by one: they start sky-dark and blurred, then brighten and sharpen; the ↓ and the two ways in do the same */
+@keyframes sa-emerge{0%{opacity:0;filter:brightness(.15) blur(9px)}45%{opacity:.75;filter:brightness(.45) blur(4px)}100%{opacity:1;filter:none}}
+.v-c .s1 h3 .w{display:inline-block;animation:sa-emerge 2.6s cubic-bezier(.4,.1,.3,1) calc(.3s + var(--d,0s)) both}
+/* "XR Work" keeps its drop shadow once it has emerged (a plain filter:none at the end would wipe it) */
+@keyframes sa-emerge-mk{0%{opacity:0;filter:brightness(.15) blur(9px) drop-shadow(1px 1px 2px #0e0b1e)}45%{opacity:.75;filter:brightness(.45) blur(4px) drop-shadow(1px 1px 2px #0e0b1e)}100%{opacity:1;filter:brightness(1) blur(0) drop-shadow(1px 1px 2px #0e0b1e)}}
+.v-c .s1 h3 .mk.w{animation-name:sa-emerge-mk}
+.v-c .s1 .cue{animation:sa-emerge 1.8s cubic-bezier(.4,.1,.3,1) 2.4s both}
+.v-c .s2 .go{opacity:0}
+.v-c .s2.in .go{animation:sa-emerge 2s cubic-bezier(.4,.1,.3,1) .1s both}
+.v-c .s2.in .way:nth-child(2) .go{animation-delay:.5s}
+@media (prefers-reduced-motion: reduce){ .v-c .s1 h3 .w,.v-c .s1 .cue,.v-c .s2 .go,.v-c .s2.in .go{animation:none;opacity:1} }
 .v-c .s2{padding:0}
 /* the two ways in sit in the dark gaps between the three curtains overhead */
 .v-c .ways{width:auto;grid-template-columns:auto;row-gap:calc(var(--fh) * .22 - 34px);justify-items:center}
@@ -230,33 +252,16 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 /* Murmuration on phones: a little more air between the headline lines and smaller one-line buttons */
 @media (max-width:520px){ .v-m h3{line-height:1.32} .v-m .s1{gap:22px} .v-m .go{font-size:.84rem;letter-spacing:0;padding:12px 2px} .v-m .ways{gap:48px} .v-m .cuerow .lede{font-size:.82rem} }
 </style>
-</head>
-<body>
 
 <div class="wrap">
   <header class="top">
-    <h1>Visual style direction</h1>
+    <h1>Landing page visuals, round 3</h1>
   </header>
 
-  <section class="style" id="murmuration" data-v="v-m" data-name="Murmuration at sunrise">
-    <div class="spec">
-      <div><h2>Murmuration at sunrise</h2><p>A Savoy blue to soft purple sky with clouds drifting down, their undersides lit faint coral, and a 3D flock of flat dots in warm white and dusty plum with a few sunrise coral sparks. At rest the flock swirls like starlings at dusk. Hover over the first screen and it gathers into a great egret seen from below that flaps, glides and turns as it follows you, while the coral sparks flicker across its wings. Lower down, the flock circles whichever way in you point at.</p></div>
-      <div><span class="label">Main elements</span><ul class="els"><li>3D flock of white and plum dots that moves like a murmuration</li><li>Hover to gather the flock into a flying great egret, with flickering coral sparks</li><li>The ↓ and the two ways in light up like a sunrise on hover, and the flock circles the button</li><li>Clouds drifting down, as if the flock is climbing</li><li>Dot array around the pointer, and a short line beside ↓ on hover</li><li>FA-1 title and buttons, Hauora Sans text</li></ul></div>
-      <div><span class="label">Colour palette</span><div class="sw">
-        <div><i style="--l:#4b61d1"></i><b>Savoy blue · top</b>#4B61D1</div>
-        <div><i style="--l:#7360d0"></i><b>Soft purple · lower</b>#7360D0</div>
-        <div><i style="--l:#ffffff"></i><b>White · text, clouds</b>#FFFFFF</div>
-        <div><i style="--l:#eeece7"></i><b>Metropolitan white · flock</b>#EEECE7</div>
-        <div><i style="--l:#d7d0e1"></i><b>Dusty plum · flock</b>#D7D0E1</div>
-        <div><i style="--l:#ff7f5c"></i><b>Sunrise coral · sprinkles, hover</b>#FF7F5C</div>
-      </div></div>
-    </div>
-    <div class="pair"></div>
-  </section>
   <section class="style" id="constellation" data-v="v-c" data-name="Starry Aurora">
     <div class="spec">
-      <div><h2>Starry Aurora</h2><p>A warm, deep blue night sky seen from below. As you scroll, the view tilts up until the aurora is overhead and the two ways in sit between its curtains. The aurora bends toward your pointer, and constellations start drawing themselves as soon as the page opens.</p></div>
-      <div><span class="label">Main elements</span><ul class="els"><li>Warm deep blue night sky with a 3D aurora that turns overhead as you scroll</li><li>Dot grid and an aurora that follows your pointer</li><li>Constellations that form on their own or as you join stars</li><li>Nova Square and Panamera type</li></ul></div>
+      <div><h2>Starry Aurora</h2><p>A night sky seen from below, in the palette picked below. Three aurora curtains wind across the whole sky in a swirl: two turn one way and one the other, so they cross and blend from time to time as they slowly morph. As you scroll, the view tilts up until the swirl is overhead and the two ways in sit at its heart. The aurora shies away from your pointer and drifts out to the edges when you hover a way in. The headline emerges from the dark sky word by word, stars blink in and out, and constellations draw themselves.</p></div>
+      <div><span class="label">Main elements</span><ul class="els"><li>Three aurora curtains swirling in opposite directions, turning overhead as you scroll</li><li>An aurora that parts around your pointer and clears when you hover a way in</li><li>Stars that blink and move, faint at the top and bright low down, and constellations that form on their own or as you join stars</li><li>A headline that emerges from the dark sky, in Nova Square and Panamera type</li></ul></div>
       <div><span class="label">Colour palette</span><div class="sw">
         <div><i style="--l:#14143a"></i><b>Warm night blue · sky</b>#14143A</div>
         <div><i style="--l:#fdfcff"></i><b>Starlight · text</b>#FDFCFF</div>
@@ -265,6 +270,14 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         <div><i style="--l:#5fe0b5"></i><b>Aurora teal · aurora, action</b>#5FE0B5</div>
         <div><i style="--l:#a8f4ff;--d:#e2ccff"></i><b>Ice · accent</b>#A8F4FF → #E2CCFF</div>
       </div></div>
+    </div>
+    <div class="pair"></div>
+  </section>
+  <section class="style" id="milkyway" data-v="v-c" data-name="Halo Orbit">
+    <div class="spec">
+      <div><h2>Halo Orbit</h2><p>The same night sky, but instead of the aurora one huge band of light sweeps across it: the rim of a wheel far bigger than the screen, passing through the middle as it turns. As you scroll down, the wheel closes into a ring of light that orbits the two ways in. Its three colours flow into one another, a few soft darker breaks drift round with it, the stars slowly turn, and moving the mouse makes the band swell wider. The headline is set in the palette&rsquo;s dark colour with a thin outline in the action colour, and the two ways in stay light.</p></div>
+      <div><span class="label">Main elements</span><ul class="els"><li>One huge band of light that sweeps through the centre, then closes into a ring orbiting the two ways in</li><li>Three colours flowing into one another, with a few soft darker breaks</li><li>A slowly turning star field with constellations, and a band that widens as the mouse moves</li><li>A dark headline with an action-colour outline; same palettes, type and buttons as Starry Aurora</li></ul></div>
+      <div><span class="label">Colour palette</span><p>Uses the palette picked for Starry Aurora.</p></div>
     </div>
     <div class="pair"></div>
   </section>
@@ -310,31 +323,110 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
   // and the pointer joins the stars it passes over.
   // The aurora is a real 3D sky: three curtains on a plane overhead, seen through a camera that tilts up as you scroll,
   // from a low view across the sky (top of the page) to looking straight up from right underneath (the two ways in).
-  const AUR = `precision mediump float;uniform vec2 r;uniform float t;uniform float w;uniform float S;uniform vec2 m0;uniform vec2 m1;uniform vec2 m2;uniform float g;uniform float ph;uniform float p;uniform float L;
-    vec3 look(vec2 q){float a=mix(.62,1.5708,p),k=.75;vec3 f=vec3(0.,cos(a),sin(a)),u=vec3(0.,-sin(a),cos(a));
+  // palettes to try: each has three decorative colours (the aurora arms), one action colour (the ways in), one light (text) and one dark (the sky)
+  const PALS = [
+    { n: 'Ember Lagoon', deco: ['#0e6873', '#fe7e3c', '#61413c'], action: '#e2507f', light: '#f6ede4', dark: '#0e1a1d',
+      names: ['Blue Lagoon', 'Burnt Orange', 'Copper', 'Raspberry', 'Ash cream', 'Black Pearl, deeper'] },
+    { n: 'Golden Switch', deco: ['#7fa0ea', '#5b3fd1', '#e0652b'], action: '#f2b33d', light: '#d9d3ff', dark: '#2a1f6b',
+      names: ['Cornflower', 'Ultraviolet', 'Ember', 'Marigold', 'Lilac', 'Deep violet'] },
+    { n: 'Previous', mk: ['#a8f4ff', '#b4c4ff', '#e2ccff'], deco: ['#5fe0b5', '#f49ab4', '#ffb86b'], action: '#a8f4ff', light: '#fdfcff', dark: '#14143a',
+      names: ['Aurora teal', 'Rose', 'Ember', 'Ice', 'Starlight', 'Warm night blue'] }
+  ];
+  const hx = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+  // dark decorative colours would vanish as light on a night sky, so each arm is lifted part way toward full brightness, keeping its hue
+  const glowC = c => { const m = Math.max(...c, .01); return c.map(v => v + (v / m - v) * .6); };
+  const PAL = { i: 0, cur: null, now() { const t = this.vec(); if (!this.cur || RM) this.cur = t.map(v => v.slice()); else this.cur.forEach((v, j) => v.forEach((x, k) => v[k] = x + (t[j][k] - x) * .06)); return this.cur; }, vec() { const p = PALS[this.i], d = hx(p.dark), a0 = hx(p.deco[0]);
+    return [d.map((v, j) => v + (a0[j] - v) * .1), d, ...p.deco.map(c => glowC(hx(c))), hx(p.light)]; } };
+  {
+    const sec = document.getElementById('constellation'), sw = sec.querySelector('.sw'), row = document.createElement('div');
+    row.className = 'palpick'; row.setAttribute('role', 'group'); row.setAttribute('aria-label', 'Try a colour palette');
+    const cols = p => [...p.deco, p.action, p.light, p.dark];
+    row.innerHTML = PALS.map((p, i) => `<button type="button" aria-pressed="${!i}" data-i="${i}"><span>${cols(p).map(c => `<i style="background:${c}"></i>`).join('')}</span>${p.n}</button>`).join('');
+    sec.querySelector('.pair').before(row);
+    const roles = ['decorative', 'decorative', 'decorative', 'action', 'light · text', 'dark · sky'];
+    const set = i => { PAL.i = i; const p = PALS[i], st = document.documentElement.style;
+      row.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.i == i));
+      st.setProperty('--p-sky', p.dark); st.setProperty('--p-b1', p.action); st.setProperty('--p-b2', p.action); st.setProperty('--p-ink', p.light);
+      // "XR Work" runs from the action colour through a decorative colour, both lifted toward the light so it stays readable on the sky
+      const mix = (a, b, k) => '#' + hx(a).map((v, j) => Math.round((v + (hx(b)[j] - v) * k) * 255).toString(16).padStart(2, '0')).join('');
+      const mk = p.mk || [mix(p.action, p.light, .15), mix(p.deco[1], p.light, .35), mix(p.deco[1], p.light, .65)];
+      mk.forEach((c, j) => st.setProperty('--p-mk' + (j + 1), c));
+      sw.innerHTML = cols(p).map((c, j) => `<div><i style="--l:${c}"></i><b>${p.names[j]} · ${roles[j]}</b>${c.toUpperCase()}</div>`).join(''); };
+    row.addEventListener('click', e => { const b = e.target.closest('button'); if (b) set(+b.dataset.i); });
+    set(0);
+  }
+  const AUR = `precision mediump float;uniform vec2 r;uniform float t;uniform float w;uniform float S;uniform vec2 m0;uniform vec2 m1;uniform vec2 m2;uniform float g;uniform float ph;uniform float p;uniform float L;uniform float dz;uniform vec3 k0;uniform vec3 k1;uniform vec3 c0;uniform vec3 c1;uniform vec3 c2;uniform vec3 c3;uniform float mw;uniform float mv;
+    vec3 look(vec2 q){float a=mix(.82,1.5708,p),k=.75;vec3 f=vec3(0.,cos(a),sin(a)),u=vec3(0.,-sin(a),cos(a));
       return normalize(f+vec3((q.x-w*.5)/S*2.*k,0.,0.)+u*(-(q.y-S*.5)/S*2.*k));}
+    float hsh(vec2 q){return fract(sin(dot(q,vec2(127.1,311.7)))*43758.5453);}
+    float vn(vec2 q){vec2 i=floor(q),f=fract(q);f=f*f*(3.-2.*f);return mix(mix(hsh(i),hsh(i+vec2(1,0)),f.x),mix(hsh(i+vec2(0,1)),hsh(i+vec2(1,1)),f.x),f.y);}
+    float fbm(vec2 q){float v=0.,a=.5;for(int o=0;o<5;o++){v+=a*vn(q);q=q*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+    // the gentle warp under the spiral, and the angle of each arm at a point (polar angle a, log radius l)
+    vec2 warpQ(vec2 Q){Q+=.22*vec2(sin(Q.y*1.6+t*.21)+.5*sin(Q.y*3.1-Q.x*1.2-t*.17),cos(Q.x*1.4-t*.18)+.5*cos(Q.x*2.9+Q.y*1.3+t*.23));return Q*(1.-.3*dz);}
+    float armPh(float a,float l,float fi,float calm){float sg=fi==1.?-1.:1.;
+      // each arm winds and drifts at its own pace; the middle arm winds and turns the other way, so the three make a swirl
+      float wnd=(2.2+.45*sin(t*.043+fi*2.4))*sg*(1.-.18*fi),off=fi*2.0944+1.5*sin(t*.061+fi*1.7)+.7*sin(t*.027+fi*4.1);
+      return a-l*wnd+off-t*.035*sg*(1.+.45*fi)+ph*.3+calm*(.16*sin(l*3.+t*.21+fi*1.9)+.06*sin(l*7.-t*.29+fi*2.7));}
     void main(){vec2 P=vec2(gl_FragCoord.x/r.x*w,(1.-gl_FragCoord.y/r.y)*S);vec3 d=look(P);float el=d.z;
       float br=.5+.5*sin(t*.7);
-      vec3 col=mix(vec3(.085,.065,.19),vec3(.075,.08,.22),smoothstep(-.2,.25,el));
+      vec3 col=mix(k0,k1,smoothstep(-.2,.25,el));
       // looking straight up, the sky opens into a deep dome: darker blue overhead, lighter blue towards the edges
       vec2 R=vec2((P.x-w*.5)/max(w*.5,S*.55)*1.1,(P.y-S*.5)/S);float rr=dot(R,R),zp=smoothstep(.35,1.,p);
-      float ed=smoothstep(.05,1.1,rr);col=mix(col,mix(vec3(.06,.06,.18),vec3(.12,.1,.27),ed)*(.94+.06*br),zp);
+      float ed=smoothstep(.05,1.1,rr);col=mix(col,mix(k1*.8,k0*1.25,ed)*(.94+.06*br),zp);
       vec3 A=vec3(0.);
-      if(L>.5&&el>.01){float Yc=mix(-1.7,0.,p),calm=mix(1.,.4,p);
-        vec2 D=P-m0;float fall=exp(-dot(D,D)/80000.),fog=smoothstep(.0,.18,el);vec3 ac=vec3(0.);
-        for(int i=0;i<3;i++){float fi=float(i),wi=1.;
-          vec3 dm=look(i==0?m0:(i==1?m1:m2));vec2 Hm=dm.xy/max(dm.z,.08);Hm.y+=Yc;
-          vec3 cc=i==0?vec3(.37,.88,.71):(i==1?vec3(.98,.5,.62):vec3(1.,.69,.4));
-          // each curtain is a thin hanging sheet: sample it at rising heights so it stands up from a low view and fans out from straight below
-          for(int k=0;k<28;k++){float fk=float(k),z=1.+fk*mix(.06,.03,p)*(1.+.25*sin(t*.4+fi*2.3));vec2 H=d.xy*z/el;H.y+=Yc;
-            float c=(-.5+fi*.5)*mix(2.1,1.,p)+mix(.16,.07,p)*sin(t*.33+fi*2.1)+calm*(.12*sin(H.x*1.3+t*.21+ph+fi*1.9)+.05*sin(H.x*3.1-t*.29+ph*1.6+fi*2.7))+.015*sin(H.x*7.-t*.45+fi);
-            float pull=exp(-pow((H.x-Hm.x)/.7,2.))*g*wi*.42;c+=clamp(Hm.y-c,-.3,.3)*clamp(pull,-.3,.42)*.55;
-            // far off and at the sides the perspective squeezes the rays into thin streaks, so there the sheet is softer and the rays fade out
-            float far=1./max(el,.05),clr=smoothstep(.04,.3,el)*exp(-H.x*H.x*.9);
-            float dd=H.y-c,sheet=exp(-dd*dd/(mix(.0075,.0012,p)*(1.+far*.5+abs(H.x)*.8)));
-            float rays=.66+clr*.3*sin(H.x*26.+5.*sin(H.x*4.+t*.3+ph+fi*2.)+fi*3.)+clr*.08*sin(H.x*61.+t*.4+fi);
-            float fade=.35+.65*smoothstep(-.3,1.,sin(H.x*1.6+t*.15+fi*2.3));
-            ac+=mix(cc,vec3(.78,.45,.86),fk/27.*.25)*sheet*rays*fade*exp(-fk*mix(.085,.095,p))*mix(1.15,.4,p)*(i==0?.2:.24)*(1.+.4*fall*max(g,0.)*wi);}}
+      if(L>.5&&el>.01){float calm=mix(1.,.5,p);
+        // the curtains wind out from one centre like the arms of the Milky Way: their footprint on the sky is a three-arm spiral
+        vec3 dc=look(vec2(w*.5,S*mix(.42,.5,p)));vec2 C=dc.xy/max(dc.z,.08);
+        vec3 dm=look(m0);vec2 Hm=dm.xy/max(dm.z,.08);
+        // the aurora shies away from the pointer: everything near it is pushed outward, leaving a clear patch of sky that follows the mouse
+        float push=clamp(abs(g),0.,1.)*.6;
+        vec2 D=P-m0;float fall=exp(-dot(D,D)/80000.),fog=smoothstep(.0,.12,el);vec3 ac=vec3(0.);float far=1./max(el,.05);
+        if(mw>.5){
+          // Milky Way wheel: one huge, clean band of light, a wheel far bigger than the screen; its hub circles the centre of the view, so the rim always sweeps through the middle as it turns
+          vec2 H=d.xy/el;float part=1.;
+          // the wheel turns at an uneven pace and its size breathes, so the band swings boldly across the sky
+          float Rr=2.6+.7*sin(t*.17),a=t*.12+.9*sin(t*.21);// on the lower screen the hub settles between the two ways in and the wheel shrinks to a ring that turns around them
+          float zq=smoothstep(.3,1.,p);vec2 Cw=C;Rr=mix(Rr,1.15+.06*sin(t*.17),zq);vec2 O=mix(C+Rr*vec2(cos(a),sin(a)),C,zq),V=H-O;
+          float dist=length(V)-Rr,sa=atan(V.y,V.x);
+          // moving the mouse makes the band swell wider, and it slims back down when the mouse rests
+          float wd2=(1.+1.8*mv)*(1.-.45*zq),band=exp(-dist*dist/(.2*wd2*wd2)),spine=exp(-dist*dist/(.03*wd2));
+          // soft swells of light travel round the rim, so you can see the wheel turn
+          float sw=.8+.2*sin(sa*5.-t*.3)*sin(sa*3.+t*.11+1.7);
+          // the three decorative colours run along the band as one continuous loop (first → second → third → back to the first), each blending slowly into the next with no hard join;
+          // on the first screen one loop spans a little more than the visible arc, so each colour shows once; on the lower screen one loop goes once round the ring
+          float th=mod(sa-a-3.14159+3.14159,6.28318)-3.14159+.25*sin(t*.09);
+          float fc=fract(th/mix(2.8,6.28318,zq)+.5)*3.,fr=fract(fc);fr=fr*fr*(3.-2.*fr);
+          vec3 bc=fc<1.?mix(c0,c1,fr):(fc<2.?mix(c1,c2,fr):mix(c2,c0,fr));
+          float Lb=dot(bc,vec3(.3,.59,.11));bc=max(mix(vec3(Lb),bc,1.+.45*(1.-abs(fract(fc)-.5)*2.)),0.);
+          vec3 g=bc*band*sw*.7+mix(bc,c3,.35)*spine*sw*.5;
+          // a white glow where one colour meets the next
+          float seam=exp(-(fract(fc)-.5)*(fract(fc)-.5)/.05);g+=mix(bc,vec3(1.),.4)*seam*(band*.08+spine*.14);
+          float cr=length(H-Cw);g+=mix(bc,vec3(1.),.2)*exp(-cr*cr/.05)*band*.3;
+          // three soft darker breaks around the wheel (one fainter), carried round with it and drifting a little
+          float dk=0.;for(int k=0;k<3;k++){float fk=float(k),bw=fk==2.?.2:.3,dd2=mod(sa-fk*2.0944-.5*sin(t*.05+fk*1.9)+3.14159,6.28318)-3.14159;dk=max(dk,(fk==2.?.6:1.)*exp(-dd2*dd2/(bw*bw)));}
+          g*=1.-.8*dk;
+          // on the first screen only one sweep of the band shows: it fades out well before the wheel could curve back into view
+          g*=mix(smoothstep(1.25,.55,abs(th)),1.,zq);
+          ac=g*part*mix(1.,smoothstep(.15,1.,cr),dz);
+        }else{
+        for(int k=0;k<24;k++){float fk=float(k),z=1.+fk*mix(.054,.0312,p);vec2 H=d.xy*z/el;
+          vec2 Dm=H-Hm;float rm=length(Dm)+.001,rn=rm-push*exp(-rm*rm/.45),part=smoothstep(0.,.18,rn);H=Hm+Dm*max(rn,0.)/rm;vec2 Q=H-C;
+          // slow organic morphing: the sky under the spiral is gently warped, so the arms bulge, pinch and wander
+          // (hovering a way in also scales it, pushing the aurora out to the edges and clearing the middle)
+          Q=warpQ(Q);
+          float rad=length(Q)+.001,ang=atan(Q.y,Q.x),lr=log(rad),inner=smoothstep(.02+dz*.45,.35+dz*.85,rad)*(1.+.35*dz);
+          for(int i=0;i<3;i++){float fi=float(i);
+            vec3 cc=i==0?c0:(i==1?c1:c2);
+            float ph2=armPh(ang,lr,fi,calm);
+            float dd=mod(ph2+3.14159,6.28318)-3.14159,wd=mix(.06,.032,p)*(1.+far*.25)*(1.+.55*sin(lr*3.3+ang-t*.27+fi*1.7));
+            // a soft sheet with a faint dark lane down its middle, like the dust in the Milky Way
+            float sheet=exp(-dd*dd/wd)*(1.-.35*exp(-dd*dd/(wd*.08)));
+            float rays=.62+mix(.3,.38,p)*sin(lr*34.+5.*sin(lr*4.+t*.3+fi*2.)+fi*3.)+.08*sin(lr*80.+t*.4+fi);
+            float fade=.4+.6*smoothstep(-.4,1.,sin(lr*2.2-t*.15+fi*2.3));
+            ac+=mix(cc,c3,fk/23.*.25)*sheet*rays*fade*inner*part*exp(-fk*.095)*mix(1.,.85,p)*.2*(1.+.4*fall*max(g,0.));}}
+        }
+        // a faint warm glow where the arms meet
+        vec2 Qc=d.xy/el-C;ac+=mix(c2,vec3(1.),.5)*exp(-dot(Qc,Qc)/.05)*.12*(1.-dz);
         A=ac*fog;}
       // L=0 draws the sky; L=1 draws only the curtains, premultiplied, so they cover the stars where they glow
       if(L>.5){float al=clamp(max(A.r,max(A.g,A.b))*1.6,0.,1.);gl_FragColor=vec4(A,al);}else gl_FragColor=vec4(col,1.);}`;
@@ -347,11 +439,12 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
       const a = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
       const u = n => gl.getUniformLocation(prog, n); gl.uniform1f(u('L'), L);
-      return { gl, c, R: u('r'), T: u('t'), W: u('w'), M: [0, 1, 2].map(k => u('m' + k)), G: u('g'), Ph: u('ph'), S: u('S'), P: u('p') }; };
+      return { gl, c, R: u('r'), T: u('t'), W: u('w'), M: [0, 1, 2].map(k => u('m' + k)), G: u('g'), Ph: u('ph'), S: u('S'), P: u('p'), DZ: u('dz'), MW: u('mw'), MV: u('mv'), K: ['k0','k1','c0','c1','c2','c3'].map(u) }; };
     const gls = [mkGL(bc, 0), mkGL(ac, 1)].filter(Boolean), gl = gls.length > 0;
     const grid = document.createElement('canvas');
     const TINTS = ['255,244,227', '255,226,190', '255,205,170', '250,196,214', '214,236,255'];
-    let W = 0, H = 0, stars = [], bright = [], keep = [], cons = [], links = [], pick = null, ptr = null, nextCon = 0, raf = 0, act = 0, spd = 0, gv = 0, mx = 0, my = 0, vxs = 0, ph = 0, mp = [[0, 0], [0, 0], [0, 0]], on = false, vh = 0, s2top = 1, cam = 0;
+    let W = 0, H = 0, stars = [], bright = [], keep = [], cons = [], links = [], pick = null, ptr = null, nextCon = 0, raf = 0, act = 0, spd = 0, gv = 0, mx = 0, my = 0, vxs = 0, ph = 0, mp = [[0, 0], [0, 0], [0, 0]], on = false, vh = 0, s2top = 1, cam = 0, dz = 0, hov = false, mv = 0;
+    const MWV = !!vp.dataset.mw; let spin = null, clearFn = () => true;
     let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     // a soft glow sprite per tint, so bright stars bloom instead of drawing shapes
     const glow = TINTS.map(c => { const g = document.createElement('canvas'); g.width = g.height = 48; const x = g.getContext('2d'), gr = x.createRadialGradient(24, 24, 0, 24, 24, 24);
@@ -362,11 +455,18 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       gls.forEach(o => { o.c.width = Math.ceil(W / 2); o.c.height = Math.ceil(vh / 2); o.c.style.height = vh + 'px'; o.gl.viewport(0, 0, o.c.width, o.c.height); });
       // keep constellations clear of the copy and the buttons
       keep = [...ld.querySelectorAll('h3, .lede, .cue, .go')].map(e => { const b = e.getBoundingClientRect(); return [b.left - r.left - 28, b.top - r.top - 28, b.right - r.left + 28, b.bottom - r.top + 28]; });
-      const clear = (x, y) => !keep.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+      const clear = (x, y) => !keep.some(([a, b, c, d]) => x > a && x < c && y > b && y < d); clearFn = clear;
       seed = 11; stars = []; const n = Math.round(W * H / 2100);
       // sparse near the top of the page, denser down towards the buttons
-      for (let i = 0; i < n; i++) { const big = rnd() < .09, x = Math.round(rnd() * W / 9) * 9, y = Math.round(H * (rnd() < .3 ? rnd() : Math.pow(rnd(), .6)) / 9) * 9;
+      for (let i = 0; i < n; i++) { const big = rnd() < .09, x = Math.round(rnd() * W / 9) * 9, y = Math.round(H * (rnd() < .1 ? rnd() : Math.pow(rnd(), .42)) / 9) * 9;
         stars.push({ x, y, r: big ? 1.3 + rnd() * 1.1 : .35 + rnd() * .8, t: Math.floor(rnd() * TINTS.length), ph: rnd() * 6.28, sp: .6 + rnd() * 1.6, big, ok: big && clear(x, y) }); }
+      // Halo Orbit: the whole star field sits on a disc that turns slowly around the middle of the page
+      if (MWV) { stars = []; const cx = W / 2, cy = H / 2, RR = Math.hypot(W, H) / 2, m = Math.round(Math.PI * RR * RR / 2100);
+        for (let i = 0; i < m; i++) { const big = rnd() < .09, r0 = RR * Math.sqrt(rnd()), a0 = rnd() * 6.2832;
+          stars.push({ r0, a0, x: cx + r0 * Math.cos(a0), y: cy + r0 * Math.sin(a0), r: big ? 1.3 + rnd() * 1.1 : .35 + rnd() * .8, t: Math.floor(rnd() * TINTS.length), ph: rnd() * 6.28, sp: .6 + rnd() * 1.6, big, ok: big }); }
+        spin = { cx, cy }; }
+      // Starry Aurora: every star lives a few seconds, blinks out, and comes back somewhere else at a new size
+      else { const t0 = performance.now() / 1000; stars.forEach(s => { s.dur = 5 + Math.random() * 9; s.born = t0 - Math.random() * s.dur; }); }
       if (!mx) { mx = W / 2; my = vh * .3; mp.forEach(q => { q[0] = mx; q[1] = my; }); } bright = stars.filter(s => s.ok); cons = []; links = []; pick = null; nextCon = 0; draw(); };
     // pick a chain of 4 to 6 nearby bright stars that no other constellation is using
     const newCon = now => { const used = new Set(cons.flatMap(c => c.pts)), free = bright.filter(s => !used.has(s)); if (free.length < 6) return;
@@ -378,6 +478,13 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         if (pts.length > best.length) best = pts; if (best.length >= 4) break; }
       if (best.length < 3) return; cons.push({ pts: best, born: now }); };
     const draw = () => { if (!W) return; const now = performance.now() / 1000, tt = RM ? 20 : now;
+      if (!spin && !RM) { const hot0 = new Set(cons.flatMap(c => c.pts)); links.forEach(l => { hot0.add(l.a); hot0.add(l.b); });
+        stars.forEach(s => { if (now - s.born < s.dur || hot0.has(s) || s === pick) return;
+          // respawn: a new spot (still sparse at the top, denser low down) and a new size
+          s.x = Math.round(Math.random() * W / 9) * 9; s.y = Math.round(H * (Math.random() < .1 ? Math.random() : Math.pow(Math.random(), .42)) / 9) * 9;
+          s.r = s.big ? 1.3 + Math.random() * 1.1 : .35 + Math.random() * .8; s.ok = s.big && clearFn(s.x, s.y); s.dur = 5 + Math.random() * 9; s.born = now; });
+        bright = stars.filter(s => s.ok); }
+      if (spin) { const an = tt * .02; stars.forEach(s => { s.x = spin.cx + s.r0 * Math.cos(s.a0 + an); s.y = spin.cy + s.r0 * Math.sin(s.a0 + an); }); }
       ctx.clearRect(0, 0, W, H);
       if (!RM) { act *= .985; spd *= .85;
         // the aurora gathers around a slow pointer and spreads from a quick sweep
@@ -387,7 +494,10 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         if (ptr) mp.forEach((q, k) => { const rt = [.03, .017, .009][k]; q[0] += (ptr.x - q[0]) * rt; q[1] += (ptr.y - q[1]) * rt; }); }
       // the aurora stays in view while the page scrolls; the camera tilts up as you go down
       const st = vp.scrollTop; ac.style.top = bc.style.top = st + 'px'; const pt = Math.max(0, Math.min(1, st / s2top)), e = pt * pt * (3 - 2 * pt); cam += (e - cam) * (RM ? 1 : .2);
-      gls.forEach(({ gl, c, R, T, W: Wu, M, G, Ph, S, P }) => { gl.uniform2f(R, c.width, c.height); gl.uniform1f(T, tt); gl.uniform1f(Wu, W); gl.uniform1f(S, vh); mp.forEach((q, k) => gl.uniform2f(M[k], q[0], q[1] - st)); gl.uniform1f(P, cam); gl.uniform1f(G, gv); gl.uniform1f(Ph, ph); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); });
+      dz += ((hov ? 1 : 0) - dz) * (RM ? 1 : hov ? .035 : .025);
+      const pv = PAL.now();
+      mv += (Math.min(1, spd / 25) - mv) * (spd / 25 > mv ? .08 : .015);
+      gls.forEach(({ gl, c, R, T, W: Wu, M, G, Ph, S, P, DZ, MW, MV, K }) => { gl.uniform1f(DZ, dz); gl.uniform1f(MW, vp.dataset.mw ? 1 : 0); gl.uniform1f(MV, mv); K.forEach((k, j) => gl.uniform3fv(k, pv[j])); gl.uniform2f(R, c.width, c.height); gl.uniform1f(T, tt); gl.uniform1f(Wu, W); gl.uniform1f(S, vh); mp.forEach((q, k) => gl.uniform2f(M[k], q[0], q[1] - st)); gl.uniform1f(P, cam); gl.uniform1f(G, gv); gl.uniform1f(Ph, ph); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); });
       // a dense array of faint dots shows around the pointer
       if (ptr && act > .02) { const G = 9, GR = 115, S = GR * 2, ox = ptr.x - GR, oy = ptr.y - GR, gx = grid.getContext('2d');
         if (grid.width !== S) grid.width = grid.height = S;
@@ -416,9 +526,11 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       if (pick && ptr && Math.hypot(ptr.x - pick.x, ptr.y - pick.y) < 170) { ctx.strokeStyle = 'rgba(255,214,180,.18)'; ctx.lineWidth = 1; ctx.shadowBlur = 0; ctx.setLineDash([2, 5]); ctx.beginPath(); ctx.moveTo(pick.x, pick.y); ctx.lineTo(ptr.x, ptr.y); ctx.stroke(); ctx.setLineDash([]); }
       ctx.shadowBlur = 0;
       const hot = new Set(cons.flatMap(c => c.pts)); links.forEach(l => { hot.add(l.a); hot.add(l.b); });
-      stars.forEach(s => { const tw = RM ? 1 : .55 + .45 * Math.sin(tt * s.sp + s.ph), lit = hot.has(s) || s === pick;
-        if (s.big || lit) { const R = (lit ? 22 : 10 + s.r * 4) * (.75 + .25 * tw); ctx.globalAlpha = lit ? 1 : .55 + .45 * tw; ctx.drawImage(glow[s.t], s.x - R / 2, s.y - R / 2, R, R); }
-        ctx.globalAlpha = s.big ? .7 + .3 * tw : .25 + .55 * tw; ctx.fillStyle = `rgb(${TINTS[s.t]})`; ctx.beginPath(); ctx.arc(s.x, s.y, lit ? s.r + .6 : s.r, 0, 6.29); ctx.fill(); });
+      stars.forEach(s => { const tw = RM ? 1 : .55 + .45 * Math.sin(tt * s.sp + s.ph), lit = hot.has(s) || s === pick, yb = (lit ? 1 : .07 + 1.05 * Math.pow(Math.max(0, Math.min(1, s.y / (H * .85))), 1.7)) * (s.dur && !lit && !RM ? Math.min(1, (now - s.born) / 1.2, (s.dur - (now - s.born)) / 1.2) : 1);
+        if (yb <= 0) return;
+        if (s.x < -20 || s.x > W + 20 || s.y < -20 || s.y > H + 20) return;
+        if (s.big || lit) { const R = (lit ? 22 : 10 + s.r * 4) * (.75 + .25 * tw); ctx.globalAlpha = lit ? 1 : Math.min(1, (.55 + .45 * tw) * yb); ctx.drawImage(glow[s.t], s.x - R / 2, s.y - R / 2, R, R); }
+        ctx.globalAlpha = Math.min(1, (s.big ? .7 + .3 * tw : .25 + .55 * tw) * yb); ctx.fillStyle = `rgb(${TINTS[s.t]})`; ctx.beginPath(); ctx.arc(s.x, s.y, lit ? s.r + .6 : s.r, 0, 6.29); ctx.fill(); });
       ctx.globalAlpha = 1; };
     const loop = () => { if (!on) return; draw(); raf = RM ? 0 : requestAnimationFrame(loop); };
     vp.addEventListener('pointermove', e => { const r = ld.getBoundingClientRect(), np = { x: e.clientX - r.left, y: e.clientY - r.top };
@@ -427,6 +539,11 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       if (best && best !== pick) { if (pick && Math.hypot(best.x - pick.x, best.y - pick.y) < 260) { links.push({ a: pick, b: best, t: performance.now() / 1000 }); if (links.length > 40) links.shift(); } pick = best; }
       if (RM) draw(); });
     vp.addEventListener('pointerleave', () => { ptr = null; pick = null; if (RM) draw(); });
+    // hovering or focusing a way in sends the aurora out to the edges
+    const setHov = v => { hov = v; if (RM) draw(); };
+    vp.addEventListener('pointerover', e => setHov(!!e.target.closest('.s2 .go')));
+    vp.addEventListener('focusin', e => { if (e.target.closest('.s2 .go')) setHov(true); });
+    vp.addEventListener('focusout', () => setHov(false));
     const ro = new ResizeObserver(build); ro.observe(ld);
     vp._sky = v => { on = v; if (v) { cancelAnimationFrame(raf); loop(); } };
     vp._skyRead = () => draw();
@@ -766,12 +883,17 @@ precision mediump float;
     vp.innerHTML = ''; vp.scrollTop = 0;
     vp.appendChild(tpl.content.cloneNode(true));
     const v = vp.dataset.v, D = DECO[v], ld = vp.querySelector('.ld'), s2 = vp.querySelector('.s2');
-    ld.classList.add(v);
+    ld.classList.add(v); if (vp.dataset.mw) ld.classList.add('mwv');
     ld.insertAdjacentHTML('afterbegin', D.bg || '');
     const [d1, d2] = vp.querySelectorAll('.deco'); d1.innerHTML = D.s1 || ''; d2.innerHTML = D.s2 || '';
     if (D.obj) vp.querySelectorAll('.obj').forEach((o, i) => o.innerHTML = D.obj[i]);
     if (v === 'v-b') { vp.querySelector('h3').innerHTML = 'Where will<br>your<br><span class="mk">XR work</span><br>shine?'; liquid(ld, vp); devices(ld, vp); lens(ld, vp); }
     if (v === 'v-c') { vp.querySelector('h3').innerHTML = 'There’s a world<br>for your<br><span class="mk">XR Work</span>'; sky(ld, vp); vp._sky(true);
+      // wrap each word of the headline so the words can emerge one after another ("XR Work" emerges as one)
+      { const h = vp.querySelector('h3'); let n = 0; [...h.childNodes].forEach(nd => {
+          if (nd.nodeType === 3) { const f = document.createDocumentFragment(); nd.textContent.split(/(\s+)/).forEach(t => { if (!t) return; if (/^\s+$/.test(t)) f.append(t); else { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = t; sp.style.setProperty('--d', (n++ * .22) + 's'); f.append(sp); } }); nd.replaceWith(f); }
+          else if (nd.classList && nd.classList.contains('mk')) { nd.classList.add('w'); nd.style.setProperty('--d', (n++ * .22 + .2) + 's'); } }); }
+      { const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { s2.classList.add('in'); io2.disconnect(); } }), { root: vp, threshold: .45 }); io2.observe(s2); vp._cleanup.push(() => io2.disconnect()); }
       const s1 = vp.querySelector('.s1'); vp.querySelector('.ld-top').remove(); const ld2 = s1.querySelector('.lede'); ld2.innerHTML = 'Plan how an immersive work will reach audiences,<br>and find venues that show work like yours.'; s1.querySelector('.cue').after(ld2); }
     if (v === 'v-m') { vp.querySelector('h3').innerHTML = 'There’s a world<br>for your <span class="mk">XR Work</span>'; vp.querySelector('.ld-top').remove();
       { const s1 = vp.querySelector('.s1'), le = s1.querySelector('.lede'), cu = s1.querySelector('.cue'), row = document.createElement('div'); row.className = 'cuerow';
@@ -811,7 +933,7 @@ precision mediump float;
   };
   function frame(v, mode, name, isFull) {
     const f = document.createElement('div'); f.className = 'frame mode-' + mode + (isFull ? ' full' : '');
-    const vp = document.createElement('div'); vp.className = 'vp'; vp.dataset.v = v; vp.tabIndex = 0; vp.setAttribute('aria-label', name + ', ' + mode + ' mode');
+    const vp = document.createElement('div'); vp.className = 'vp'; vp.dataset.v = v; if (name === 'Halo Orbit') vp.dataset.mw = 1; vp.tabIndex = 0; vp.setAttribute('aria-label', name + ', ' + mode + ' mode');
     const cap = document.createElement('div'); cap.className = 'cap';
     cap.innerHTML = `<span>${isFull ? name + ' · ' : ''}${mode === 'light' ? 'Light' : 'Dark'}</span><button type="button" class="ic" data-a="replay" aria-label="Replay from the top" title="Replay from the top">${icon.replay}</button>` +
       (isFull ? `<button type="button" class="ic" data-a="close" aria-label="Close full screen" title="Close">${icon.close}</button>`
@@ -840,6 +962,3 @@ precision mediump float;
   function closeFull() { if (!full) return; const vp = full.querySelector('.vp'); if (vp._sky) vp._sky(false); (vp._cleanup || []).forEach(f => f()); full.remove(); full = null; document.body.style.overflow = ''; document.removeEventListener('keydown', esc); if (back) back.focus(); }
 })();
 </script>
-
-</body>
-</html>
