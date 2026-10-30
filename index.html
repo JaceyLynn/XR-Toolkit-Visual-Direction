@@ -260,8 +260,8 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 
   <section class="style" id="constellation" data-v="v-c" data-name="Starry Aurora">
     <div class="spec">
-      <div><h2>Starry Aurora</h2><p>A night sky seen from below, in the palette picked below. Three aurora curtains wind across the whole sky in a swirl: two turn one way and one the other, so they cross and blend from time to time as they slowly morph. As you scroll, the view tilts up until the swirl is overhead and the two ways in sit at its heart. The aurora shies away from your pointer and drifts out to the edges when you hover a way in. The headline emerges from the dark sky word by word, stars blink in and out, and constellations draw themselves.</p></div>
-      <div><span class="label">Main elements</span><ul class="els"><li>Three aurora curtains swirling in opposite directions, turning overhead as you scroll</li><li>An aurora that parts around your pointer and clears when you hover a way in</li><li>Stars that blink and move, faint at the top and bright low down, and constellations that form on their own or as you join stars</li><li>A headline that emerges from the dark sky, in Nova Square and Panamera type</li></ul></div>
+      <div><h2>Starry Aurora</h2><p>A night sky seen from below, in the palette picked below. Three aurora curtains wind across the whole sky in a swirl: two turn one way and one the other, so they cross and blend from time to time as they slowly morph. As you scroll, the view tilts up until the swirl is overhead and the two ways in sit at its heart. The aurora shies away from your pointer and drifts out to the edges when you hover a way in. The headline emerges from the dark sky word by word, stars blink in and out, and constellations start drawing themselves as soon as you land.</p></div>
+      <div><span class="label">Main elements</span><ul class="els"><li>Three aurora curtains swirling in opposite directions, turning overhead as you scroll</li><li>An aurora that parts around your pointer and clears when you hover a way in</li><li>Stars that blink and move, brightest low down, and constellations that start drawing themselves as soon as the page opens, or as you join stars</li><li>A headline that emerges from the dark sky, in Nova Square and Panamera type</li></ul></div>
       <div><span class="label">Colour palette</span><div class="sw">
         <div><i style="--l:#14143a"></i><b>Warm night blue · sky</b>#14143A</div>
         <div><i style="--l:#fdfcff"></i><b>Starlight · text</b>#FDFCFF</div>
@@ -295,8 +295,8 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     <div class="s2">
       <div class="deco"></div>
       <div class="ways">
-        <div class="way"><button type="button" class="go">Create Distribution Plan</button></div>
-        <div class="way"><button type="button" class="go">Explore Venue Database</button></div>
+        <div class="way"><button type="button" class="go">Guided Journey</button></div>
+        <div class="way"><button type="button" class="go">Explore Database</button></div>
       </div>
     </div>
   </div>
@@ -454,15 +454,15 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       vh = vp.clientHeight; const s2 = ld.querySelector('.s2'); s2top = s2 ? s2.offsetTop : 1;
       gls.forEach(o => { o.c.width = Math.ceil(W / 2); o.c.height = Math.ceil(vh / 2); o.c.style.height = vh + 'px'; o.gl.viewport(0, 0, o.c.width, o.c.height); });
       // keep constellations clear of the copy and the buttons
-      keep = [...ld.querySelectorAll('h3, .lede, .cue, .go')].map(e => { const b = e.getBoundingClientRect(); return [b.left - r.left - 28, b.top - r.top - 28, b.right - r.left + 28, b.bottom - r.top + 28]; });
+      keep = [...ld.querySelectorAll('h3, .lede, .cue, .go')].map(e => { const b = e.getBoundingClientRect(); return [b.left - r.left - 16, b.top - r.top - 16, b.right - r.left + 16, b.bottom - r.top + 16]; });
       const clear = (x, y) => !keep.some(([a, b, c, d]) => x > a && x < c && y > b && y < d); clearFn = clear;
       seed = 11; stars = []; const n = Math.round(W * H / 2100);
       // sparse near the top of the page, denser down towards the buttons
-      for (let i = 0; i < n; i++) { const big = rnd() < .09, x = Math.round(rnd() * W / 9) * 9, y = Math.round(H * (rnd() < .1 ? rnd() : Math.pow(rnd(), .42)) / 9) * 9;
+      for (let i = 0; i < n; i++) { const x = Math.round(rnd() * W / 9) * 9, y = Math.round(H * (rnd() < .35 ? rnd() : Math.pow(rnd(), .6)) / 9) * 9, big = rnd() < (Math.hypot(x - W / 2, y - vh / 2) < Math.min(W, vh) * .42 ? .22 : .12);
         stars.push({ x, y, r: big ? 1.3 + rnd() * 1.1 : .35 + rnd() * .8, t: Math.floor(rnd() * TINTS.length), ph: rnd() * 6.28, sp: .6 + rnd() * 1.6, big, ok: big && clear(x, y) }); }
       // Halo Orbit: the whole star field sits on a disc that turns slowly around the middle of the page
       if (MWV) { stars = []; const cx = W / 2, cy = H / 2, RR = Math.hypot(W, H) / 2, m = Math.round(Math.PI * RR * RR / 2100);
-        for (let i = 0; i < m; i++) { const big = rnd() < .09, r0 = RR * Math.sqrt(rnd()), a0 = rnd() * 6.2832;
+        for (let i = 0; i < m; i++) { const big = rnd() < .15, r0 = RR * Math.sqrt(rnd()), a0 = rnd() * 6.2832;
           stars.push({ r0, a0, x: cx + r0 * Math.cos(a0), y: cy + r0 * Math.sin(a0), r: big ? 1.3 + rnd() * 1.1 : .35 + rnd() * .8, t: Math.floor(rnd() * TINTS.length), ph: rnd() * 6.28, sp: .6 + rnd() * 1.6, big, ok: big }); }
         spin = { cx, cy }; }
       // Starry Aurora: every star lives a few seconds, blinks out, and comes back somewhere else at a new size
@@ -470,18 +470,18 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       if (!mx) { mx = W / 2; my = vh * .3; mp.forEach(q => { q[0] = mx; q[1] = my; }); } bright = stars.filter(s => s.ok); cons = []; links = []; pick = null; nextCon = 0; draw(); };
     // pick a chain of 4 to 6 nearby bright stars that no other constellation is using
     const newCon = now => { const used = new Set(cons.flatMap(c => c.pts)), free = bright.filter(s => !used.has(s)); if (free.length < 6) return;
-      // start in the part of the sky that is on screen, so the visitor sees it draw; try a few starts until one makes a chain
-      const st = vp.scrollTop, seen = free.filter(s => s.y > st + 30 && s.y < st + vh - 30), from = (seen.length ? seen : free).slice().sort(() => Math.random() - .5);
+      // start near the middle of the screen, so the visitor sees it draw; try a few starts until one makes a chain
+      const st = vp.scrollTop, seen = free.filter(s => s.y > st + 30 && s.y < st + vh - 30), cx0 = W / 2, cy0 = st + vh / 2, near = seen.filter(s => Math.hypot(s.x - cx0, s.y - cy0) < Math.min(W, vh) * .45), from = (near.length >= 3 ? near : seen.length >= 4 ? seen : free).map(s => [s, Math.hypot(s.x - cx0, (s.y - cy0) * 1.3) * (.8 + Math.random() * .5)]).sort((a, b) => a[1] - b[1]).map(a => a[0]);
       let best = [];
       for (const s0 of from.slice(0, 14)) { const pts = [s0], want = 4 + Math.floor(Math.random() * 3);
-        while (pts.length < want) { const l = pts[pts.length - 1], nx = free.filter(s => !pts.includes(s)).map(s => [s, Math.hypot(s.x - l.x, s.y - l.y)]).filter(([, d]) => d > 34 && d < 190).sort((a, b) => a[1] - b[1])[0]; if (!nx) break; pts.push(nx[0]); }
+        while (pts.length < want) { const l = pts[pts.length - 1], nx = free.filter(s => !pts.includes(s)).map(s => [s, Math.hypot(s.x - l.x, s.y - l.y)]).filter(([, d]) => d > 34 && d < 170).map(([s, d]) => [s, d + .6 * Math.hypot(s.x - cx0, (s.y - cy0) * 1.3)]).sort((a, b) => a[1] - b[1])[0]; if (!nx) break; pts.push(nx[0]); }
         if (pts.length > best.length) best = pts; if (best.length >= 4) break; }
       if (best.length < 3) return; cons.push({ pts: best, born: now }); };
     const draw = () => { if (!W) return; const now = performance.now() / 1000, tt = RM ? 20 : now;
       if (!spin && !RM) { const hot0 = new Set(cons.flatMap(c => c.pts)); links.forEach(l => { hot0.add(l.a); hot0.add(l.b); });
         stars.forEach(s => { if (now - s.born < s.dur || hot0.has(s) || s === pick) return;
           // respawn: a new spot (still sparse at the top, denser low down) and a new size
-          s.x = Math.round(Math.random() * W / 9) * 9; s.y = Math.round(H * (Math.random() < .1 ? Math.random() : Math.pow(Math.random(), .42)) / 9) * 9;
+          s.x = Math.round(Math.random() * W / 9) * 9; s.y = Math.round(H * (Math.random() < .35 ? Math.random() : Math.pow(Math.random(), .6)) / 9) * 9;
           s.r = s.big ? 1.3 + Math.random() * 1.1 : .35 + Math.random() * .8; s.ok = s.big && clearFn(s.x, s.y); s.dur = 5 + Math.random() * 9; s.born = now; });
         bright = stars.filter(s => s.ok); }
       if (spin) { const an = tt * .02; stars.forEach(s => { s.x = spin.cx + s.r0 * Math.cos(s.a0 + an); s.y = spin.cy + s.r0 * Math.sin(s.a0 + an); }); }
@@ -509,12 +509,12 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         mg.addColorStop(0, 'rgba(0,0,0,1)'); mg.addColorStop(.45, 'rgba(0,0,0,.45)'); mg.addColorStop(1, 'rgba(0,0,0,0)'); gx.fillStyle = mg; gx.fillRect(0, 0, S, S);
         ctx.globalAlpha = .4 * act; ctx.drawImage(grid, ox, oy); ctx.globalAlpha = 1; }
       // constellations that draw themselves: each line grows in turn, the name appears, then it all fades
-      if (!RM && on && now > nextCon && cons.length < 3) { const first = !nextCon; newCon(now); if (first) newCon(now + .9); nextCon = now + (first ? 3.2 : 2.2 + Math.random() * 1.6); }
+      if (!RM && on && now > nextCon && cons.length < 4) { const first = !nextCon; newCon(now); if (first) { newCon(now + .4); newCon(now + .8); } nextCon = now + (first ? 2.4 : 1.4 + Math.random() * 1.2); }
       if (RM && !cons.length) newCon(now);
-      cons = cons.filter(c => RM || now - c.born < 6);
+      cons = cons.filter(c => RM || now - c.born < 8);
       ctx.lineCap = 'round';
-      cons.forEach(c => { const age = RM ? 99 : now - c.born, seg = .55, fadeOut = RM ? 1 : Math.min(1, (6 - age) / 1.2);
-        ctx.strokeStyle = `rgba(255,232,205,${.22 * fadeOut})`; ctx.lineWidth = .8; ctx.shadowColor = 'rgba(255,184,107,.4)'; ctx.shadowBlur = 4; ctx.beginPath();
+      cons.forEach(c => { const age = RM ? 99 : now - c.born, seg = .55, fadeOut = RM ? 1 : Math.max(0, Math.min(1, (8 - age) / 1.4));
+        ctx.strokeStyle = `rgba(255,236,214,${.62 * fadeOut})`; ctx.lineWidth = 1.2; ctx.shadowColor = 'rgba(255,196,140,.75)'; ctx.shadowBlur = 7; ctx.beginPath();
         for (let k = 1; k < c.pts.length; k++) { const p = Math.max(0, Math.min(1, (age - (k - 1) * seg) / seg)); if (!p) break; const a = c.pts[k - 1], b = c.pts[k];
           ctx.moveTo(a.x, a.y); ctx.lineTo(a.x + (b.x - a.x) * p, a.y + (b.y - a.y) * p); }
         ctx.stroke(); ctx.shadowBlur = 0;
@@ -526,7 +526,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       if (pick && ptr && Math.hypot(ptr.x - pick.x, ptr.y - pick.y) < 170) { ctx.strokeStyle = 'rgba(255,214,180,.18)'; ctx.lineWidth = 1; ctx.shadowBlur = 0; ctx.setLineDash([2, 5]); ctx.beginPath(); ctx.moveTo(pick.x, pick.y); ctx.lineTo(ptr.x, ptr.y); ctx.stroke(); ctx.setLineDash([]); }
       ctx.shadowBlur = 0;
       const hot = new Set(cons.flatMap(c => c.pts)); links.forEach(l => { hot.add(l.a); hot.add(l.b); });
-      stars.forEach(s => { const tw = RM ? 1 : .55 + .45 * Math.sin(tt * s.sp + s.ph), lit = hot.has(s) || s === pick, yb = (lit ? 1 : .07 + 1.05 * Math.pow(Math.max(0, Math.min(1, s.y / (H * .85))), 1.7)) * (s.dur && !lit && !RM ? Math.min(1, (now - s.born) / 1.2, (s.dur - (now - s.born)) / 1.2) : 1);
+      stars.forEach(s => { const tw = RM ? 1 : .55 + .45 * Math.sin(tt * s.sp + s.ph), lit = hot.has(s) || s === pick, yb = (lit ? 1 : .4 + .7 * Math.pow(Math.max(0, Math.min(1, s.y / (H * .85))), 1.1)) * (s.dur && !lit && !RM ? Math.min(1, (now - s.born) / 1.2, (s.dur - (now - s.born)) / 1.2) : 1);
         if (yb <= 0) return;
         if (s.x < -20 || s.x > W + 20 || s.y < -20 || s.y > H + 20) return;
         if (s.big || lit) { const R = (lit ? 22 : 10 + s.r * 4) * (.75 + .25 * tw); ctx.globalAlpha = lit ? 1 : Math.min(1, (.55 + .45 * tw) * yb); ctx.drawImage(glow[s.t], s.x - R / 2, s.y - R / 2, R, R); }
