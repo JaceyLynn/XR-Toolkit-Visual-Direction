@@ -156,6 +156,9 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 /* the curtains sit in front of the stars: the sky is drawn below the star canvas and the aurora on its own layer above it */
 .v-c canvas.aur{z-index:-1;filter:blur(1.5px)}
 .v-c canvas.sky{z-index:-2}
+/* Rhizomatic Cosmos: band, stars and growing network on one canvas held to the viewport */
+.v-c canvas.rzc,.v-c canvas.rzg,.v-c canvas.rzs{position:absolute;left:0;top:0;width:100%;display:block;pointer-events:none;z-index:-2}
+.v-c canvas.rzg{z-index:-3;filter:blur(2px)}
 .v-c .ld-logo{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.03em;font-stretch:112%}
 .v-c h3{line-height:1;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.035em;font-size:clamp(1.9rem,5vw,3.5rem);max-width:13ch;text-shadow:1px 1px 3px #0e0b1e}
 .v-c .mk{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.01em;font-size:1.22em;padding:0 .12em;text-shadow:none;
@@ -281,6 +284,14 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     </div>
     <div class="pair"></div>
   </section>
+  <section class="style" id="rhizome" data-v="v-c" data-name="Rhizomatic Cosmos">
+    <div class="spec">
+      <div><h2>Rhizomatic Cosmos</h2><p>A Milky Way band runs diagonally across the sky from the lower left to the upper right: a slowly flowing cloud with soft edges and small clusters of stars, split along its length by one continuous ragged lane of open sky, which drifts aside a little as the pointer passes. The brighter stars stand for people, projects and places. Two networks of light grow in from opposite corners, drawing filaments from star to star along curved, branching paths. On the first screen they grow along the Milky Way toward the middle until they touch, and a pulse of light runs along the bridge. Lower down they spread out to the two empty corners until every star is connected. Paths never disappear; once drawn they settle to a softer glow. Moving the pointer steers nearby growth toward the stars in that direction, and the network carries on by itself when you stop. Scrolling down zooms deep into the sky like a lens racking focus: the whole star network and the cloud go softly out of focus as the stars grow larger, hidden stars appear in the middle, and the two networks rush in to meet around the ways in. Hovering a way in sends a branch from each network across the stars to meet at that button, joined by a bridge of light beneath it.</p></div>
+      <div><span class="label">Main elements</span><ul class="els"><li>A diagonal Milky Way cloud that flows on its own and shifts slightly with the pointer, split by one continuous lane of open sky, clusters and a faint layer of branching filaments</li><li>Two star networks growing from the lower-left and upper-right corners, meeting across the middle with no single hub</li><li>Stars that flare when a branch reaches them, and light pulses along each new bridge</li><li>Growth that bends toward the pointer, and both networks meeting at whichever way in you hover</li><li>Same headline, type and buttons as Starry Aurora</li></ul></div>
+      <div><span class="label">Colour palette</span><p>Uses the palette picked for Starry Aurora.</p></div>
+    </div>
+    <div class="pair"></div>
+  </section>
 </div>
 
 <template id="landing">
@@ -325,12 +336,12 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
   // from a low view across the sky (top of the page) to looking straight up from right underneath (the two ways in).
   // palettes to try: each has three decorative colours (the aurora arms), one action colour (the ways in), one light (text) and one dark (the sky)
   const PALS = [
+    { n: 'Previous', mk: ['#a8f4ff', '#b4c4ff', '#e2ccff'], deco: ['#5fe0b5', '#f49ab4', '#ffb86b'], action: '#a8f4ff', light: '#fdfcff', dark: '#14143a',
+      names: ['Aurora teal', 'Rose', 'Ember', 'Ice', 'Starlight', 'Warm night blue'] },
     { n: 'Ember Lagoon', deco: ['#0e6873', '#fe7e3c', '#61413c'], action: '#e2507f', light: '#f6ede4', dark: '#0e1a1d',
       names: ['Blue Lagoon', 'Burnt Orange', 'Copper', 'Raspberry', 'Ash cream', 'Black Pearl, deeper'] },
     { n: 'Golden Switch', deco: ['#7fa0ea', '#5b3fd1', '#e0652b'], action: '#f2b33d', light: '#d9d3ff', dark: '#2a1f6b',
-      names: ['Cornflower', 'Ultraviolet', 'Ember', 'Marigold', 'Lilac', 'Deep violet'] },
-    { n: 'Previous', mk: ['#a8f4ff', '#b4c4ff', '#e2ccff'], deco: ['#5fe0b5', '#f49ab4', '#ffb86b'], action: '#a8f4ff', light: '#fdfcff', dark: '#14143a',
-      names: ['Aurora teal', 'Rose', 'Ember', 'Ice', 'Starlight', 'Warm night blue'] }
+      names: ['Cornflower', 'Ultraviolet', 'Ember', 'Marigold', 'Lilac', 'Deep violet'] }
   ];
   const hx = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
   // dark decorative colours would vanish as light on a night sky, so each arm is lifted part way toward full brightness, keeping its hue
@@ -429,7 +440,8 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         vec2 Qc=d.xy/el-C;ac+=mix(c2,vec3(1.),.5)*exp(-dot(Qc,Qc)/.05)*.12*(1.-dz);
         A=ac*fog;}
       // L=0 draws the sky; L=1 draws only the curtains, premultiplied, so they cover the stars where they glow
-      if(L>.5){float al=clamp(max(A.r,max(A.g,A.b))*1.6,0.,1.);gl_FragColor=vec4(A,al);}else gl_FragColor=vec4(col,1.);}`;
+      float dth=mw*(fract(sin(dot(gl_FragCoord.xy+fract(t*7.13)*97.,vec2(12.9898,78.233)))*43758.5453)-.5)*2.5/255.;
+      if(L>.5){float al=clamp(max(A.r,max(A.g,A.b))*1.6,0.,1.);gl_FragColor=vec4(A+dth*step(.004,al),al);}else gl_FragColor=vec4(col+dth,1.);}`;
   function sky(ld, vp) {
     const cv = ld.querySelector('canvas.sky'), ctx = cv.getContext('2d'), ac = ld.querySelector('canvas.aur');
     const bc = ld.querySelector('canvas.aurbg');
@@ -444,7 +456,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     const grid = document.createElement('canvas');
     const TINTS = ['255,244,227', '255,226,190', '255,205,170', '250,196,214', '214,236,255'];
     let W = 0, H = 0, stars = [], bright = [], keep = [], cons = [], links = [], pick = null, ptr = null, nextCon = 0, raf = 0, act = 0, spd = 0, gv = 0, mx = 0, my = 0, vxs = 0, ph = 0, mp = [[0, 0], [0, 0], [0, 0]], on = false, vh = 0, s2top = 1, cam = 0, dz = 0, hov = false, mv = 0;
-    const MWV = !!vp.dataset.mw; let spin = null, clearFn = () => true;
+    const MWV = !!vp.dataset.mw; let spin = null, clearFn = () => true, lastT = 0, trailK = 1;
     let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     // a soft glow sprite per tint, so bright stars bloom instead of drawing shapes
     const glow = TINTS.map(c => { const g = document.createElement('canvas'); g.width = g.height = 48; const x = g.getContext('2d'), gr = x.createRadialGradient(24, 24, 0, 24, 24, 24);
@@ -486,6 +498,10 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         bright = stars.filter(s => s.ok); }
       if (spin) { const an = tt * .02; stars.forEach(s => { s.x = spin.cx + s.r0 * Math.cos(s.a0 + an); s.y = spin.cy + s.r0 * Math.sin(s.a0 + an); }); }
       ctx.clearRect(0, 0, W, H);
+      // Halo Orbit: each star drags a short trail along its circle, fading out over the last 2 seconds of its path
+      if (spin && !RM) { const an = tt * .02, dA = .04 / 6; ctx.lineCap = 'round';
+        [[false, .6, .05], [true, 1.5, .16]].forEach(([big, lw, al]) => { for (let j = 0; j < 6; j++) { ctx.beginPath(); stars.forEach(s => { if (s.r0 < 4 || s.big !== big) return; const a1 = s.a0 + an - j * dA, a2 = a1 - dA; ctx.moveTo(spin.cx + s.r0 * Math.cos(a1), spin.cy + s.r0 * Math.sin(a1)); ctx.arc(spin.cx, spin.cy, s.r0, a1, a2, true); });
+          ctx.strokeStyle = `rgba(255,240,224,${(al * Math.pow(1 - j / 6, 1.6)).toFixed(3)})`; ctx.lineWidth = lw; ctx.stroke(); } }); }
       if (!RM) { act *= .985; spd *= .85;
         // the aurora gathers around a slow pointer and spreads from a quick sweep
         const gt = ptr ? (spd > 14 ? -.9 : 1) : 0; gv += (gt - gv) * (gt < gv ? .02 : .01);
@@ -495,9 +511,12 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       // the aurora stays in view while the page scrolls; the camera tilts up as you go down
       const st = vp.scrollTop; ac.style.top = bc.style.top = st + 'px'; const pt = Math.max(0, Math.min(1, st / s2top)), e = pt * pt * (3 - 2 * pt); cam += (e - cam) * (RM ? 1 : .2);
       dz += ((hov ? 1 : 0) - dz) * (RM ? 1 : hov ? .035 : .025);
-      const pv = PAL.now();
+      const pv = PAL.now(), tdt = Math.min(.1, now - (lastT || now)); lastT = now; trailK = Math.max(1 - Math.pow(.05, tdt / 2), Math.min(1, Math.abs(e - cam) * 60 + (tdt ? 0 : 1)));
       mv += (Math.min(1, spd / 25) - mv) * (spd / 25 > mv ? .08 : .015);
-      gls.forEach(({ gl, c, R, T, W: Wu, M, G, Ph, S, P, DZ, MW, MV, K }) => { gl.uniform1f(DZ, dz); gl.uniform1f(MW, vp.dataset.mw ? 1 : 0); gl.uniform1f(MV, mv); K.forEach((k, j) => gl.uniform3fv(k, pv[j])); gl.uniform2f(R, c.width, c.height); gl.uniform1f(T, tt); gl.uniform1f(Wu, W); gl.uniform1f(S, vh); mp.forEach((q, k) => gl.uniform2f(M[k], q[0], q[1] - st)); gl.uniform1f(P, cam); gl.uniform1f(G, gv); gl.uniform1f(Ph, ph); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); });
+      gls.forEach(({ gl, c, R, T, W: Wu, M, G, Ph, S, P, DZ, MW, MV, K }) => { gl.uniform1f(DZ, dz); gl.uniform1f(MW, vp.dataset.mw ? 1 : 0); gl.uniform1f(MV, mv); K.forEach((k, j) => gl.uniform3fv(k, pv[j])); gl.uniform2f(R, c.width, c.height); gl.uniform1f(T, tt); gl.uniform1f(Wu, W); gl.uniform1f(S, vh); mp.forEach((q, k) => gl.uniform2f(M[k], q[0], q[1] - st)); gl.uniform1f(P, cam); gl.uniform1f(G, gv); gl.uniform1f(Ph, ph);
+        // Halo Orbit: each frame blends over the last, so the turning sky leaves a soft trail that fades out over about 2 seconds
+        if (MWV && !RM && trailK < 1) { gl.enable(gl.BLEND); gl.blendColor(0, 0, 0, trailK); gl.blendFunc(gl.CONSTANT_ALPHA, gl.ONE_MINUS_CONSTANT_ALPHA); } else gl.disable(gl.BLEND);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); });
       // a dense array of faint dots shows around the pointer
       if (ptr && act > .02) { const G = 9, GR = 115, S = GR * 2, ox = ptr.x - GR, oy = ptr.y - GR, gx = grid.getContext('2d');
         if (grid.width !== S) grid.width = grid.height = S;
@@ -878,17 +897,323 @@ precision mediump float;
     vp._cleanup.push(() => { on = false; cancelAnimationFrame(raf); ro.disconnect(); clearTimeout(tap); [gl, cg].forEach(g => { const x = g && g.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }); });
     build();
   }
+  // Rhizomatic Cosmos: a Milky Way band runs diagonally across the sky, and two star networks grow in from the
+  // lower-left and upper-right corners, meet across the middle and keep spreading through one another.
+  // Stars are the junctions; each filament draws itself from one star to another. Drawn in viewport space so the
+  // field stays put while the page scrolls.
+  function rhizome(ld, vp) {
+    const cv = ld.querySelector('canvas.rzc'), ctx = cv.getContext('2d'), sv = ld.querySelector('canvas.rzs'), sctx = sv.getContext('2d');
+    const lift = (h, k = .6) => { const c = hx(h), m = Math.max(...c, .01); return c.map(v => v + (v / m - v) * k); };
+    const rgb = (c, a) => `rgba(${c.map(v => Math.round(Math.min(1, v) * 255)).join(',')},${a})`;
+    const target = () => { const p = PALS[PAL.i]; return { A: lift(p.deco[0]), B: lift(p.deco[1]), C: lift(p.deco[2]), act: lift(p.action, .3), lt: hx(p.light), dk: hx(p.dark) }; };
+    let col = target(), palI = PAL.i, band = null, bandOld = null, bandFade = 1;
+    let W = 0, H = 0, D = 1, nodes = [], edges = [], tips = [], pulses = [], raf = 0, on = false, last = 0, met = false, lastPulse = 0, small = false, quiet = [0, 0, 0, 0];
+    let bok = [], meetN = null, ptr = null, pe = null, pv = [0, 0], pw = 0, lastSpawn = 0, rmTimer = 0, routes = [], anchor = null, Z = 1, zp = 0, s2y = 1;
+    // scrolling down zooms into the sky: Z magnifies around the middle of the view, zp (0 to 1) is how far down the page you are
+    const toW = (x, y) => [W / 2 + (x - W / 2) / Z, H / 2 + (y - H / 2) / Z];
+    const zoomTo = st => { const p = Math.max(0, Math.min(1, st / s2y)), e = p * p * (3 - 2 * p); zp += (e - zp) * (RM ? 1 : .12); Z = 1 + 1.05 * zp; };
+    // the far sky (Milky Way cloud and its stars) zooms in much less than the network in front of it, and stays in focus
+    const FAR = .35;
+    // the Milky Way cloud itself: a flowing shader layer under the stars. Its gaps are simply places with no cloud, wandering and organic
+    const gc = ld.querySelector('canvas.rzg'), gl = gc && gc.getContext('webgl', { premultipliedAlpha: true, antialias: false });
+    let G = null;
+    if (gl) { const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }, pr = gl.createProgram();
+      gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'));
+      gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision mediump float;uniform vec2 r;uniform vec2 S;uniform float t;uniform vec3 c0;uniform vec3 c1;uniform vec3 c2;uniform vec3 lt;uniform vec4 qb;uniform vec2 m;uniform float mw;uniform float z;uniform float zx;
+        float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+        float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+        float fb(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+        void main(){vec2 q=vec2(gl_FragCoord.x/r.x,1.-gl_FragCoord.y/r.y)*S;float D=length(S);q=S*.5+(q-S*.5)/z;
+          // hovering over the cloud opens the void lane wider around the pointer
+          vec2 dm=q-m;float fall=exp(-dot(dm,dm)/(D*D*.022))*mw;
+          vec2 u=normalize(vec2(S.x,-S.y)),nn=vec2(-u.y,u.x),c=S*.5;float s=dot(q-c,u),o=dot(q-c,nn);
+          vec2 w=q/D*3.2;vec2 wq=vec2(fb(w*1.2+vec2(t*.03,0.)),fb(w*1.2+vec2(5.2,1.3)-vec2(0.,t*.025)));
+          float f=fb(w+1.6*wq+vec2(-t*.012,t*.008));
+          o+=D*.05*sin(s/D*7.1+1.3)+D*.03*sin(s/D*15.7)+D*.07*(f-.5);
+          float sig=D*.16*(1.+.7*zx),den=exp(-o*o/(sig*sig*.55))*(.35+1.1*f);
+          // one continuous void runs the whole length of the band, just off its centre like the dust lane in a Milky Way photo:
+          // plain sky, no darker than the sky around it, with a ragged edge that wanders, swells and narrows as it flows
+          float g=fb(w*2.1+1.3*wq+vec2(3.1+t*.01,-t*.012)),ol=o-sig*.12-D*.03*sin(s/D*9.3+t*.05)-D*.05*(g-.5);
+          float kw=smoothstep(.32,.68,fb(vec2(s/D*3.2+t*.02,2.7))),lw=sig*(.018+.32*kw*kw)*(.8+.4*fb(w*3.4+wq))*(.75+.5*fb(w*8.5+2.*wq+vec2(t*.03,0.)));lw=lw*(1.+2.6*fall+1.8*zx)+sig*(.22*fall+.08*zx);den*=1.-.96*smoothstep(1.,.3,abs(ol)/lw);
+          den*=1.-.25*smoothstep(.62,.8,fb(w*4.3-wq+vec2(t*.02,8.)));
+          // fine filaments and dust grain through the cloud: lost in the soft focus up top, sharp once you zoom in below
+          float rg=1.-abs(2.*fb(w*7.+2.2*wq+vec2(t*.008,-t*.006))-1.),gr=fb(w*26.+wq);den*=mix(1.,(.74+.6*pow(rg,3.))*(.85+.3*gr),.55+.45*zx);
+          // a quieter patch behind the headline and the ways in
+          vec2 qc=(qb.xy+qb.zw)*.5,qr=max((qb.zw-qb.xy)*vec2(.75,.8),vec2(60.));float qd=length((q-qc)/qr);den*=mix(.5,1.,smoothstep(.4,1.2,qd));
+          vec3 col=mix(c0,c1,smoothstep(.3,.7,fb(w*.7+vec2(9.,t*.01))));col=mix(col,c2,.6*smoothstep(.5,.8,f));col+=lt*.35*pow(clamp(den,0.,1.),2.5);
+          float a=clamp(den*.5,0.,.78);gl_FragColor=vec4(col*a,a);}`));
+      gl.linkProgram(pr); gl.useProgram(pr); const bf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+      const a = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
+      G = Object.fromEntries(['r', 'S', 't', 'c0', 'c1', 'c2', 'lt', 'qb', 'm', 'mw', 'z', 'zx'].map(k => [k, gl.getUniformLocation(pr, k)])); }
+    let cm = [0, 0], cmw = 0;
+    const cloud = (now, st) => { if (!G) return; gc.style.top = st + 'px'; gc.style.filter = `blur(${(.5 + 3.5 * (1 - zp)).toFixed(2)}px)`;
+      if (ptr) { const zf = 1 + (Z - 1) * FAR, tx = W / 2 + (ptr[0] - W / 2) / zf, ty = H / 2 + (ptr[1] - H / 2) / zf; cm[0] += (tx - cm[0]) * .04; cm[1] += (ty - cm[1]) * .04; } cmw += ((ptr ? 1 : 0) - cmw) * .03;
+      gl.uniform2f(G.r, gc.width, gc.height); gl.uniform2f(G.S, W, H); gl.uniform1f(G.t, RM ? 30 : now); gl.uniform3fv(G.c0, col.A); gl.uniform3fv(G.c1, col.B); gl.uniform3fv(G.c2, col.C); gl.uniform3fv(G.lt, col.lt);
+      gl.uniform4f(G.qb, quiet[0], quiet[1], quiet[2], quiet[3]); gl.uniform2f(G.m, cm[0], cm[1]); gl.uniform1f(G.mw, cmw); gl.uniform1f(G.z, 1 + (Z - 1) * FAR); gl.uniform1f(G.zx, zp); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+    const R = Math.random, gauss = () => (R() + R() + R() - 1.5) / .87;
+    // far stars for the lower half: each lives a few seconds, then reappears somewhere else
+    let fs = [], fl = [], fNext = 0, fo = 1, hv = 0;
+    // a curved, slightly wobbly filament between two far stars, with a couple of short offshoots
+    const fLink = (a, b, gen, born) => { const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy), nx = -dy / len, ny = dx / len, o1 = (R() - .5) * len * .5, o2 = (R() - .5) * len * .5, pts = [];
+      for (let i = 0; i <= 12; i++) { const t = i / 12, u = 1 - t, j = i && i < 12 ? 1.1 : 0; pts.push([u * u * u * a.x + 3 * u * u * t * (a.x + dx * .33 + nx * o1) + 3 * u * t * t * (a.x + dx * .66 + nx * o2) + t * t * t * b.x + (R() - .5) * j,
+        u * u * u * a.y + 3 * u * u * t * (a.y + dy * .33 + ny * o1) + 3 * u * t * t * (a.y + dy * .66 + ny * o2) + t * t * t * b.y + (R() - .5) * j]); }
+      const tw = []; for (let k = 0, m = R() * 3 | 0; k < m; k++) { const f = .2 + R() * .6, p = pts[Math.round(f * 12)], an = Math.atan2(dy, dx) + (R() < .5 ? 1 : -1) * (.5 + R() * .7), l = 6 + R() * 12; tw.push({ f, x0: p[0], y0: p[1], x1: p[0] + Math.cos(an) * l, y1: p[1] + Math.sin(an) * l }); }
+      return { a, b, gen, born, pts, tw, c: a.c.map((v, j) => v + (col.lt[j] - v) * .35), grow: len / (70 + R() * 40), hold: 2.5 + R() * 1.5, kids: false }; };
+    const farStar = born => { const [x, y] = R() < .65 ? bandPt((R() * 2 - 1) * D * .6, gauss() * D * .12) : [R() * W, R() * H], big = R() < .14;
+      return { x, y, born, dur: 3 + R() * 6, r: big ? 1.1 + R() * .7 : .45 + R() * .5, a: big ? .9 : .45 + R() * .45, sp: 2 + R() * 4, ph: R() * 6.28, c: (R() < .2 ? col.lt : [col.A, col.B, col.C, col.act][R() * 4 | 0]).map((v, j, a) => v + (col.lt[j] - v) * .25) }; };
+    const corners = () => [[0, H], [W, 0]];
+    const inQuiet = (x, y) => x > quiet[0] && x < quiet[2] && y > quiet[1] && y < quiet[3];
+    // the band: an axis from the lower-left corner to the upper-right, wandering a little, with soft edges
+    const axis = () => { const u = [W, -H], l = Math.hypot(u[0], u[1]); return { u: [u[0] / l, u[1] / l], n: [H / l, W / l], c: [W / 2, H / 2] }; };
+    const bandPt = (s, o) => { const a = axis(), w = D * .05 * Math.sin(s / D * 7.1 + 1.3) + D * .03 * Math.sin(s / D * 15.7); return [a.c[0] + a.u[0] * s + a.n[0] * (o + w), a.c[1] + a.u[1] * s + a.n[1] * (o + w)]; };
+    const renderBand = () => {
+      const dpr = Math.min(3, (devicePixelRatio || 1) * 1.4), c = document.createElement('canvas'); c.width = Math.ceil(W * dpr); c.height = Math.ceil(H * dpr);
+      const x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0); const sig = D * (small ? .2 : .16), L = D * .7;
+      x.globalCompositeOperation = 'lighter';
+      // tiny distant stars, crowded in the band, and a few small clusters
+      const nS = Math.round(W * H / (small ? 520 : 380));
+      for (let i = 0; i < nS; i++) { const inB = R() < .7, s = (R() * 2 - 1) * L, [px, py] = inB ? bandPt(s, gauss() * sig * .5) : [R() * W, R() * H], r = .25 + Math.pow(R(), 3) * .9;
+        x.fillStyle = rgb(R() < .3 ? col.lt : [col.A, col.B, col.C, col.act][i % 4].map((v, j) => v + (col.lt[j] - v) * .2), (.18 + R() * .6) * (inB ? 1 : .75)); x.beginPath(); x.arc(px, py, Math.max(.45, r), 0, 6.283); x.fill(); }
+      for (let k = 0; k < 9; k++) { const [cx, cy] = bandPt((R() * 2 - 1) * L * .9, gauss() * sig * .35), rr = 12 + R() * 26;
+        for (let i = 0; i < 45; i++) { const a = R() * 6.283, d = rr * Math.sqrt(R()), r = .3 + R() * .5; x.fillStyle = rgb(R() < .4 ? col.lt : [col.A, col.B, col.C, col.act][R() * 4 | 0], .25 + R() * .55); x.beginPath(); x.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, Math.max(.45, r), 0, 6.283); x.fill(); } }
+      // a faint layer of organic branching behind the sharper connections: knots with filaments wandering out of them
+      x.lineCap = 'round';
+      for (let k = 0; k < (small ? 6 : 10); k++) { const [kx, ky] = bandPt((R() * 2 - 1) * L * .85, gauss() * sig * .6), arms = 9 + (R() * 8 | 0), kc = [col.A, col.B, col.C][k % 3];
+        const walk = (px, py, an, len, w, depth) => { x.beginPath(); x.moveTo(px, py); let st = 0;
+          while (st < len) { an += (R() - .5) * .55; const sl = 5 + R() * 6; px += Math.cos(an) * sl; py += Math.sin(an) * sl; st += sl; x.lineTo(px, py);
+            if (depth < 2 && R() < .07) { x.strokeStyle = rgb(kc, .07 / (depth + 1)); x.lineWidth = w; x.stroke(); walk(px, py, an + (R() < .5 ? -1 : 1) * (.5 + R() * .7), (len - st) * (.4 + R() * .4), w * .7, depth + 1); x.beginPath(); x.moveTo(px, py); } }
+          x.strokeStyle = rgb(kc, .07 / (depth + 1)); x.lineWidth = w; x.stroke(); };
+        for (let i = 0; i < arms; i++) walk(kx, ky, R() * 6.283, D * (.05 + R() * .12), .7, 0);
+        const g = x.createRadialGradient(kx, ky, 0, kx, ky, 14); g.addColorStop(0, rgb(kc, .12)); g.addColorStop(1, rgb(kc, 0)); x.fillStyle = g; x.fillRect(kx - 14, ky - 14, 28, 28); }
+      return c; };
+    // junction stars: fewer and brighter than the dust, mostly along the band
+    const build = () => { const r = vp.getBoundingClientRect(); W = r.width; H = vp.clientHeight; if (!W || !H) return; D = Math.hypot(W, H); small = W < 640;
+      const dpr = Math.min(2, devicePixelRatio || 1); cv.width = Math.ceil(W * dpr); cv.height = Math.ceil(H * dpr); cv.style.height = H + 'px'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); sv.width = cv.width; sv.height = cv.height; sv.style.height = H + 'px';
+      if (G) { const gk = small ? .5 : .8; gc.width = Math.ceil(W * gk); gc.height = Math.ceil(H * gk); gc.style.height = H + 'px'; gl.viewport(0, 0, gc.width, gc.height); }
+      const s2e = ld.querySelector('.s2'); s2y = s2e ? s2e.offsetTop || 1 : 1;
+      const st = vp.scrollTop, bx = [...ld.querySelectorAll('.s1 h3, .s1 .cue')].map(e => e.getBoundingClientRect());
+      quiet = bx.length ? [Math.min(...bx.map(b => b.left)) - r.left - 18, Math.min(...bx.map(b => b.top)) - r.top + st - 14, Math.max(...bx.map(b => b.right)) - r.left + 18, Math.max(...bx.map(b => b.bottom)) - r.top + st + 14] : [W * .3, H * .3, W * .7, H * .7];
+      const sig = D * (small ? .2 : .16), n = Math.max(60, Math.min(small ? 120 : 270, Math.round(W * H / (small ? 3000 : 4000)))), md = small ? 18 : 22;
+      nodes = []; let tries = 0;
+      while (nodes.length < n && tries++ < n * 40) { const [x, y] = R() < .4 ? bandPt((R() * 2 - 1) * D * .62, gauss() * sig * .7) : [R() * W, R() * H];
+        if (x < 10 || y < 10 || x > W - 10 || y > H - 10 || inQuiet(x, y) || nodes.some(o => Math.hypot(o.x - x, o.y - y) < md)) continue;
+        nodes.push({ x, y, r: .9 + Math.pow(R(), 2) * 1.5, ph: R() * 6.28, sp: .5 + R() * 1.2, col: -1, edges: new Set(), flash: 0, seed: false }); }
+      // a loose ring of stars around the headline, so bridges can form above, below and to either side of it
+      for (let i = 0, m = small ? 8 : 16; i < m; i++) { const cx = (quiet[0] + quiet[2]) / 2, cy = (quiet[1] + quiet[3]) / 2, an = i / m * 6.283 + R() * .3, f = 1 + R() * .5,
+        x = cx + Math.cos(an) * ((quiet[2] - quiet[0]) / 2 + 30) * f, y = cy + Math.sin(an) * ((quiet[3] - quiet[1]) / 2 + 26) * f;
+        if (x < 10 || y < 10 || x > W - 10 || y > H - 10 || inQuiet(x, y) || nodes.some(o => Math.hypot(o.x - x, o.y - y) < md)) continue;
+        nodes.push({ x, y, r: .9 + Math.pow(R(), 2) * 1.5, ph: R() * 6.28, sp: .5 + R() * 1.2, col: -1, edges: new Set(), flash: 0, seed: false, ring: true }); }
+      // a few stars just beyond the lower-left and upper-right corners, so the two networks grow in from off screen
+      [0, 1].forEach(k => { for (let i = 0, tr = 0; i < (small ? 5 : 8) && tr < 400; tr++) { let x = -110 + R() * (W * .2 + 110), y = H * .76 + R() * (H * .24 + 110);
+          if (x > -15 && y < H + 15) continue; if (k) { x = W - x; y = H - y; } if (nodes.some(o => Math.hypot(o.x - x, o.y - y) < md * 1.2)) continue; i++;
+          nodes.push({ x, y, r: .9 + Math.pow(R(), 2) * 1.5, ph: R() * 6.28, sp: .5 + R() * 1.2, col: -1, edges: new Set(), flash: 0, seed: false, off: k }); } });
+      // close-up stars in the middle, hidden behind the headline at first and revealed as you zoom in on the lower half
+      for (let i = 0, m = small ? 14 : 26, tr = 0; i < m && tr < 600; tr++) { const x = quiet[0] + R() * (quiet[2] - quiet[0]), y = quiet[1] + R() * (quiet[3] - quiet[1]);
+        if (nodes.some(o => Math.hypot(o.x - x, o.y - y) < md * .8)) continue; i++;
+        nodes.push({ x, y, r: .7 + Math.pow(R(), 2) * 1.1, ph: R() * 6.28, sp: .5 + R() * 1.2, col: -1, edges: new Set(), flash: 0, seed: false, deep: true }); }
+      // the meeting point: a star in the middle of the title, where the two colours touch
+      { const x = (quiet[0] + quiet[2]) / 2, y = quiet[1] + (quiet[3] - quiet[1]) * .55; nodes = nodes.filter(o => Math.hypot(o.x - x, o.y - y) > md * .7);
+        meetN = { x, y, r: 1.6, ph: 0, sp: 1, col: -1, edges: new Set(), flash: 0, seed: false, ring: true, meet: true }; nodes.push(meetN); }
+      const maxD = Math.max(80, Math.min(small ? 120 : 165, D * .12));
+      nodes.forEach(a => a.rv = []); nodes.forEach(a => { a.nb = nodes.filter(b => b !== a).map(b => [b, Math.hypot(b.x - a.x, b.y - a.y)]).filter(([, d]) => d < maxD).sort((p, q) => p[1] - q[1]).slice(0, 7).map(p => p[0]); }); nodes.forEach(a => a.nb.forEach(b => b.rv.push(a)));
+      // how far each star sits from the middle of the Milky Way band, in band widths
+      { const ax = axis(); nodes.forEach(o => { const dx = o.x - ax.c[0], dy = o.y - ax.c[1], sa = dx * ax.u[0] + dy * ax.u[1], oa = dx * ax.n[0] + dy * ax.n[1], wv = D * .05 * Math.sin(sa / D * 7.1 + 1.3) + D * .03 * Math.sin(sa / D * 15.7); o.bo = Math.abs(oa - wv) / sig; o.sa = sa; if (o.ring && o.bo < 1.6) o.bo = .4; }); }
+      // every star's travel distance to the meeting point across the network, cheaper along the Milky Way, so the first-screen growth flows down the band to it
+      { nodes.forEach(o => o.dm = 1e9); meetN.dm = 0; const todo = new Set([meetN]);
+        while (todo.size) { let n = null; todo.forEach(o => { if (!n || o.dm < n.dm) n = o; }); todo.delete(n);
+          [...new Set([...n.nb, ...n.rv])].forEach(c => { const d = n.dm + Math.hypot(c.x - n.x, c.y - n.y) * (1 + .5 * Math.max(0, (c.bo || 0) - .6)); if (d < c.dm) { c.dm = d; todo.add(c); } }); } }
+      edges = []; tips = []; pulses = []; routes = []; anchor = null; met = false; seed();
+      // a few near stars that only show as you zoom in, swelling into soft out-of-focus discs as they rush past
+      bok = Array.from({ length: small ? 10 : 18 }, (_, i) => { const a = R() * 6.283, d = .12 + Math.sqrt(R()) * .5; return { x: W / 2 + Math.cos(a) * d * W * .55, y: H / 2 + Math.sin(a) * d * H * .55, r: 1.4 + R() * 2.6, k: i % 4, ph: R() * 6.28 }; }); band = renderBand(); bandOld = null; bandFade = 1;
+      if (RM) { for (let i = 0; i < 4000 && edges.length < (small ? 70 : 130); i++) step(.25, true); edges.forEach(e => { e.p = 1; e.done = -99; }); nodes.forEach(o => o.flash = 0); tips = []; }
+      draw(performance.now() / 1000); };
+    const nearest = (x, y, col) => nodes.filter(o => col === undefined || o.col === col).map(o => [o, Math.hypot(o.x - x, o.y - y)]).sort((p, q) => p[1] - q[1]);
+    // a few small connected clusters near each corner to start from
+    // the networks start from stars just off screen beyond the lower-left and upper-right corners and grow in
+    const seed = (only) => { corners().forEach(([cx, cy], k) => { if (only !== undefined && only !== k) return;
+      const off = nodes.filter(o => o.off === k).sort((p, q) => Math.hypot(p.x - cx, p.y - cy) - Math.hypot(q.x - cx, q.y - cy)), st = off.length ? off.slice(0, 3) : nearest(cx, cy).slice(0, 2).map(c => c[0]);
+      st.forEach(s => { if (s.col < 0) s.col = k; s.seed = true; tips.push(tip(s, k)); }); }); };
+    const link = (a, b, k, instant) => { const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy), nx = -dy / len, ny = dx / len, o1 = (R() - .5) * len * .45, o2 = (R() - .5) * len * .45, pts = [];
+      for (let i = 0; i <= 18; i++) { const t = i / 18, u = 1 - t, bx = u * u * u * a.x + 3 * u * u * t * (a.x + dx * .33 + nx * o1) + 3 * u * t * t * (a.x + dx * .66 + nx * o2) + t * t * t * b.x,
+        by = u * u * u * a.y + 3 * u * u * t * (a.y + dy * .33 + ny * o1) + 3 * u * t * t * (a.y + dy * .66 + ny * o2) + t * t * t * b.y, j = i && i < 18 ? .9 : 0; pts.push([bx + (R() - .5) * j, by + (R() - .5) * j]); }
+      // small offshoots that branch off a filament and stop short
+      // fine dendrites: several offshoots along each filament, some forking again, like nerve fibres
+      const twigs = [], tw = (f, x0, y0, an, tl, deep) => { const bend = (R() - .5) * .8, x1 = x0 + Math.cos(an) * tl, y1 = y0 + Math.sin(an) * tl; twigs.push({ f, x0, y0, x1, y1, cx: x0 + Math.cos(an + bend) * tl * .5, cy: y0 + Math.sin(an + bend) * tl * .5 });
+        if (deep && R() < .55) for (let j = 0, m = 1 + (R() < .4); j < m; j++) { const mx = (x0 + x1) / 2 + (R() - .5) * 2, my = (y0 + y1) / 2; tw(Math.min(.98, f + .08), x0 + (x1 - x0) * (.45 + R() * .3), y0 + (y1 - y0) * (.45 + R() * .3), an + (R() < .5 ? -1 : 1) * (.4 + R() * .6), tl * (.35 + R() * .3), false); } };
+      for (let i = 0, m = 1 + (R() * 4 | 0) + (len > 90 ? 1 : 0); i < m; i++) { const f = .1 + R() * .8, q = pts[Math.round(f * 18)]; tw(f, q[0], q[1], Math.atan2(dy, dx) + (R() < .5 ? -1 : 1) * (.45 + R() * .8), 10 + R() * 28, true); }
+      // a few short fibres sprout straight from the star at each end
+      [[a, 0], [b, .96]].forEach(([o, f]) => { for (let i = 0, m = R() < .5 ? 1 : 0; i < m; i++) tw(f, o.x, o.y, R() * 6.283, 8 + R() * 16, false); });
+      const now = performance.now() / 1000, e = { a, b, k, pts, len, p: instant ? 1 : 0, spd: 60 + R() * 55, born: now, done: instant ? now - 6 : 0, life: 26 + R() * 22, fade: 0, bridge: false, twigs };
+      edges.push(e); a.edges.add(e); b.edges.add(e); return e; };
+    const waypoint = () => { const cx = (quiet[0] + quiet[2]) / 2, cy = (quiet[1] + quiet[3]) / 2, a = R() * 6.283, rx = (quiet[2] - quiet[0]) / 2 + 40 + R() * 60, ry = (quiet[3] - quiet[1]) / 2 + 30 + R() * 50;
+      return [Math.max(20, Math.min(W - 20, cx + Math.cos(a) * rx)), Math.max(20, Math.min(H - 20, cy + Math.sin(a) * ry))]; };
+    // where a new branch heads: on the first screen nothing (it follows the band to the middle); lower down, one of the two empty corners
+    const tip = (node, k) => ({ node, col: k, goal: vp.scrollTop >= H * .5 ? (R() < .5 ? [0, 0] : [W, H]) : null });
+    const linked = (a, b) => [...a.edges].some(e => e.a === b || e.b === b);
+    // choose where a tip grows next: toward the other corner, toward fresh stars, a little at random, and toward the pointer when it is near
+    // choose where a tip grows next. First screen, before the networks meet: along the Milky Way toward the middle.
+    // First screen after they meet: a little more growth along the band. Lower half: out toward the two empty corners, onto stars not yet connected.
+    const grow = t => { const n = t.node, top = vp.scrollTop < H * .5 && !met, AX = axis();
+      // first screen: a network that has already reached the meeting star waits there for the other one
+      if (top && !met && meetN.col === t.col && n.dm < 260) return false;
+      if (top) t.goal = null; else if (!t.goal) t.goal = R() < .5 ? [0, 0] : [W, H];
+      const goal = top && !met ? [W / 2, H / 2] : top ? (() => { const sa = (n.x - AX.c[0]) * AX.u[0] + (n.y - AX.c[1]) * AX.u[1], dir = met ? (R() < .5 ? 1 : -1) : -Math.sign(sa) || 1; return bandPt(sa + dir * Math.min(Math.abs(sa) + (met ? D * .2 : 0), D * .22), 0); })() : t.goal,
+        gx = goal[0] - n.x, gy = goal[1] - n.y, gl = Math.hypot(gx, gy) || 1;
+      let best = null, bs = -1e9;
+      (top && !met ? [...new Set([...n.nb, ...n.rv, ...(Math.hypot(n.x - meetN.x, n.y - meetN.y) < 190 && n !== meetN ? [meetN] : [])])] : n.nb).forEach(c => { if (c === n || linked(n, c) || (c.deep && zp < .35 && !(top && !met))) return; const dx = c.x - n.x, dy = c.y - n.y, dl = Math.hypot(dx, dy), ux = dx / dl, uy = dy / dl;
+        let s = (ux * gx + uy * gy) / gl * (top ? 1.4 : 1.2) + R() * .7 + (c.edges.size > 3 ? -.6 : 0);
+        if (top && !met) s = (n.dm - c.dm) / dl * 3 + R() * .35 + (c.col >= 0 && c.col !== t.col ? 3 : c.col === t.col ? -.8 : 0) + (c.edges.size > 3 ? -.6 : 0);
+        else if (top) s += (c.col < 0 ? .5 : c.col === t.col ? -.6 : 2) - (met ? 4 * Math.max(0, (c.bo || 0) - .3) : 2.2 * Math.max(0, (c.bo || 0) - .5)) + 1.2 * Math.abs(ux * AX.u[0] + uy * AX.u[1]);
+        else s += c.col < 0 ? 1.6 : c.edges.size < 3 ? 1 : c.col === t.col ? -.9 : .1;
+        if (pe && pw > .02) { const px = pe[0] + pv[0] * 18 - n.x, py = pe[1] + pv[1] * 18 - n.y, pd = Math.hypot(px, py), reach = small ? 200 : 280;
+          if (pd < reach) s += 2.4 * pw * (1 - pd / reach) * (ux * px + uy * py) / (pd || 1); }
+        if (s > bs) { bs = s; best = c; } });
+      if (!best || (top && met && (best.bo || 0) > .65 && !(pe && pw > .1)) || (!top && best.col >= 0 && bs < .4 && R() < .5)) return false; if (best.deep && top && !met) best.deep = false; t.edge = link(n, best, t.col); if (top && !met) t.edge.spine = true; return true; };
+    // hovering a way in: a branch from each network takes the shortest route across the stars to a star just under the button, and the two meet there
+    const route = (from, to) => { const dist = new Map([[from, 0]]), prev = new Map(), todo = new Set([from]);
+      while (todo.size) { let n = null, nd = 1e9; todo.forEach(o => { if (dist.get(o) < nd) { nd = dist.get(o); n = o; } }); todo.delete(n); if (n === to) break;
+        const adj = n === to ? [] : [...new Set([...n.nb, ...n.rv, ...(to.nb.includes(n) ? [to] : [])])];
+        adj.forEach(o => { const d = nd + Math.hypot(o.x - n.x, o.y - n.y); if (d < (dist.has(o) ? dist.get(o) : 1e9)) { dist.set(o, d); prev.set(o, n); todo.add(o); } }); }
+      if (!prev.has(to)) return null; const path = [to]; while (path[0] !== from) path.unshift(prev.get(path[0])); return path; };
+    // one junction just left of the button for the lower-left network, one just right of it for the upper-right network; a bridge then joins them under the label
+    const meetAt = btn => { unmeet(); const r = vp.getBoundingClientRect(), b = btn.getBoundingClientRect(), y = b.top + b.height * .55 - r.top;
+      const mk = (x0, side) => { const [x, yw] = toW(x0, y); const a = { x, y: yw, r: 1.8, ph: 0, sp: 1, col: -1, edges: new Set(), flash: 0, seed: false, tmp: true, rv: [] };
+        a.nb = nodes.filter(o => !o.tmp && (o.x - x) * side > -10).map(o => [o, Math.hypot(o.x - x, o.y - yw) + 1.2 * Math.abs(o.y - yw)]).sort((p, q) => p[1] - q[1]).slice(0, 5).map(p => p[0]); nodes.push(a); return a; };
+      anchor = { L: mk(b.left - r.left - 16, -1), R: mk(b.right - r.left + 16, 1), got: 0, sag: (b.bottom - r.top - y + 10) / Z };
+      [0, 1].forEach(k => { const to = k ? anchor.R : anchor.L, own = nodes.filter(o => o.col === k && !o.tmp && o.edges.size), cc = corners()[k], pool = own.length ? own : nodes.filter(o => !o.tmp).sort((p, q) => Math.hypot(p.x - cc[0], p.y - cc[1]) - Math.hypot(q.x - cc[0], q.y - cc[1])).slice(0, 1);
+        // start a little way back inside the network, so the branch visibly travels toward the button
+        const st = pool.map(o => [o, Math.hypot(o.x - to.x, o.y - to.y)]).sort((p, q) => p[1] - q[1]); const from = st[Math.min(st.length - 1, 1 + (R() * 3 | 0))][0];
+        const path = route(from, to); if (path) routes.push({ k, path, i: 0, edge: null }); }); };
+    const unmeet = () => { routes = []; if (!anchor) return; const now = performance.now() / 1000; [anchor.L, anchor.R].forEach(a => { a.edges.forEach(e => { if (!e.fade) e.fade = now - 2; }); a.dying = true; }); edges.forEach(e => { if (e.hov && !e.fade) e.hov = false; }); anchor = null; };
+    const maxTips = () => small ? 5 : 7, maxEdges = () => small ? 120 : 230;
+    const send = (e, from, gen, hot) => { if (pulses.length < 240) pulses.push({ e, fwd: from === e.a, t: 0, gen, hot }); };
+    const step = (dt, sim) => { const now = performance.now() / 1000;
+      const addR = []; routes = routes.filter(rt => { if (!rt.edge) { while (rt.i < rt.path.length - 1 && linked(rt.path[rt.i], rt.path[rt.i + 1])) { const a = rt.path[rt.i], b = rt.path[rt.i + 1], e = [...a.edges].find(o => o.a === b || o.b === b);
+            if (e && !e.fade) { e.done = now; send(e, a, 0); } rt.i++; }
+          if (rt.i >= rt.path.length - 1) return false; const a = rt.path[rt.i], b = rt.path[rt.i + 1]; rt.edge = link(a, b, rt.k); rt.edge.spd = 330 + R() * 60; rt.edge.hov = true; rt.edge.life = 1e6; }
+        const e = rt.edge; e.p = Math.min(1, e.p + dt * e.spd / e.len); if (e.p < 1) return true;
+        e.done = now; e.b.flash = 1; rt.edge = null; rt.i++; if (e.b.col < 0 && !e.b.tmp) e.b.col = rt.k;
+        if (rt.final) { [e.a, e.b].forEach(o => { o.flash = 2.2; [...o.edges].forEach(x => { x.bridge = true; if (x !== e) send(x, o, 4); }); }); return false; }
+        if (e.b.tmp && anchor) { e.b.col = rt.k; anchor.got |= 1 << rt.k;
+          // both branches have reached the button: a bridge draws itself under the label, then light runs back along both routes
+          if (anchor.got === 3) { const L = anchor.L, Rr = anchor.R, be = link(L, Rr, 0); be.bridge = true; be.hov = true; be.life = 1e6; be.spd = 260; be.twigs = [];
+            be.pts = be.pts.map((q, i) => { const t = i / 18; return [L.x + (Rr.x - L.x) * t, L.y + Math.pow(Math.sin(Math.PI * t), .35) * anchor.sag]; }); addR.push({ k: 0, path: [L, Rr], i: 0, edge: be, final: true }); }
+          return false; }
+        return true; }); routes.push(...addR);
+      tips = tips.filter(t => { if (!t.edge) { if (!grow(t)) return false; }
+        const e = t.edge; e.p = Math.min(1, e.p + dt * e.spd / e.len * (.55 + .45 * Math.sin(Math.PI * Math.min(.98, e.p + .02))));
+        if (e.p < 1) return true;
+        // a branch reaches a star: it brightens and joins; reaching the other network makes a bridge
+        const b = e.b; e.done = now; b.flash = 1; t.edge = null;
+        if (b.col >= 0 && b.col !== t.col) { e.bridge = !met || R() < .06; if ((Math.hypot(b.x - meetN.x, b.y - meetN.y) < 110 && Math.hypot(e.a.x - meetN.x, e.a.y - meetN.y) < 200) || vp.scrollTop >= H * .5) { if (!met) { b.flash = 2.5; } met = true; } if (!sim && now - lastPulse > .9) { lastPulse = now; send(e, e.a, 3); } if (R() < .35) return false; }
+        if (b.col < 0) b.col = t.col; t.node = b;
+        if (t.goal && Math.hypot(b.x - t.goal[0], b.y - t.goal[1]) < D * .1) return false;
+        if (tips.filter(o => o.col === t.col).length < maxTips() && R() < .38) tips.push(tip(b, t.col));
+        return true; });
+      // keep both networks growing: toward the middle until they meet, gently along the band after that, and lower down out to the corners until every star is connected
+      { const top = vp.scrollTop < H * .5 && !met, free = nodes.filter(o => (o.col < 0 || o.edges.size < 3) && !o.tmp && o.off === undefined && (!o.deep || zp > .35)), want0 = top ? (met ? 2 : maxTips()) : (free.length ? maxTips() + 6 : 0);
+        [0, 1].forEach(k => { let mine = tips.filter(t => t.col === k).length; const want = top && !met && meetN.col === k ? 1 : want0; if (!nodes.some(o => o.col === k)) seed(k);
+          while (mine < want - 1 || (mine < want && R() < dt * .8)) { let own = nodes.filter(o => o.col === k && !o.tmp && o.edges.size < 6); if (!own.length) break; let pick;
+            if (top) { const onB = own.filter(o => (o.bo || 0) < .8); if (onB.length && met) own = onB;
+              pick = !met && R() < .75 ? own.slice().sort((a, b) => a.dm - b.dm)[R() * Math.min(3, own.length) | 0] : own[R() * own.length | 0]; }
+            else { const fr = own.filter(o => [...o.nb, ...o.rv].some(c => (c.col < 0 || c.edges.size < 3) && !c.tmp && !linked(o, c) && (!c.deep || zp > .35))); if (!fr.length) break; pick = fr[R() * fr.length | 0]; }
+            tips.push(tip(pick, k)); mine++; } }); }
+      // the pointer adds a few extra tips nearby
+      if (pe && pw > .3 && now - lastSpawn > .7 && tips.length < maxTips() * 2 + 4) { const c = nodes.filter(o => o.col >= 0).map(o => [o, Math.hypot(o.x - pe[0], o.y - pe[1])]).sort((p, q) => p[1] - q[1])[0];
+        if (c && c[1] < (small ? 160 : 220)) { tips.push({ node: c[0], col: c[0].col, goal: null }); lastSpawn = now; } }
+      if (sim) return;
+      // older paths fade to make room; stars left with no paths go back to being free
+      // established paths never go: they only settle to a softer glow (only the temporary hover junctions fade away)
+      edges = edges.filter(e => { if (e.fade && now - e.fade > 4) { e.a.edges.delete(e); e.b.edges.delete(e); [e.a, e.b].forEach(o => { if (!o.edges.size && !tips.some(t => t.node === o)) o.col = -1; }); return false; } return true; });
+      // hovering a way in: pink sparks shoot out from the button and race through the connected paths
+      if (anchor && anchor.got === 3 && now > (anchor.next || 0)) { anchor.next = now + .16; [anchor.L, anchor.R].forEach(a => [...a.edges].filter(e => e.p >= 1 && !(e.a.tmp && e.b.tmp)).forEach(e => send(e, a, 9, true))); }
+      pulses = pulses.filter(p => { p.t += dt * (p.hot ? 420 : 230) / p.e.len; if (p.t < 1) return true; const end = p.fwd ? p.e.b : p.e.a; end.flash = Math.max(end.flash, p.hot ? .6 : 0);
+        if (p.gen > 0) [...end.edges].filter(e => e !== p.e && e.p >= 1 && !e.fade && !(e.a.tmp || e.b.tmp)).sort(() => R() - .5).slice(0, p.hot ? (R() < .3 ? 2 : 1) : 2).forEach(e => send(e, end, p.gen - 1, p.hot)); return false; });
+      nodes.forEach(o => o.flash *= Math.pow(o.tmp && !o.dying && o.flash > .3 ? .6 : .25, dt)); nodes = nodes.filter(o => !(o.tmp && o.dying && !o.edges.size)); };
+    const ptAt = (e, f) => { const i = Math.min(17, Math.floor(f * 18)), u = f * 18 - i, a = e.pts[i], b = e.pts[i + 1]; return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; };
+    const draw = now => { if (!W) return; const st = vp.scrollTop; cv.style.top = sv.style.top = st + 'px'; zoomTo(st); sv.style.filter = zp < .98 ? `blur(${(2.2 * (1 - zp)).toFixed(2)}px)` : 'none';
+      // zooming in on the lower half throws the network of paths softly out of focus; the Milky Way and its stars stay sharp
+      cv.style.filter = zp > .02 ? `blur(${(zp * 3.2).toFixed(2)}px)` : 'none'; cloud(now, st);
+      // zooming in fades the front network out, leaving the far sky; hovering a way in brings it back for the meeting at the button
+      { const p = Math.max(0, Math.min(1, (zp - .08) / .62)), tgt = 1 - p * p * (3 - 2 * p); fo += (tgt - fo) * (RM ? 1 : .12); hv += ((anchor ? 1 : 0) - hv) * (RM ? 1 : .08); cv.style.opacity = fo.toFixed(3); }
+      const tg = target(); Object.keys(col).forEach(k => col[k] = RM ? tg[k] : col[k].map((v, j) => v + (tg[k][j] - v) * .05));
+      if (PAL.i !== palI) { palI = PAL.i; col = RM ? tg : col; bandOld = band; band = renderBand(); bandFade = RM ? 1 : 0; }
+      bandFade = Math.min(1, bandFade + .02);
+      [ctx, sctx].forEach(c => { c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, cv.width, cv.height); const dpr = cv.width / W; c.setTransform(dpr * Z, 0, 0, dpr * Z, dpr * W / 2 * (1 - Z), dpr * H / 2 * (1 - Z)); });
+      { const dpr = cv.width / W, zf = 1 + (Z - 1) * FAR; sctx.setTransform(dpr * zf, 0, 0, dpr * zf, dpr * W / 2 * (1 - zf), dpr * H / 2 * (1 - zf)); }
+      // the far stars are hidden on the first screen and appear as you scroll into the lower half
+      const fv = Math.max(0, Math.min(1, (zp - .15) / .6));
+      if (fv > 0) { if (bandOld && bandFade < 1) { sctx.globalAlpha = (1 - bandFade) * fv; sctx.drawImage(bandOld, 0, 0, W, H); } sctx.globalAlpha = (bandOld && bandFade < 1 ? bandFade : 1) * fv; sctx.drawImage(band, 0, 0, W, H); sctx.globalAlpha = 1;
+        // lower half: far stars blink, move to new places and briefly join into faint constellations behind the network
+        if (!fs.length || fs.W !== W) { fs = []; fs.W = W; for (let i = 0; i < (small ? 90 : 200); i++) fs.push(farStar(now - R() * 6)); }
+        fs.forEach((f, i) => { if (now - f.born > f.dur && !fl.some(l => l.a === f || l.b === f)) fs[i] = farStar(now); });
+        // every second or so a faint rhizome starts at one far star and creeps outward, curving and forking from star to star, then fades
+        const fUsed = f => fl.some(l => l.a === f || l.b === f), fGrow = (from, gen, t0) => { const live = fs.filter(f => f !== from && !fUsed(f) && f.dur - (now - f.born) > 2.5);
+            const opts = live.map(f => [f, Math.hypot(f.x - from.x, f.y - from.y)]).filter(q => q[1] > 26 && q[1] < 140).sort((p, q) => p[1] - q[1]).slice(0, 4);
+            const n = gen > 3 ? 0 : R() < (gen ? .45 : .8) ? 2 : 1; opts.sort(() => R() - .5).slice(0, n).forEach(([to]) => fl.push(fLink(from, to, gen, t0))); };
+        if (!RM && now > fNext) { fNext = now + .8 + R() * .7; const live = fs.filter(f => now - f.born > .6 && f.dur - (now - f.born) > 3 && !fUsed(f)), s0 = live[R() * live.length | 0]; if (s0) fGrow(s0, 0, now); }
+        fl.forEach(l => { if (!l.kids && now - l.born > l.grow) { l.kids = true; fGrow(l.b, l.gen + 1, now); } });
+        fl = fl.filter(l => now - l.born < l.grow + l.hold + 1.2);
+        sctx.lineCap = 'round'; fl.forEach(l => { const age = now - l.born; if (age < 0) return; const g = Math.min(1, age / l.grow), al = Math.min(1, age / .3, (l.grow + l.hold + 1.2 - age) / 1.2) * (.34 - l.gen * .04) * fv, m = Math.max(1, Math.ceil(g * 12));
+          sctx.strokeStyle = rgb(l.c.map((v, j) => v + (col.act[j] - v) * hv), Math.min(1, al * (1 + 1.4 * hv))); sctx.lineWidth = (.7 - l.gen * .08) * (1 + .5 * hv); sctx.beginPath(); sctx.moveTo(l.pts[0][0], l.pts[0][1]); for (let i = 1; i <= m; i++) sctx.lineTo(l.pts[i][0], l.pts[i][1]);
+          l.tw.forEach(w => { if (g <= w.f) return; const k = Math.min(1, (g - w.f) * 4); sctx.moveTo(w.x0, w.y0); sctx.lineTo(w.x0 + (w.x1 - w.x0) * k, w.y0 + (w.y1 - w.y0) * k); }); sctx.stroke(); });
+        fs.forEach(f => { const age = now - f.born, env = Math.max(0, Math.min(1, age / .8, (f.dur - age) / .8)), tw = RM ? 1 : .55 + .45 * Math.sin(now * f.sp + f.ph), al = env * tw * f.a * fv; if (al < .01) return;
+          if (f.r > 1) { const rr = f.r * 4, g = sctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, rr); g.addColorStop(0, rgb(f.c, al * .45)); g.addColorStop(1, rgb(f.c, 0)); sctx.fillStyle = g; sctx.fillRect(f.x - rr, f.y - rr, rr * 2, rr * 2); }
+          const fc = hv > .01 && fUsed(f) ? f.c.map((v, j) => v + (col.act[j] - v) * hv) : f.c; sctx.fillStyle = rgb(fc, al); sctx.beginPath(); sctx.arc(f.x, f.y, f.r, 0, 6.283); sctx.fill(); }); } { const dpr = cv.width / W; sctx.setTransform(dpr * Z, 0, 0, dpr * Z, dpr * W / 2 * (1 - Z), dpr * H / 2 * (1 - Z)); }
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      const kc = e => e.bridge ? col.act : e.k ? col.B : col.A;
+      const path = (e, f) => { const m = Math.max(1, Math.ceil(f * 18)); ctx.beginPath(); ctx.moveTo(e.pts[0][0], e.pts[0][1]); for (let i = 1; i < m; i++) ctx.lineTo(e.pts[i][0], e.pts[i][1]); const q = ptAt(e, f); ctx.lineTo(q[0], q[1]);
+        e.twigs.forEach(w => { if (f <= w.f) return; const g = Math.min(1, (f - w.f) * 4); ctx.moveTo(w.x0, w.y0); ctx.quadraticCurveTo(w.x0 + (w.cx - w.x0) * g, w.y0 + (w.cy - w.y0) * g, w.x0 + (w.x1 - w.x0) * g, w.y0 + (w.y1 - w.y0) * g); }); };
+      // older connections soft, fresh ones bright with a glow
+      const fresh = [];
+      edges.forEach(e => { const age = e.done ? now - e.done : 0, fd = (e.fade ? Math.max(0, 1 - (now - e.fade) / 4) : 1) * (e.a.deep || e.b.deep ? Math.min(1, zp * 1.5) : 1);
+        if (!e.done || age < 6) { fresh.push([e, fd, age]); return; }
+        const old = RM ? 1 : .26 + .74 * Math.exp(-(age - 6) / 22); ctx.strokeStyle = rgb(kc(e), (e.bridge ? .5 : e.spine ? .62 : .36) * fd * old); ctx.lineWidth = e.bridge ? 1.1 : e.spine ? 1.3 : .8; path(e, 1); ctx.stroke(); });
+      fresh.forEach(([e, fd, age]) => { const k = e.done ? Math.exp(-age / 2.5) : 1, c = kc(e);
+        ctx.shadowColor = rgb(c, .8 * k); ctx.shadowBlur = 8 * k; ctx.strokeStyle = rgb(c.map((v, j) => v + (col.lt[j] - v) * .25 * k), (.38 + .55 * k) * fd); ctx.lineWidth = .85 + .6 * k; path(e, e.p); ctx.stroke();
+        if (!e.done) { const q = ptAt(e, e.p); ctx.shadowBlur = 6; ctx.fillStyle = rgb(col.lt, .95); ctx.beginPath(); ctx.arc(q[0], q[1], 1.4, 0, 6.283); ctx.fill(); } });
+      ctx.shadowBlur = 0;
+      // a pulse of light runs along new bridges and on into both networks
+      pulses.forEach(p => { const q = ptAt(p.e, p.fwd ? p.t : 1 - p.t);
+        if (p.hot) { const g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], 15); g.addColorStop(0, rgb(col.act.map(v => v + (1 - v) * .35), 1)); g.addColorStop(.3, rgb(col.act, .85)); g.addColorStop(1, rgb(col.act, 0)); ctx.fillStyle = g; ctx.fillRect(q[0] - 15, q[1] - 15, 30, 30); ctx.fillStyle = rgb(col.act.map(v => v + (1 - v) * .5), 1); ctx.beginPath(); ctx.arc(q[0], q[1], 3.2, 0, 6.283); ctx.fill(); return; }
+        const g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], 9); g.addColorStop(0, rgb(col.lt, .9)); g.addColorStop(.35, rgb(col.act, .55)); g.addColorStop(1, rgb(col.act, 0));
+        ctx.fillStyle = g; ctx.fillRect(q[0] - 9, q[1] - 9, 18, 18); });
+      // where the two colours met in the title: a soft glow that stays and breathes
+      if (met && meetN) { const rr = 56 * (1 + .6 * zp) * (1 + .12 * Math.sin(now * 1.3)), g = ctx.createRadialGradient(meetN.x, meetN.y, 0, meetN.x, meetN.y, rr);
+        g.addColorStop(0, rgb(col.act.map(v => v + (1 - v) * .3), .42)); g.addColorStop(.35, rgb(col.act, .18)); g.addColorStop(1, rgb(col.act, 0)); ctx.fillStyle = g; ctx.fillRect(meetN.x - rr, meetN.y - rr, rr * 2, rr * 2); }
+      // junction stars, brighter once they belong to a network, flaring when a branch arrives
+      nodes.forEach(o => { if (o.deep && zp < .02) return; const tw = (RM ? 1 : .7 + .3 * Math.sin(now * o.sp + o.ph)) * (o.deep ? Math.min(1, zp * 1.5) : 1), c = o.col < 0 ? col.lt : (o.col ? col.B : col.A), lit = o.col >= 0 && o.edges.size, C = ctx;
+        if (lit || o.flash > .05) { const rr = (5 + o.r * 3) * (1 + 1.2 * zp) + o.flash * 14, g = C.createRadialGradient(o.x, o.y, 0, o.x, o.y, rr); g.addColorStop(0, rgb(c.map((v, j) => v + (col.lt[j] - v) * .5), (.35 + .5 * o.flash) * tw)); g.addColorStop(1, rgb(c, 0)); C.fillStyle = g; C.fillRect(o.x - rr, o.y - rr, rr * 2, rr * 2); }
+        C.fillStyle = rgb(lit ? c.map((v, j) => v + (col.lt[j] - v) * .55) : col.lt, (lit ? .95 : .5 * Math.min(1, zp * 2.5) + .5 * Math.min(1, o.flash)) * tw); C.beginPath(); C.arc(o.x, o.y, o.r * (lit ? 1.1 : .85) * (1 + 1.3 * zp) + o.flash * 1.2, 0, 6.283); C.fill(); });
+      };
+    const loop = t => { if (!on) return; const now = t / 1000, dt = Math.min(.05, now - (last || now)); last = now;
+      // the pointer's pull eases in behind it and fades away once it stops
+      if (ptr) { const pw0 = toW(ptr[0], ptr[1]); if (!pe) pe = pw0.slice(); const vx = (pw0[0] - pe[0]) * .06, vy = (pw0[1] - pe[1]) * .06; pe[0] += vx; pe[1] += vy; pv[0] += (vx - pv[0]) * .1; pv[1] += (vy - pv[1]) * .1; }
+      pw = Math.max(0, pw - dt / 2.2); step(dt * (1 + 1.8 * zp) * (met ? 2.4 : 3.6)); draw(now); raf = requestAnimationFrame(loop); };
+    vp.addEventListener('pointermove', e => { const r = vp.getBoundingClientRect(), np = [e.clientX - r.left, e.clientY - r.top]; if (ptr && Math.hypot(np[0] - ptr[0], np[1] - ptr[1]) > 1) pw = Math.min(1, pw + .08); ptr = np; });
+    vp.addEventListener('pointerleave', () => { ptr = null; });
+    let hovB = null; const setB = b => { if (b === hovB) return; hovB = b; if (b && !RM) meetAt(b); else unmeet(); };
+    vp.addEventListener('pointerover', e => setB(e.target.closest('.s2 .go')));
+    vp.addEventListener('focusin', e => setB(e.target.closest('.s2 .go'))); vp.addEventListener('focusout', () => setB(null));
+    const ro = new ResizeObserver(() => build()); ro.observe(ld);
+    vp._sky = v => { on = v; cancelAnimationFrame(raf); clearInterval(rmTimer); if (!v) return; if (RM) { draw(performance.now() / 1000); rmTimer = setInterval(() => draw(performance.now() / 1000), 600); } else { last = 0; raf = requestAnimationFrame(loop); } };
+    vp._skyRead = () => draw(performance.now() / 1000);
+    vp.addEventListener('scroll', () => { if (RM) draw(performance.now() / 1000); }, { passive: true });
+    vp._cleanup.push(() => { on = false; cancelAnimationFrame(raf); clearInterval(rmTimer); ro.disconnect(); const x = gl && gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); });
+    if (document.fonts) document.fonts.ready.then(() => build());
+    build();
+  }
   function mount(vp) {
     (vp._cleanup || []).forEach(f => f()); vp._cleanup = []; vp._anims = [];
     vp.innerHTML = ''; vp.scrollTop = 0;
     vp.appendChild(tpl.content.cloneNode(true));
     const v = vp.dataset.v, D = DECO[v], ld = vp.querySelector('.ld'), s2 = vp.querySelector('.s2');
     ld.classList.add(v); if (vp.dataset.mw) ld.classList.add('mwv');
-    ld.insertAdjacentHTML('afterbegin', D.bg || '');
+    ld.insertAdjacentHTML('afterbegin', vp.dataset.rz ? '<canvas class="rzg" aria-hidden="true"></canvas><canvas class="rzs" aria-hidden="true"></canvas><canvas class="rzc" aria-hidden="true"></canvas>' : D.bg || '');
     const [d1, d2] = vp.querySelectorAll('.deco'); d1.innerHTML = D.s1 || ''; d2.innerHTML = D.s2 || '';
     if (D.obj) vp.querySelectorAll('.obj').forEach((o, i) => o.innerHTML = D.obj[i]);
     if (v === 'v-b') { vp.querySelector('h3').innerHTML = 'Where will<br>your<br><span class="mk">XR work</span><br>shine?'; liquid(ld, vp); devices(ld, vp); lens(ld, vp); }
-    if (v === 'v-c') { vp.querySelector('h3').innerHTML = 'There’s a world<br>for your<br><span class="mk">XR Work</span>'; sky(ld, vp); vp._sky(true);
+    if (v === 'v-c') { vp.querySelector('h3').innerHTML = 'There’s a world<br>for your<br><span class="mk">XR Work</span>'; (vp.dataset.rz ? rhizome : sky)(ld, vp); vp._sky(true);
       // wrap each word of the headline so the words can emerge one after another ("XR Work" emerges as one)
       { const h = vp.querySelector('h3'); let n = 0; [...h.childNodes].forEach(nd => {
           if (nd.nodeType === 3) { const f = document.createDocumentFragment(); nd.textContent.split(/(\s+)/).forEach(t => { if (!t) return; if (/^\s+$/.test(t)) f.append(t); else { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = t; sp.style.setProperty('--d', (n++ * .22) + 's'); f.append(sp); } }); nd.replaceWith(f); }
@@ -933,7 +1258,7 @@ precision mediump float;
   };
   function frame(v, mode, name, isFull) {
     const f = document.createElement('div'); f.className = 'frame mode-' + mode + (isFull ? ' full' : '');
-    const vp = document.createElement('div'); vp.className = 'vp'; vp.dataset.v = v; if (name === 'Halo Orbit') vp.dataset.mw = 1; vp.tabIndex = 0; vp.setAttribute('aria-label', name + ', ' + mode + ' mode');
+    const vp = document.createElement('div'); vp.className = 'vp'; vp.dataset.v = v; if (name === 'Halo Orbit') vp.dataset.mw = 1; if (name === 'Rhizomatic Cosmos') vp.dataset.rz = 1; vp.tabIndex = 0; vp.setAttribute('aria-label', name + ', ' + mode + ' mode');
     const cap = document.createElement('div'); cap.className = 'cap';
     cap.innerHTML = `<span>${isFull ? name + ' · ' : ''}${mode === 'light' ? 'Light' : 'Dark'}</span><button type="button" class="ic" data-a="replay" aria-label="Replay from the top" title="Replay from the top">${icon.replay}</button>` +
       (isFull ? `<button type="button" class="ic" data-a="close" aria-label="Close full screen" title="Close">${icon.close}</button>`
