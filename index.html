@@ -1156,21 +1156,25 @@ precision mediump float;
         fl = fl.filter(l => now - l.born < l.grow + l.hold + 1.2);
         sctx.lineCap = 'round'; fl.forEach(l => { const age = now - l.born; if (age < 0) return; const g = Math.min(1, age / l.grow), al = Math.min(1, age / .3, (l.grow + l.hold + 1.2 - age) / 1.2) * (.34 - l.gen * .04) * fv, m = Math.max(1, Math.ceil(g * 12));
           sctx.strokeStyle = rgb(l.c.map((v, j) => v + (col.act[j] - v) * hv), Math.min(1, al * (1 + 1.4 * hv))); sctx.lineWidth = (.7 - l.gen * .08) * (1 + .5 * hv); sctx.beginPath(); sctx.moveTo(l.pts[0][0], l.pts[0][1]); for (let i = 1; i <= m; i++) sctx.lineTo(l.pts[i][0], l.pts[i][1]);
-          l.tw.forEach(w => { if (g <= w.f) return; const k = Math.min(1, (g - w.f) * 4); sctx.moveTo(w.x0, w.y0); sctx.lineTo(w.x0 + (w.x1 - w.x0) * k, w.y0 + (w.y1 - w.y0) * k); }); sctx.stroke(); });
+          sctx.stroke(); sctx.beginPath(); sctx.globalAlpha = .7; sctx.lineWidth *= .85;
+          l.tw.forEach(w => { if (g <= w.f) return; const k = Math.min(1, (g - w.f) * 4); sctx.moveTo(w.x0, w.y0); sctx.lineTo(w.x0 + (w.x1 - w.x0) * k, w.y0 + (w.y1 - w.y0) * k); }); sctx.stroke(); sctx.globalAlpha = 1; });
         fs.forEach(f => { const age = now - f.born, env = Math.max(0, Math.min(1, age / .8, (f.dur - age) / .8)), tw = RM ? 1 : .55 + .45 * Math.sin(now * f.sp + f.ph), al = env * tw * f.a * fv; if (al < .01) return;
           if (f.r > 1) { const rr = f.r * 4, g = sctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, rr); g.addColorStop(0, rgb(f.c, al * .45)); g.addColorStop(1, rgb(f.c, 0)); sctx.fillStyle = g; sctx.fillRect(f.x - rr, f.y - rr, rr * 2, rr * 2); }
           const fc = hv > .01 && fUsed(f) ? f.c.map((v, j) => v + (col.act[j] - v) * hv) : f.c; sctx.fillStyle = rgb(fc, al); sctx.beginPath(); sctx.arc(f.x, f.y, f.r, 0, 6.283); sctx.fill(); }); } { const dpr = cv.width / W; sctx.setTransform(dpr * Z, 0, 0, dpr * Z, dpr * W / 2 * (1 - Z), dpr * H / 2 * (1 - Z)); }
       ctx.lineCap = 'round'; ctx.lineJoin = 'round';
       const kc = e => e.bridge ? col.act : e.k ? col.B : col.A;
-      const path = (e, f) => { const m = Math.max(1, Math.ceil(f * 18)); ctx.beginPath(); ctx.moveTo(e.pts[0][0], e.pts[0][1]); for (let i = 1; i < m; i++) ctx.lineTo(e.pts[i][0], e.pts[i][1]); const q = ptAt(e, f); ctx.lineTo(q[0], q[1]);
-        e.twigs.forEach(w => { if (f <= w.f) return; const g = Math.min(1, (f - w.f) * 4); ctx.moveTo(w.x0, w.y0); ctx.quadraticCurveTo(w.x0 + (w.cx - w.x0) * g, w.y0 + (w.cy - w.y0) * g, w.x0 + (w.x1 - w.x0) * g, w.y0 + (w.y1 - w.y0) * g); }); };
+      // the main filament and its fine offshoots are stroked separately, so the offshoots can be thinner and more see-through
+      const path = (e, f) => { const m = Math.max(1, Math.ceil(f * 18)); ctx.beginPath(); ctx.moveTo(e.pts[0][0], e.pts[0][1]); for (let i = 1; i < m; i++) ctx.lineTo(e.pts[i][0], e.pts[i][1]); const q = ptAt(e, f); ctx.lineTo(q[0], q[1]); };
+      const twigPath = (e, f) => { ctx.beginPath(); e.twigs.forEach(w => { if (f <= w.f) return; const g = Math.min(1, (f - w.f) * 4); ctx.moveTo(w.x0, w.y0); ctx.quadraticCurveTo(w.x0 + (w.cx - w.x0) * g, w.y0 + (w.cy - w.y0) * g, w.x0 + (w.x1 - w.x0) * g, w.y0 + (w.y1 - w.y0) * g); }); };
       // older connections soft, fresh ones bright with a glow
       const fresh = [];
       edges.forEach(e => { const age = e.done ? now - e.done : 0, fd = (e.fade ? Math.max(0, 1 - (now - e.fade) / 4) : 1) * (e.a.deep || e.b.deep ? Math.min(1, zp * 1.5) : 1);
         if (!e.done || age < 6) { fresh.push([e, fd, age]); return; }
-        const old = RM ? 1 : .26 + .74 * Math.exp(-(age - 6) / 22); ctx.strokeStyle = rgb(kc(e), (e.bridge ? .5 : e.spine ? .62 : .36) * fd * old); ctx.lineWidth = e.bridge ? 1.1 : e.spine ? 1.3 : .8; path(e, 1); ctx.stroke(); });
+        const old = RM ? 1 : .26 + .74 * Math.exp(-(age - 6) / 22); ctx.strokeStyle = rgb(kc(e), (e.bridge ? .5 : e.spine ? .62 : .36) * fd * old); ctx.lineWidth = e.bridge ? 1.1 : e.spine ? 1.3 : .8; path(e, 1); ctx.stroke();
+        if (e.twigs.length) { ctx.strokeStyle = rgb(kc(e), (e.bridge ? .5 : e.spine ? .62 : .36) * .7 * fd * old); ctx.lineWidth = .65; twigPath(e, 1); ctx.stroke(); } });
       fresh.forEach(([e, fd, age]) => { const k = e.done ? Math.exp(-age / 2.5) : 1, c = kc(e);
         ctx.shadowColor = rgb(c, .8 * k); ctx.shadowBlur = 8 * k; ctx.strokeStyle = rgb(c.map((v, j) => v + (col.lt[j] - v) * .25 * k), (.38 + .55 * k) * fd); ctx.lineWidth = .85 + .6 * k; path(e, e.p); ctx.stroke();
+        if (e.twigs.length) { ctx.shadowBlur = 0; ctx.strokeStyle = rgb(c, (.38 + .55 * k) * .7 * fd); ctx.lineWidth = .65 + .3 * k; twigPath(e, e.p); ctx.stroke(); }
         if (!e.done) { const q = ptAt(e, e.p); ctx.shadowBlur = 6; ctx.fillStyle = rgb(col.lt, .95); ctx.beginPath(); ctx.arc(q[0], q[1], 1.4, 0, 6.283); ctx.fill(); } });
       ctx.shadowBlur = 0;
       // a pulse of light runs along new bridges and on into both networks
