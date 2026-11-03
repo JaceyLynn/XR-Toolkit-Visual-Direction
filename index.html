@@ -149,7 +149,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 .v-c{background:linear-gradient(180deg,var(--p-sky) 0%,var(--p-sky) 36%,var(--p-low,var(--p-sky)) 70%,var(--p-low,var(--p-sky)) 100%)}
 .v-c canvas.rzs{z-index:-3}
 /* type: Recia for the headline (Bold, with "XR Work" in Regular Italic; embedded from Jacie's files) (whole title one light colour with a soft drop shadow in the action colour); Space Grotesk for the lede and the two ways in */
-.v-c h3{color:#fff;-webkit-text-fill-color:#fff;font-family:"Recia",Georgia,serif;font-weight:700;font-stretch:100%;text-transform:none;letter-spacing:-.01em;line-height:1.08;font-size:clamp(2.1rem,5.4vw,3.9rem);text-shadow:0 2px 5px color-mix(in srgb,var(--p-b1) 75%,transparent),0 1px 18px color-mix(in srgb,var(--p-b1) 40%,transparent)}
+.v-c h3{max-width:none;color:#fff;-webkit-text-fill-color:#fff;font-family:"Recia",Georgia,serif;font-weight:700;font-stretch:100%;text-transform:none;letter-spacing:-.01em;line-height:1.08;font-size:clamp(1.7rem,3.4vw,3.1rem);text-shadow:0 2px 5px color-mix(in srgb,var(--p-b1) 75%,transparent),0 1px 18px color-mix(in srgb,var(--p-b1) 40%,transparent)}
 .v-c .mk{font-family:"Recia",Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.02em;padding:0;filter:none;background-image:none;color:inherit;-webkit-text-fill-color:currentColor;text-shadow:inherit;font-size:1em;vertical-align:baseline;margin-top:.1em}
 @keyframes sa-emerge-mk{0%{opacity:0;filter:brightness(.15) blur(9px)}45%{opacity:.75;filter:brightness(.45) blur(4px)}100%{opacity:1;filter:none}}
 .v-c .s1>.lede{font-family:"Space Grotesk",sans-serif;font-size:.9rem;letter-spacing:.005em}
@@ -157,15 +157,31 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 /* the ↓: a plain thin ring, no glass */
 .v-c .go::after{height:2px;border-radius:1px}
 .v-c .s1{position:relative}
-.v-c .nl-top{position:absolute;top:0;left:0;right:0;justify-content:center;text-align:center;padding:20px 16px 10px}
-.v-c .ld-logo{font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-stretch:100%;opacity:.78}
-.v-c .cue{border:2px solid color-mix(in srgb,var(--p-ink) 45%,transparent);background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;transition:border-color .4s,transform .3s}
+.v-c .nl-top{position:static;justify-content:center;text-align:center;padding:0;margin:.9em 0 0}
+@media (min-width:760px){.v-c h3{white-space:nowrap}}
+.v-c .ld-logo{font-family:"Space Grotesk",sans-serif;font-weight:400;font-size:clamp(14px,1.4vw,17px);letter-spacing:.02em;text-transform:none;font-stretch:100%;opacity:.9;cursor:default}
+.v-c .cue{border:2px solid color-mix(in srgb,var(--p-ink) 60%,transparent);background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;transition:border-color .4s,transform .3s}
 .v-c .cue:hover,.v-c .cue:focus-visible{background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--p-b1) 85%,#fff) 0%,var(--p-b1) 45%,color-mix(in srgb,var(--p-b1) 35%,transparent) 100%);box-shadow:0 0 18px 4px color-mix(in srgb,var(--p-b1) 45%,transparent);border-color:var(--p-b1);color:var(--p-sky);transform:translateY(-1px)}
 /* the two ways in: text only, a short line under each that grows on hover */
 .v-c .go{font-family:"Space Grotesk",sans-serif;font-weight:500;font-stretch:100%;text-transform:uppercase;letter-spacing:.12em;font-size:clamp(.86rem,1.3vw,.98rem)}
 .v-c .way,.v-c .way:nth-child(2){--c:var(--p-b1)}
 .v-c .go:hover{text-shadow:0 0 10px color-mix(in srgb,var(--c) 35%,transparent)}
 .palnote{margin:0;color:var(--muted);font-size:13px}
+
+/* v41: no hover text under the arrow; the small line emerges just after the title */
+.v-c .s1>.lede{display:none}
+.v-c .s1 .nl-top{animation:sa-emerge 2.6s cubic-bezier(.4,.1,.3,1) 1.7s both}
+@media (prefers-reduced-motion: reduce){ .v-c .s1 .nl-top{animation:none;opacity:1} }
+
+/* v43: the small line waits under the arrow and appears on hover */
+.v-c .s1 .nl-top{animation:none;opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s;pointer-events:none;margin:-4px 0 0}
+.v-c .s1 .cue:hover~.nl-top,.v-c .s1 .cue:focus-visible~.nl-top{opacity:1;transform:none}
+
+.v-c .s2 .go{text-shadow:0 1px 2px color-mix(in srgb,var(--p-sky) 70%,transparent),0 0 10px color-mix(in srgb,var(--p-sky) 55%,transparent)}
+.v-c .s2 .go:hover,.v-c .s2 .go:focus-visible{text-shadow:0 2px 3px color-mix(in srgb,var(--p-sky) 90%,#000),0 1px 1px color-mix(in srgb,var(--p-sky) 80%,#000),0 0 14px color-mix(in srgb,var(--p-sky) 75%,transparent)}
+.v-c .s2 .go:hover::after{box-shadow:0 1px 3px color-mix(in srgb,var(--p-sky) 85%,#000)}
+
+.v-c .s2{--p-b1:var(--p-b1s2,var(--p-b1));--c:var(--p-b1s2,var(--p-b1))}
 
 </style>
 
@@ -179,7 +195,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     <div class="spec">
       <div><h2>Nodes of Light</h2><p>Two rhizome networks grow in from opposite corners of a warm, dark, grainy ground, where the colours flow slowly underneath, drawing curved, forking paths from node to node. On the first screen they grow toward the headline and touch inside it, leaving a soft glow where they meet, then keep spreading until the ground is full. Each node lights up when a path reaches it and then twinkles at its own pace, with a slow breath and an occasional glint; nodes with more links glow a little more. Paths never disappear; once drawn they settle to a softer glow. Moving the pointer steers nearby growth toward it. Lower down, the view moves much closer in: the first network drifts out of focus and a nearer rhizome grows after your pointer, starting just behind it and branching toward wherever it moves. Hovering a way in sends a branch from each network to meet under that button, joined by a bridge of light.</p></div>
       <div><span class="label">Main elements</span><ul class="els"><li>A warm, matte ground with a slow, gentle flow of colour under a fine paper-like grain, soft mottling and faint out-of-focus roots, in place of the sky</li><li>Two rhizome networks growing from the lower-left and upper-right corners, meeting in the headline with no single hub</li><li>Nodes of light that twinkle, light up when a path arrives, and glow more where the network is busiest</li><li>Growth that bends toward the pointer on the first screen and follows it closely on the lower half, and both networks meeting at whichever way in you hover</li><li>Recia for the headline, with &ldquo;XR Work&rdquo; in the action colour; Space Grotesk for the lede and the two ways in; a plain ring for the &darr;</li></ul></div>
-      <div><span class="label">Colour palette</span><p class="palnote">Each palette comes from one of the reference palettes: Poppy Dusk (wild poppies and thyme), Gilded Iris (old gold and royal purple) and Late Harvest (grasslands on grape fizz).</p><div class="sw"></div></div>
+      <div><span class="label">Colour palette</span><p class="palnote">Each palette comes from one of the reference palettes: Poppy Dusk (wild poppies and thyme) and Marigold (an orange ground with moss, river blue and lilac).</p><div class="sw"></div></div>
     </div>
     <div class="pair"></div>
   </section>
@@ -187,7 +203,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
 
 <template id="landing">
   <div class="ld">
-    <div class="ld-top"><button type="button" class="ld-logo">Immersive Distribution and Exhibition Toolkit</button></div>
+    <div class="ld-top"><button type="button" class="ld-logo">There’s a world for your XR Work</button></div>
     <div class="s1">
       <div class="deco"></div>
       <h3>There’s a world for your <span class="mk">XR work</span></h3>
@@ -216,12 +232,10 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
   // palettes to try: each has three decorative colours (the two networks, then the ground's warmth and roots), one action colour (the ways in and the meeting glow), one light (text) and one dark (the ground)
   const PALS = [
     // from the client's references: wild poppies and thyme, a grasslands set on grape fizz, and an old gold and royal purple set on deep teal
-    { n: 'Poppy Dusk', deco: ['#87a680', '#d4a23c', '#e9b8a0'], action: '#e0582e', light: '#f7e9de', dark: '#132a3a', low: '#1f4a5c',
+    { n: 'Poppy Dusk', deco: ['#87a680', '#d4a23c', '#e9b8a0'], action: '#ea6a3c', light: '#f7e9de', dark: '#132a3a', low: '#1f4a5c',
       names: ['Thyme', 'Ochre', 'Peach Blush', 'Poppy', 'White Clay', 'Midnight Pond', 'Deep Lake'] },
-    { n: 'Gilded Iris', deco: ['#875799', '#eaa585', '#e8633f'], action: '#d7b941', light: '#f2ebe1', dark: '#16302e', low: '#1f4f4a',
-      names: ['Royal Purple', 'Apricot', 'Vermillion, warmed', 'Old Gold', 'Bone', 'Deep Teal', 'Teal']  },
-    { n: 'Late Harvest', deco: ['#6e8f3a', '#8c6290', '#a1a8be'], action: '#ea785b', light: '#f7eee9', dark: '#3a1838', low: '#5c2b5e',
-      names: ['Fresh Grasslands', 'Dusty Lilac', 'Bluebell', 'Terra Cotta', 'Cream White', 'Grape Fizz, deep', 'Grape Fizz, lighter'] },
+    { n: 'Marigold', deco: ['#a9d879', '#87c3e3', '#f2d9a6'], action: '#c4c4f6', light: '#fff6ea', dark: '#8a4203', low: '#c07c30',
+      names: ['Sage Moss', 'River Blue', 'Sand', 'Lilac', 'Linen', 'Amber', 'Tangerine'] },
   ];
   const hx = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
   const PAL = { i: 0 };
@@ -234,7 +248,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     const roles = ['network one', 'network two', 'ground colour flow', 'action', 'light · text', 'ground · top to lower half'];
     const set = i => { PAL.i = i; const p = PALS[i], st = document.documentElement.style;
       row.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.i == i));
-      st.setProperty('--p-sky', p.dark); st.setProperty('--p-b1', p.action); st.setProperty('--p-b2', p.action); st.setProperty('--p-ink', p.light); st.setProperty('--p-c3', p.deco[2]); st.setProperty('--p-low', p.low); { const ac = hx(p.action), lt = hx(p.light), k = Math.max(...ac) < .6 ? .45 : 0; const b1 = '#' + ac.map((v, j) => Math.round((v + (lt[j] - v) * k) * 255).toString(16).padStart(2, '0')).join(''); st.setProperty('--p-b1', b1); st.setProperty('--p-b2', b1); }
+      st.setProperty('--p-sky', p.dark); st.setProperty('--p-b1', p.action); st.setProperty('--p-b2', p.action); st.setProperty('--p-ink', p.light); st.setProperty('--p-c3', p.deco[2]); st.setProperty('--p-low', p.low); st.setProperty('--p-b1s2', p.actLow || p.action); { const ac = hx(p.action), lt = hx(p.light), k = Math.max(...ac) < .6 ? .45 : 0; const b1 = '#' + ac.map((v, j) => Math.round((v + (lt[j] - v) * k) * 255).toString(16).padStart(2, '0')).join(''); st.setProperty('--p-b1', b1); st.setProperty('--p-b2', b1); }
       // "XR Work" runs from the action colour through a decorative colour, both lifted toward the light so it stays readable on the sky
       const mix = (a, b, k) => '#' + hx(a).map((v, j) => Math.round((v + (hx(b)[j] - v) * k) * 255).toString(16).padStart(2, '0')).join('');
       const mk = [mix(p.action, p.light, .15), mix(p.deco[1], p.light, .35), mix(p.deco[1], p.light, .65)];
@@ -248,6 +262,10 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
   // (there are no stars and no sky). Drawn in viewport space so the field stays put while the page scrolls.
   function rhizome(ld, vp) {
     const cv = ld.querySelector('canvas.rzc'), ctx = cv.getContext('2d'), sv = ld.querySelector('canvas.rzs'), sctx = sv.getContext('2d');
+    // the area around the two ways in (lower half, far-space units) where nothing grows
+    const inZ = (x, y) => { const z = zc || [W / 2, H / 2, 90, 60]; return ((x - z[0]) / z[2]) ** 2 + ((y - z[1]) / z[3]) ** 2 < 1; };
+    const outZ = (x, y) => { if (!inZ(x, y)) return [x, y]; const z = zc || [W / 2, H / 2, 90, 60], dx = (x - z[0]) / z[2], dy = (y - z[1]) / z[3], d = Math.hypot(dx, dy) || 1, k = (1.05 + Math.random() * .25) / d; return [z[0] + (x - z[0]) * k, z[1] + (y - z[1]) * k]; };
+    const crossZ = (a, b) => [.1, .2, .3, .4, .5, .6, .7, .8, .9].some(t => inZ(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t));
     const toHsl = ([r, g, b]) => { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn; if (!d) return [0, 0, l]; const s = d / (1 - Math.abs(2 * l - 1)); let h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return [(h * 60 + 360) % 360, s, l]; };
     const fromHsl = ([h, s, l]) => { s = Math.max(0, Math.min(1, s)); l = Math.max(0, Math.min(1, l)); const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, k = h / 60 | 0; const [r, g, b] = [[c, x, 0], [x, c, 0], [0, c, x], [0, x, c], [x, 0, c], [c, 0, x]][k % 6]; return [r + m, g + m, b + m]; };
     // the ground's own hue, only lighter (dl) and richer (ds): used for the colour flow and the mottling so nothing new is mixed in
@@ -294,16 +312,16 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       gl.uniform4f(G.qb, quiet[0], quiet[1], quiet[2], quiet[3]); gl.uniform2f(G.m, cm[0], cm[1]); gl.uniform1f(G.mw, cmw); gl.uniform1f(G.z, 1 + (Z - 1) * FAR); gl.uniform1f(G.zx, zp); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
     const R = Math.random, gauss = () => (R() + R() + R() - 1.5) / .87;
     // far stars for the lower half: each lives a few seconds, then reappears somewhere else
-    let halo = null, haloB = null, halos = [], fs = [], fl = [], fbNow = null, fpNow = null, fLast = 0, fNext = 0, fo = 1, hv = 0, lastLink = 0, metAt = 0, doneAt = 0, autoDone = false, as = null;
+    let halo = null, haloB = null, halos = [], fStart = 0, fRec = 0, fdm = 1, ci0 = 0, fsT = 2.6, zc = null, wEl = null, fs = [], fl = [], fbNow = null, fpNow = null, fLast = 0, fNext = 0, fo = 1, hv = 0, lastLink = 0, metAt = 0, doneAt = 0, autoDone = false, as = null;
     // a curved, slightly wobbly filament between two far stars, with a couple of short offshoots
     const fLink = (a, b, gen, born) => { const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy), nx = -dy / len, ny = dx / len, o1 = (R() - .5) * len * .3, o2 = o1 * (.4 + R() * .5), pts = [], c1x = a.dir ? a.x + a.dir[0] * len * .38 : a.x + dx * .33 + nx * o1, c1y = a.dir ? a.y + a.dir[1] * len * .38 : a.y + dy * .33 + ny * o1;
       for (let i = 0; i <= 12; i++) { const t = i / 12, u = 1 - t; pts.push([u * u * u * a.x + 3 * u * u * t * c1x + 3 * u * t * t * (a.x + dx * .66 + nx * o2) + t * t * t * b.x,
         u * u * u * a.y + 3 * u * u * t * c1y + 3 * u * t * t * (a.y + dy * .66 + ny * o2) + t * t * t * b.y]); }
       { const ex = pts[12][0] - pts[11][0], ey = pts[12][1] - pts[11][1], el = Math.hypot(ex, ey) || 1; b.dir = [ex / el, ey / el]; }
-      const tw = []; for (let k = 0, m = R() * 3 | 0; k < m; k++) { const f = .2 + R() * .6, p = pts[Math.round(f * 12)], sd = R() < .5 ? 1 : -1, an = Math.atan2(dy, dx) + sd * (.3 + R() * .4), l = 6 + R() * 12, ca = an + sd * .45; tw.push({ f, x0: p[0], y0: p[1], cx: p[0] + Math.cos(an - sd * .2) * l * .55, cy: p[1] + Math.sin(an - sd * .2) * l * .55, x1: p[0] + Math.cos(ca) * l, y1: p[1] + Math.sin(ca) * l }); }
-      return { a, b, gen, born, pts, tw, cp: [a.x, a.y, c1x, c1y, a.x + dx * .66 + nx * o2, a.y + dy * .66 + ny * o2, b.x, b.y], c: a.c, hot: fpNow ? 1 : 0, bur: fbNow ? 1 : 0, grow: len / (fbNow ? 340 + R() * 120 : fpNow ? 120 + R() * 50 : 70 + R() * 40), hold: fbNow ? .5 + R() * .4 : .9 + R() * .7, kids: false }; };
-    const farStar = born => { const [x, y] = fbNow && R() < .7 ? (() => { const an = R() * 6.283, rr = fbNow[2] + 5 + R() * 110; return [fbNow[0] + Math.cos(an) * rr, fbNow[1] + Math.sin(an) * rr * .6]; })() : fpNow && R() < .5 ? [fpNow[0] + gauss() * 120, fpNow[1] + gauss() * 95] : R() < .65 ? bandPt((R() * 2 - 1) * D * .6, gauss() * D * .12) : [R() * W, R() * H], big = R() < .14;
-      return { x, y, born, dur: 3 + R() * 6, r: big ? 1.1 + R() * .7 : .45 + R() * .5, a: big ? .9 : .45 + R() * .45, sp: 2 + R() * 4, ph: R() * 6.28, c: [col.A, col.B][R() * 2 | 0].map((v, j, a) => v + (col.lt[j] - v) * .25) }; };
+      const tw = []; for (let k = 0, m = 2 + R() * 4 | 0; k < m; k++) { const f = .2 + R() * .6, p = pts[Math.round(f * 12)], sd = R() < .5 ? 1 : -1, an = Math.atan2(dy, dx) + sd * (.3 + R() * .5), l = 7 + R() * 17, ca = an + sd * .45; tw.push({ f, x0: p[0], y0: p[1], cx: p[0] + Math.cos(an - sd * .2) * l * .55, cy: p[1] + Math.sin(an - sd * .2) * l * .55, x1: p[0] + Math.cos(ca) * l, y1: p[1] + Math.sin(ca) * l }); }
+      return { a, b, gen, born, pts, tw, cp: [a.x, a.y, c1x, c1y, a.x + dx * .66 + nx * o2, a.y + dy * .66 + ny * o2, b.x, b.y], c: a.c, ci: a.ci, hot: fpNow ? 1 : 0, bur: fbNow ? 1 : 0, grow: len / (fbNow ? 340 + R() * 120 : fpNow ? 120 + R() * 50 : 95 + R() * 45), hold: fbNow ? .5 + R() * .4 : 1e9, kids: false }; };
+    const farStar = born => { ci0 = R() * 2 | 0; let [x, y] = fbNow && R() < .7 ? (() => { const an = R() * 6.283, rr = fbNow[2] + 5 + R() * 110; return [fbNow[0] + Math.cos(an) * rr, fbNow[1] + Math.sin(an) * rr * .6]; })() : fpNow && R() < .5 ? [fpNow[0] + gauss() * 120, fpNow[1] + gauss() * 95] : [W / 2 + (R() * 2 - 1) * W * .5 / fsT, H / 2 + (R() * 2 - 1) * H * .5 / fsT]; if (!fbNow) [x, y] = outZ(x, y); const big = R() < .14;
+      return { x, y, born, kn: R() < .45, dur: 3 + R() * 6, r: big ? 1.1 + R() * .7 : .45 + R() * .5, a: big ? .9 : .45 + R() * .45, sp: 2 + R() * 4, ph: R() * 6.28, ci: ci0, c: [col.A, col.B][ci0].map((v, j, a) => v + (col.lt[j] - v) * .25) }; };
     const mkHalo = (btn, t0) => { const rr = vp.getBoundingClientRect(), b = btn.getBoundingClientRect(), cx = b.left + b.width / 2 - rr.left, cy = b.top + b.height / 2 - rr.top, hw = b.width / 2 + 30, hh = b.height / 2 + 20, N = 16, d = .07, ns = [], ln = [], rt = [];
       for (let i = 0; i < N; i++) { const a = Math.PI + i / N * 6.283 + (R() - .5) * .16, k = 1 + (R() - .5) * .14; ns.push({ x: cx + Math.cos(a) * hw * k, y: cy + Math.sin(a) * hh * k, a, c: Math.cos(a) < 0 ? col.A : col.B, ph: R() * 6.28, at: Math.min(i, N - i) * d }); }
       for (let i = 0; i < N; i++) { const fwd = i < N / 2, a = fwd ? ns[i] : ns[(i + 1) % N], b2 = fwd ? ns[(i + 1) % N] : ns[i], dx = b2.x - a.x, dy = b2.y - a.y, L = Math.hypot(dx, dy) || 1, o = (R() - .5) * 7, pts = [];
@@ -364,7 +382,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         if (nodes.some(o => Math.hypot(o.x - x, o.y - y) < md * .8)) continue; i++;
         nodes.push({ x, y, r: .7 + Math.pow(R(), 2) * 1.1, ph: R() * 6.28, sp: .5 + R() * 1.2, col: -1, edges: new Set(), flash: 0, seed: false, deep: true }); }
       // the meeting point: a star in the middle of the title, where the two colours touch
-      { const x = (quiet[0] + quiet[2]) / 2, y = quiet[1] + (quiet[3] - quiet[1]) * .55; nodes = nodes.filter(o => Math.hypot(o.x - x, o.y - y) > md * .7);
+      { const cb = vp.querySelector('.s1 .cue'), vr = vp.getBoundingClientRect(), br = cb && cb.getBoundingClientRect(), x = br && br.width ? br.left + br.width / 2 - vr.left : (quiet[0] + quiet[2]) / 2, y = br && br.width ? br.top + br.height / 2 - vr.top + vp.scrollTop : quiet[1] + (quiet[3] - quiet[1]) * .55; nodes = nodes.filter(o => Math.hypot(o.x - x, o.y - y) > md * .7);
         meetN = { x, y, r: 1.6, ph: 0, sp: 1, col: -1, edges: new Set(), flash: 0, seed: false, ring: true, meet: true }; nodes.push(meetN); }
       const maxD = Math.max(80, Math.min(small ? 120 : 165, D * .12));
       nodes.forEach(a => a.rv = []); nodes.forEach(a => { a.nb = nodes.filter(b => b !== a).map(b => [b, Math.hypot(b.x - a.x, b.y - a.y)]).filter(([, d]) => d < maxD).sort((p, q) => p[1] - q[1]).slice(0, 7).map(p => p[0]); }); nodes.forEach(a => a.nb.forEach(b => b.rv.push(a)));
@@ -496,33 +514,37 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       [ctx, sctx].forEach(c => { c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, cv.width, cv.height); const dpr = cv.width / W; c.setTransform(dpr * Z, 0, 0, dpr * Z, dpr * W / 2 * (1 - Z), dpr * H / 2 * (1 - Z)); });
       { const dpr = cv.width / W, zf = 1 + (Z - 1) * FAR; sctx.setTransform(dpr * zf, 0, 0, dpr * zf, dpr * W / 2 * (1 - zf), dpr * H / 2 * (1 - zf)); }
       // the far rhizomes are hidden on the first screen and appear as you scroll into the lower half
-      const fv = Math.max(0, Math.min(1, (zp - .15) / .6));
+      const fv = Math.max(0, Math.min(1, vp.scrollTop / (s2y || H) / .16));
       { if (bandOld && bandFade < 1) { sctx.globalAlpha = 1 - bandFade; sctx.drawImage(bandOld, 0, 0, W, H); } sctx.globalAlpha = bandOld && bandFade < 1 ? bandFade : 1; sctx.drawImage(band, 0, 0, W, H); sctx.globalAlpha = 1; }
+      if (fv > 0) { wEl = wEl || vp.querySelector('.s2 .ways'); if (wEl) { const rr = vp.getBoundingClientRect(), b = wEl.getBoundingClientRect(), cx = b.left + b.width / 2 - rr.left, cy = b.top + b.height / 2 - rr.top, rx = Math.max(b.width / 2 + 230, W * .27) * 1.05, ry = Math.max(b.height / 2 + 150, H * .36) * 1.05, dpr = cv.width / W; sctx.save(); sctx.setTransform(dpr, 0, 0, dpr * ry / rx, dpr * cx, dpr * cy); const g = sctx.createRadialGradient(0, 0, 0, 0, 0, rx); g.addColorStop(0, `rgba(0,0,0,${fv * .75})`); g.addColorStop(.45, `rgba(0,0,0,${fv * .55})`); g.addColorStop(1, 'rgba(0,0,0,0)'); sctx.globalCompositeOperation = 'destination-out'; sctx.fillStyle = g; sctx.fillRect(-rx, -rx, rx * 2, rx * 2); sctx.restore(); } }
       if (fv > 0) {
         // the lower-half network is seen from much closer than the one on the first screen
         const FS = (1 + (Z - 1) * FAR) * (1 + .9 * fv); { const dpr = cv.width / W; sctx.setTransform(dpr * FS, 0, 0, dpr * FS, dpr * W / 2 * (1 - FS), dpr * H / 2 * (1 - FS)); }
-        const fb = hovB && !RM ? (() => { const rr = vp.getBoundingClientRect(), b = hovB.getBoundingClientRect(), cx = b.left + b.width / 2 - rr.left, cy = b.top + b.height / 2 - rr.top; return [W / 2 + (cx - W / 2) / FS, H / 2 + (cy - H / 2) / FS, b.width / 2 / FS]; })() : null; fbNow = fb;
-        const fp = !fb && ptr && pw > .03 && !RM ? [W / 2 + (ptr[0] - W / 2) / FS, H / 2 + (ptr[1] - H / 2) / FS] : null; fpNow = fp;
+        fsT = (1 + (2.2 - 1) * FAR) * 1.9; wEl = wEl || vp.querySelector('.s2 .ways'); if (wEl) { const rr = vp.getBoundingClientRect(), b = wEl.getBoundingClientRect(); const sb = wEl.closest('.s2').getBoundingClientRect(), ky = b.top - sb.top + b.height / 2; zc = [W / 2 + (b.left + b.width / 2 - rr.left - W / 2) / fsT, H / 2 + (ky - H / 2) / fsT, Math.max(b.width / 2 + 230, W * .27) / fsT, Math.max(b.height / 2 + 150, H * .36) / fsT]; }
+        const fb = false && hovB ? (() => { const rr = vp.getBoundingClientRect(), b = hovB.getBoundingClientRect(), cx = b.left + b.width / 2 - rr.left, cy = b.top + b.height / 2 - rr.top; return [W / 2 + (cx - W / 2) / FS, H / 2 + (cy - H / 2) / FS, b.width / 2 / FS]; })() : null; fbNow = fb;
+        fdm += ((hovB && !RM ? .1 : 1) - fdm) * (RM ? 1 : .07); const fp = false && ptr ? [W / 2 + (ptr[0] - W / 2) / FS, H / 2 + (ptr[1] - H / 2) / FS] : null; fpNow = fp;
         // lower half: faint far rhizomes creep from node to node behind the network, then fade (their nodes only show while a thread holds them)
-        if (!fs.length || fs.W !== W) { fs = []; fs.W = W; for (let i = 0; i < (small ? 140 : 320); i++) fs.push(farStar(now - R() * 6)); }
+        if (!fs.length || fs.W !== W) { fs = []; fs.W = W; for (let i = 0; i < (small ? 90 : 170); i++) fs.push(farStar(now - R() * 6)); }
         fs.forEach((f, i) => { if (now - f.born > f.dur && !fl.some(l => l.a === f || l.b === f)) fs[i] = farStar(now); });
         // every second or so a faint rhizome starts at one far star and creeps outward, curving and forking from star to star, then fades
-        const fUsed = f => fl.some(l => l.a === f || l.b === f), fGrow = (from, gen, t0) => { const live = fs.filter(f => f !== from && !fUsed(f) && f.dur - (now - f.born) > 2.5);
-            const opts = live.map(f => [f, Math.hypot(f.x - from.x, f.y - from.y)]).filter(q => (!from.dir || fb || ((q[0].x - from.x) * from.dir[0] + (q[0].y - from.y) * from.dir[1]) / (q[1] || 1) > .6) && q[1] > 20 && q[1] < (fb ? 80 : fp ? 190 : 140) && (!fp || (q[1] > 70 && Math.hypot(q[0].x - fp[0], q[0].y - fp[1]) < 230))).sort((p, q) => p[1] - q[1]).slice(0, 4);
-            const near = fp && Math.hypot(from.x - fp[0], from.y - fp[1]) < 230, n = fb ? (gen > 1 ? 0 : R() < .5 ? 2 : 1) : fp ? (!near || gen > 2 ? 0 : R() < .2 ? 2 : 1) : gen > 3 ? 0 : R() < (gen ? .45 : .8) ? 2 : 1; if (fb) opts.sort((p, q) => Math.hypot(q[0].x - fb[0], q[0].y - fb[1]) - Math.hypot(p[0].x - fb[0], p[0].y - fb[1]) + (R() - .5) * 20); else if (fp) opts.sort((p, q) => Math.hypot(p[0].x - fp[0], p[0].y - fp[1]) - Math.hypot(q[0].x - fp[0], q[0].y - fp[1]) + (R() - .5) * 30); else opts.sort(() => R() - .5); let d0 = null; opts.slice(0, n).forEach(([to]) => { const dd = Math.hypot(to.x - from.x, to.y - from.y) || 1, ux = (to.x - from.x) / dd, uy = (to.y - from.y) / dd; if (d0 && ux * d0[0] + uy * d0[1] < .45) return; d0 = d0 || [ux, uy]; fl.push(fLink(from, to, gen, t0)); }); };
-        if (!RM && !fb && !fp && now > fNext) { fNext = now + .8 + R() * .7; const live = fs.filter(f => now - f.born > .6 && f.dur - (now - f.born) > 3 && !fUsed(f)), s0 = live[R() * live.length | 0]; if (s0) fGrow(s0, 0, now); }
+        const fUsed = f => fl.some(l => l.a === f || l.b === f), fGrow = (from, gen, t0) => { if (fl.length > 430) return; const live = fs.filter(f => f !== from && !fUsed(f) && f.dur - (now - f.born) > 2.5);
+            const opts = live.map(f => [f, Math.hypot(f.x - from.x, f.y - from.y)]).filter(q => (!from.dir || fb || ((q[0].x - from.x) * from.dir[0] + (q[0].y - from.y) * from.dir[1]) / (q[1] || 1) > .4) && q[1] > 20 && q[1] < (fb ? 80 : 115) && (fb || q[1] > 32)).sort((p, q) => p[1] - q[1]).slice(0, 4);
+            const near = fp && Math.hypot(from.x - fp[0], from.y - fp[1]) < 230, n = fb ? (gen > 1 ? 0 : R() < .5 ? 2 : 1) : fp ? (!near || gen > 2 ? 0 : R() < .2 ? 2 : 1) : gen > 5 ? 0 : !gen && R() < .15 ? 3 : R() < (gen ? .32 : .7) ? 2 : 1; if (fb) opts.sort((p, q) => Math.hypot(q[0].x - fb[0], q[0].y - fb[1]) - Math.hypot(p[0].x - fb[0], p[0].y - fb[1]) + (R() - .5) * 20); else if (fp) opts.sort((p, q) => Math.hypot(p[0].x - fp[0], p[0].y - fp[1]) - Math.hypot(q[0].x - fp[0], q[0].y - fp[1]) + (R() - .5) * 30); else opts.sort(() => R() - .5); let d0 = null; opts.slice(0, n).forEach(([to]) => { const dd = Math.hypot(to.x - from.x, to.y - from.y) || 1, ux = (to.x - from.x) / dd, uy = (to.y - from.y) / dd; if (d0 && ux * d0[0] + uy * d0[1] < .45) return; if (!fb && crossZ(from, to)) return; const bd = to.dir, nl = fLink(from, to, gen, t0); if (nl.pts.some(p => inZ(p[0], p[1])) || nl.tw.some(w => inZ(w.x1, w.y1))) { to.dir = bd; return; } d0 = d0 || [ux, uy]; [from, to].forEach(s => s.dur = Math.max(s.dur, t0 - s.born + nl.grow + nl.hold + 1.5)); fl.push(nl); }); };
+        if (fv <= 0) fStart = 0; else if (!fStart) { fStart = now; if (!fl.length) { const T = now - 1e3; const hw = W * .5 / fsT, hh = H * .5 / fsT; const NS = 22, ex = hw * 1.08, ey = hh * 1.08, per = 4 * (ex + ey); for (let k = 0; k < NS; k++) { const d = (k + .5 + (R() - .5) * .5) / NS * per, [x, y] = d < 2 * ex ? [W / 2 - ex + d, H / 2 - ey] : d < 2 * ex + 2 * ey ? [W / 2 + ex, H / 2 - ey + (d - 2 * ex)] : d < 4 * ex + 2 * ey ? [W / 2 + ex - (d - 2 * ex - 2 * ey), H / 2 + ey] : [W / 2 - ex, H / 2 + ey - (d - 4 * ex - 2 * ey)], sd = { x, y, born: T, kn: false, dur: 1e9, r: .6, a: .6, sp: 2, ph: 0, ci: k % 2, c: [col.A, col.B][k % 2].map((v, j) => v + (col.lt[j] - v) * .25) }, dl = Math.hypot(W / 2 - x, H / 2 - y) || 1; { const ix = (W / 2 - x) / dl, iy = (H / 2 - y) / dl, sg = k % 2 ? 1 : -1, tx = ix * .6 - iy * sg, ty = iy * .6 + ix * sg, tl = Math.hypot(tx, ty); sd.dir = [tx / tl, ty / tl]; } fs.push(sd); fGrow(sd, 0, T); } const kidsAll = () => { for (let k = 0; k < 8; k++) fl.slice().forEach(l => { if (!l.kids) { l.kids = true; fGrow(l.b, l.gen + 1, T); } }); }; kidsAll(); const NB = 20, inV = p => Math.abs(p[0] - W / 2) < hw && Math.abs(p[1] - H / 2) < hh; for (let pass = 0; pass < 4; pass++) { const cov = new Array(NB).fill(0); fl.forEach(l => l.pts.forEach(p => { if (inV(p)) cov[((Math.atan2((p[1] - H / 2) / hh, (p[0] - W / 2) / hw) / 6.283 + 1) * NB | 0) % NB]++; })); const gaps = cov.map((c, i) => c < 6 ? i : -1).filter(i => i >= 0); if (!gaps.length) break; gaps.forEach((i, j) => { const an = (i + .2 + R() * .6) / NB * 6.283, cx = Math.cos(an), cy = Math.sin(an), t = 1 / Math.max(Math.abs(cx) / ex, Math.abs(cy) / ey), x = W / 2 + cx * t, y = H / 2 + cy * t, sg = R() < .5 ? 1 : -1, ix = -cx, iy = -cy, tx = ix * .6 - iy * sg, ty = iy * .6 + ix * sg, tl = Math.hypot(tx, ty), sd = { x, y, born: T, kn: false, dur: 1e9, r: .6, a: .6, sp: 2, ph: 0, dir: [tx / tl, ty / tl], ci: (i + j) % 2, c: [col.A, col.B][(i + j) % 2].map((v, q) => v + (col.lt[q] - v) * .25) }; fs.push(sd); fGrow(sd, 0, T); }); kidsAll(); } fl.forEach(l => { l.kids = true; l.ly = Math.min(2, l.gen >> 1); }); { const used = fs.filter(f => fl.some(l => l.a === f || l.b === f)); fl.filter(l => !fl.some(m => m.a === l.b)).forEach(l => { const e = l.b; if (R() > .75) return; const c = used.filter(f => f !== e && f !== l.a && !fl.some(m => (m.a === e && m.b === f) || (m.b === e && m.a === f))).map(f => [f, Math.hypot(f.x - e.x, f.y - e.y)]).filter(q => q[1] > 25 && q[1] < 125).sort((p, q) => p[1] - q[1])[0]; if (!c) return; const bd = c[0].dir, nl = fLink(e, c[0], l.gen + 1, T); c[0].dir = bd; if (nl.pts.some(p => inZ(p[0], p[1]))) return; nl.kids = true; nl.ly = l.ly; fl.push(nl); }); } if (!RM) fl.filter(l => !fl.some(m => m.a === l.b)).forEach(l => { if (R() < .4) { l.born = now + l.ly * .9 + .2 + R() * .5; l.grow = 1.6 + R() * .8; } }); fs.forEach(f => { const d = fl.reduce((n, l) => n + (l.a === f || l.b === f), 0); f.kd = d >= 3 || (d === 2 && R() < .45); const gl = fl.find(l => l.b === f && l.born > now); f.kdAt = gl ? gl.born + gl.grow : 0; }); } }
+        if (false && now > fRec) { fRec = now + .8; const o = fl.find(l => l.hold > 1e5); if (o) o.hold = Math.max(0, now - o.born - o.grow); }
+        if (false && now > fNext) { fNext = now + .3 + R() * .3; const live = fs.filter(f => now - f.born > .6 && f.dur - (now - f.born) > 3 && !fUsed(f)), s0 = live[R() * live.length | 0]; if (s0) fGrow(s0, 0, now); }
         if (fp && now - fLast > .55) { fLast = now; const nb = fs.filter(f => !fUsed(f) && now - f.born > .3 && f.dur - (now - f.born) > 3).map(f => [f, Math.hypot(f.x - fp[0], f.y - fp[1])]).filter(q => q[1] > 30 && q[1] < 150).sort((p, q) => p[1] - q[1]); if (nb.length) fGrow(nb[Math.min(nb.length - 1, R() * 2 | 0)][0], 0, now); }
         if (fb) fl.forEach(l => { if (!l.bur && !l.cut) { l.cut = 1; l.kids = true; l.hold = Math.max(0, Math.min(l.hold, now - l.born - l.grow)); } });
         fl.forEach(l => { if (!l.kids && now - l.born > l.grow) { l.kids = true; fGrow(l.b, l.gen + 1, now); } });
         fl = fl.filter(l => now - l.born < l.grow + l.hold + .7);
-        sctx.lineCap = 'round'; fl.forEach(l => { const age = now - l.born; if (age < 0) return; const g = Math.min(1, age / l.grow), al = Math.min(1, age / .3, (l.grow + l.hold + .7 - age) / .7) * (.8 - l.gen * .05) * fv * (1 + .2 * l.hot), m = Math.max(1, Math.ceil(g * 12));
-          sctx.strokeStyle = rgb(l.c, Math.min(1, al)); { const bw = (.4 - l.gen * .035) / FS * 1.6, q = l.cp, ns = Math.max(2, Math.ceil(g * 48)), bz = t => { const u = 1 - t; return [u * u * u * q[0] + 3 * u * u * t * q[2] + 3 * u * t * t * q[4] + t * t * t * q[6], u * u * u * q[1] + 3 * u * u * t * q[3] + 3 * u * t * t * q[5] + t * t * t * q[7]]; };
-            let pv = bz(0); for (let i = 1; i <= ns; i++) { const t = g * i / ns, pn = bz(t); sctx.lineWidth = bw * (1.75 - 1.25 * t); sctx.beginPath(); sctx.moveTo(pv[0], pv[1]); sctx.lineTo(pn[0], pn[1]); sctx.stroke(); pv = pn; } sctx.lineWidth = bw; }
+        sctx.lineCap = 'round'; fl.forEach(l => { const age = now - l.born; if (age < 0) return; const g = Math.min(1, age / l.grow), al = Math.min(1, age / .3, (l.grow + l.hold + .7 - age) / .7) * (1 - l.gen * .06) * fv * (RM ? 1 : Math.max(0, Math.min(1, (now - fStart - (l.ly || 0) * .9) / 1.6))) * (1 + .2 * l.hot), m = Math.max(1, Math.ceil(g * 12));
+          { const fi = PALS[PAL.i].far; sctx.strokeStyle = rgb(fi && l.ci !== undefined ? hx(fi[l.ci]) : l.c, Math.min(1, al) * .92 * fdm); } { const bw = Math.max(.08, .4 - l.gen * .045) / FS * 2.4, q = l.cp, ns = Math.max(2, Math.ceil(g * 30)), bz = t => { const u = 1 - t; return [u * u * u * q[0] + 3 * u * u * t * q[2] + 3 * u * t * t * q[4] + t * t * t * q[6], u * u * u * q[1] + 3 * u * u * t * q[3] + 3 * u * t * t * q[5] + t * t * t * q[7]]; };
+            const ed = PALS[PAL.i].edge, ss = sctx.strokeStyle; for (let ps = ed ? 0 : 1; ps < 2; ps++) { if (!ps) sctx.strokeStyle = rgb(hx(ed), Math.min(1, al) * .38 * fdm); else sctx.strokeStyle = ss; let pv = bz(0); for (let r = 0; r < 3; r++) { sctx.lineWidth = bw * (1.75 - 1.25 * g * (r + .5) / 3) * (ps ? 1 : 2.6); sctx.beginPath(); sctx.moveTo(pv[0], pv[1]); for (let i = 1; i <= 7; i++) { pv = bz(g * (r * 7 + i) / 21); sctx.lineTo(pv[0], pv[1]); } sctx.stroke(); } } sctx.lineWidth = bw; }
           sctx.beginPath(); sctx.globalAlpha = .7; sctx.lineWidth *= .6;
           l.tw.forEach(w => { if (g <= w.f) return; const k = Math.min(1, (g - w.f) * 4); sctx.moveTo(w.x0, w.y0); sctx.quadraticCurveTo(w.x0 + (w.cx - w.x0) * k, w.y0 + (w.cy - w.y0) * k, w.x0 + (w.x1 - w.x0) * k, w.y0 + (w.y1 - w.y0) * k); }); sctx.stroke(); sctx.globalAlpha = 1; });
-        fs.forEach(f => { if (!fUsed(f)) return; const age = now - f.born, env = Math.max(0, Math.min(1, age / .8, (f.dur - age) / .8)), tw = RM ? 1 : .45 + .55 * Math.sin(now * f.sp + f.ph), al = env * tw * f.a * fv * .8; if (al < .01) return;
-          if (f.r > 1) { const rr = f.r * 4, g = sctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, rr); g.addColorStop(0, rgb(f.c, al * .45)); g.addColorStop(1, rgb(f.c, 0)); sctx.fillStyle = g; sctx.fillRect(f.x - rr, f.y - rr, rr * 2, rr * 2); }
-          const fc = f.c; sctx.fillStyle = rgb(fc, al); sctx.beginPath(); sctx.arc(f.x, f.y, f.r, 0, 6.283); sctx.fill(); });
+        fs.forEach(f => { if (!f.kd) return; const age = now - f.born, env = Math.max(0, Math.min(1, age / .8, (f.dur - age) / .8)), tw = RM ? 1 : .72 + .28 * Math.sin(now * f.sp * .16 + f.ph), al = fdm * Math.min(1, (now - (f.kdAt || 0)) / .6) * Math.min(1, env * tw * f.a * fv * 1.15 * (RM ? 1 : Math.max(0, Math.min(1, (now - fStart - .4) / 1.6)))); if (al < .01) return;
+          { const rr = Math.max(f.r, 1) * 6, g = sctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, rr); g.addColorStop(0, rgb(f.c, al * .6)); g.addColorStop(1, rgb(f.c, 0)); sctx.fillStyle = g; sctx.fillRect(f.x - rr, f.y - rr, rr * 2, rr * 2); }
+          const fc = f.c.map((v, j) => v + (col.lt[j] - v) * .35); sctx.fillStyle = rgb(fc, al); sctx.beginPath(); sctx.arc(f.x, f.y, Math.max(f.r, .9) * 1.7, 0, 6.283); sctx.fill(); });
         // hovering a way in: a ring of rhizome wraps the button itself, growing from its left end both ways round to meet at its right end,
         // then short roots grow outward from each node of the ring. Drawn in screen space so it sits exactly on the label.
         { const dpr = cv.width / W; sctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
@@ -568,8 +590,8 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
         const pr = p.soft ? 7 : 9, pa = p.soft ? .8 * Math.min(1, p.t * 6, (1 - p.t) * 6 + (p.gen ? 1 : 0)) : 1, pc = p.soft ? kc(p.e).map((v, j) => v + (col.lt[j] - v) * .35) : col.act, g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], pr); g.addColorStop(0, rgb(col.lt, .9 * pa)); g.addColorStop(.35, rgb(pc, .6 * pa)); g.addColorStop(1, rgb(pc, 0));
         ctx.fillStyle = g; ctx.fillRect(q[0] - pr, q[1] - pr, pr * 2, pr * 2); });
       // where the two colours met in the title: a soft glow that stays and breathes
-      if (met && meetN) { const rr = 56 * (1 + .6 * zp) * (1 + .12 * Math.sin(now * 1.3)), g = ctx.createRadialGradient(meetN.x, meetN.y, 0, meetN.x, meetN.y, rr);
-        g.addColorStop(0, rgb(col.act.map(v => v + (1 - v) * .3), .42)); g.addColorStop(.35, rgb(col.act, .18)); g.addColorStop(1, rgb(col.act, 0)); ctx.fillStyle = g; ctx.fillRect(meetN.x - rr, meetN.y - rr, rr * 2, rr * 2); }
+      if (met && meetN) { const mb = RM ? .7 : .5 + .5 * Math.sin(now * 6.283 / 4.5), rr = 60 * (1 + .6 * zp) * (.82 + .38 * mb), g = ctx.createRadialGradient(meetN.x, meetN.y, 0, meetN.x, meetN.y, rr);
+        g.addColorStop(0, rgb(col.act.map(v => v + (1 - v) * .3), .55 + .35 * mb)); g.addColorStop(.35, rgb(col.act, .26 + .2 * mb)); g.addColorStop(1, rgb(col.act, 0)); ctx.fillStyle = g; ctx.fillRect(meetN.x - rr, meetN.y - rr, rr * 2, rr * 2); }
       // nodes of light: a node lights up when a path first reaches it, then twinkles at its own pace (a slow breath plus an occasional glint);
       // nodes with more links glow a little more, and nodes no path has reached stay dark
       nodes.forEach(o => { if (o.deep && zp < .02) return; const lit = o.col >= 0 && o.edges.size; if (!lit && o.flash < .05) return;
@@ -588,7 +610,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
       pw = Math.max(0, pw - dt / 2.2); step(dt * (1 + 1.8 * zp) * (met ? 2.4 : 3.6));
       // a moment after the two networks meet in the title, the page presses its own ↓ and slides down to the two ways in (once; scrolling or tapping first cancels it)
       if (met && !metAt) metAt = now;
-      if (!RM && !autoDone && met && vp.scrollTop < 4) { const sec = performance.now() / 1000, free = nodes.filter(o => (o.col < 0 || o.edges.size < 4) && !o.tmp && o.off === undefined).length;
+      if (false && !RM && !autoDone && met && vp.scrollTop < 4) { const sec = performance.now() / 1000, free = nodes.filter(o => (o.col < 0 || o.edges.size < 4) && !o.tmp && o.off === undefined).length;
         if (!doneAt) doneAt = now;
         if (doneAt && now - doneAt > 2.2) { autoDone = true; const cb = vp.querySelector('.cue'); if (cb) cb.click(); } }
       if (as) { const p = Math.min(1, (now - as.t0) / 3.6), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; vp.scrollTop = as.from + (as.to - as.from) * e; if (p >= 1) as = null; }
@@ -616,13 +638,13 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     ld.insertAdjacentHTML('afterbegin', '<canvas class="rzg" aria-hidden="true"></canvas><canvas class="rzs" aria-hidden="true"></canvas><canvas class="rzc" aria-hidden="true"></canvas>');
     const [d1, d2] = vp.querySelectorAll('.deco'); d1.innerHTML = D.s1 || ''; d2.innerHTML = D.s2 || '';
     if (D.obj) vp.querySelectorAll('.obj').forEach((o, i) => o.innerHTML = D.obj[i]);
-    if (v === 'v-c') { vp.querySelector('h3').innerHTML = 'There’s a world<br>for your<br><span class="mk">XR Work</span>'; rhizome(ld, vp); vp._sky(true);
+    if (v === 'v-c') { vp.querySelector('h3').innerHTML = 'Immersive Distribution and Exhibition Toolkit'; rhizome(ld, vp); vp._sky(true);
       // wrap each word of the headline so the words can emerge one after another ("XR Work" emerges as one)
       { const h = vp.querySelector('h3'); let n = 0; [...h.childNodes].forEach(nd => {
           if (nd.nodeType === 3) { const f = document.createDocumentFragment(); nd.textContent.split(/(\s+)/).forEach(t => { if (!t) return; if (/^\s+$/.test(t)) f.append(t); else { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = t; sp.style.setProperty('--d', (n++ * .22) + 's'); f.append(sp); } }); nd.replaceWith(f); }
           else if (nd.classList && nd.classList.contains('mk')) { nd.classList.add('w'); nd.style.setProperty('--d', (n++ * .22 + .2) + 's'); } }); }
       { const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { s2.classList.add('in'); io2.disconnect(); } }), { root: vp, threshold: .45 }); io2.observe(s2); vp._cleanup.push(() => io2.disconnect()); }
-      const s1 = vp.querySelector('.s1'); { const tp = vp.querySelector('.ld-top'); tp.classList.add('nl-top'); s1.prepend(tp); } const ld2 = s1.querySelector('.lede'); ld2.innerHTML = 'Plan how an immersive work will reach audiences,<br>and find venues that show work like yours.'; s1.querySelector('.cue').after(ld2); }
+      const s1 = vp.querySelector('.s1'); { const tp = vp.querySelector('.ld-top'); tp.classList.add('nl-top'); s1.querySelector('.cue').after(tp); } const ld2 = s1.querySelector('.lede'); ld2.innerHTML = 'Plan how an immersive work will reach audiences,<br>and find venues that show work like yours.'; s1.querySelector('.cue').after(ld2); }
     // the ↓ button glides to the two ways in
     let slid = false, timer = 0;
     const slide = force => { if (slid && !force) return; slid = true; clearTimeout(timer); vp.scrollTo({ top: s2.offsetTop, behavior: RM ? 'auto' : 'smooth' }); };
