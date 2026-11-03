@@ -176,7 +176,7 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
     <div class="spec">
       <div><h2>Nodes of Light</h2><p>Two rhizome networks grow in from opposite corners of a warm, dark, grainy ground, where the colours flow slowly underneath, drawing curved, forking paths from node to node. On the first screen they grow toward the headline and touch inside it, leaving a soft glow where they meet, then keep spreading until the ground is full. Each node lights up when a path reaches it and then twinkles at its own pace, with a slow breath and an occasional glint; nodes with more links glow a little more. Paths never disappear; once drawn they settle to a softer glow. Moving the pointer steers nearby growth toward it. Lower down, the view moves much closer in: the first network drifts out of focus and a nearer rhizome grows after your pointer, starting just behind it and branching toward wherever it moves. Hovering a way in sends a branch from each network to meet under that button, joined by a bridge of light.</p></div>
       <div><span class="label">Main elements</span><ul class="els"><li>A warm, matte ground with a slow, gentle flow of colour under a fine paper-like grain, soft mottling and faint out-of-focus roots, in place of the sky</li><li>Two rhizome networks growing from the lower-left and upper-right corners, meeting in the headline with no single hub</li><li>Nodes of light that twinkle, light up when a path arrives, and glow more where the network is busiest</li><li>Growth that bends toward the pointer on the first screen and follows it closely on the lower half, and both networks meeting at whichever way in you hover</li><li>Recia for the headline, with &ldquo;XR Work&rdquo; in the action colour; Space Grotesk for the lede and the two ways in; a plain ring for the &darr;</li></ul></div>
-      <div><span class="label">Colour palette</span><p class="palnote">Each palette comes from one of the reference palettes: Poppy Dusk (wild poppies and thyme), Late Harvest (grasslands on grape fizz) and Gilded Iris (old gold and royal purple on gunmetal).</p><div class="sw"></div></div>
+      <div><span class="label">Colour palette</span><p class="palnote">Each palette comes from one of the reference palettes: Late Harvest (grasslands on grape fizz), Poppy Dusk (wild poppies and thyme) and Gilded Iris (old gold and royal purple on gunmetal).</p><div class="sw"></div></div>
     </div>
     <div class="pair"></div>
   </section>
@@ -213,10 +213,10 @@ button:focus-visible,a:focus-visible,.vp:focus-visible{outline:2px solid var(--f
   // palettes to try: each has three decorative colours (the two networks, then the ground's warmth and roots), one action colour (the ways in and the meeting glow), one light (text) and one dark (the ground)
   const PALS = [
     // from the client's references: wild poppies and thyme, a grasslands set on grape fizz, and an old gold and royal purple set on gunmetal
-    { n: 'Poppy Dusk', deco: ['#87a680', '#7d8cb5', '#e9b8a0'], action: '#e0582e', light: '#f7e9de', dark: '#2e110d', low: '#62271a',
-      names: ['Thyme', 'Dusty Cornflower', 'Peach Blush', 'Poppy', 'White Clay', 'Mahogany', 'Cognac'] },
     { n: 'Late Harvest', deco: ['#5f5420', '#8c6290', '#a1a8be'], action: '#ea785b', light: '#f7eee9', dark: '#461a2e', low: '#6a2c4a',
       names: ['Grasslands', 'Dusty Lilac', 'Bluebell', 'Terra Cotta', 'Cream White', 'Grape Fizz, deep', 'Grape Fizz, lighter'] },
+    { n: 'Poppy Dusk', deco: ['#87a680', '#7d8cb5', '#e9b8a0'], action: '#e0582e', light: '#f7e9de', dark: '#2e110d', low: '#62271a',
+      names: ['Thyme', 'Dusty Cornflower', 'Peach Blush', 'Poppy', 'White Clay', 'Mahogany', 'Cognac'] },
     { n: 'Gilded Iris', deco: ['#875799', '#eaa585', '#e8633f'], action: '#d7b941', light: '#f2ebe1', dark: '#2a3a44', low: '#2b4d58',
       names: ['Royal Purple', 'Apricot', 'Vermillion, warmed', 'Old Gold', 'Bone', 'Slate', 'Gunmetal, lighter'] },
   ];
